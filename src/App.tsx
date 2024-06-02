@@ -1,4 +1,6 @@
+import { BrowserRouter } from "react-router-dom";
 import { useState } from "react";
+import { Routes } from "~routes";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 
@@ -8,10 +10,10 @@ function App() {
   const [count, setCount] = useState<any>(0);
 
   return (
-    <div className="app">
-      <h1>Here we go</h1>
-    </div>
-  ); 
+    <BrowserRouter>
+      <Routes />
+    </BrowserRouter>
+  );
 }
 
 export default App;
