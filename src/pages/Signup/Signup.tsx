@@ -12,18 +12,20 @@ import {
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 
-import { formSchema } from './loginSchema';
-import { FormSchemaTypes } from './login.types';
+import { formSchema } from './signupSchema';
+import { FormSchemaTypes } from './signup.types';
+import { formFields } from './signupFields';
 
-import './login.scss';
-import { formFields } from './loginFields';
+import './signup.scss';
 
-export function Login() {
+export const Signup = () => {
     const form = useForm<FormSchemaTypes>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            name: '',
             email: '',
             password: '',
+            confirmPassword: '',
         },
     });
 
@@ -32,12 +34,12 @@ export function Login() {
     }
 
     return (
-        <section className="login_page-section">
-            <div className="login_form-wrapper">
+        <section className="signup_page-section">
+            <div className="signup_form-wrapper">
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
-                        className="space-y-8 login-form"
+                        className="space-y-8 signup-form"
                     >
                         {formFields.map((field) => (
                             <FormField
@@ -67,4 +69,4 @@ export function Login() {
             </div>
         </section>
     );
-}
+};

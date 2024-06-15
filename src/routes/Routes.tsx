@@ -1,10 +1,11 @@
-import { Route, Routes as ReactRouterRoutes, Navigate } from 'react-router-dom';
+import { Route, Routes as ReactRouterRoutes } from 'react-router-dom';
 
 import { AppRoutes } from '~constants';
 import PrivateRoutes from './PrivateRoutes';
 import { Login } from '~pages/Login';
 import { Dashboard } from '~pages/Dashboard';
 import { Homepage } from '~pages/Homepage';
+import { Signup } from '~pages/Signup';
 
 export const Routes = () => {
     return (
@@ -14,6 +15,7 @@ export const Routes = () => {
             </Route>
             <Route path={AppRoutes.Homepage} element={<Homepage />} />
             <Route path={AppRoutes.Login} element={<Login />} />
+            <Route path={AppRoutes.Signup} element={<Signup />} />
         </ReactRouterRoutes>
     );
 };
