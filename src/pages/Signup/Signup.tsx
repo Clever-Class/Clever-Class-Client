@@ -7,7 +7,6 @@ import {
     FormControl,
     FormField,
     FormItem,
-    FormLabel,
     FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
@@ -48,7 +47,9 @@ export const Signup = () => {
                                 name={field.name as keyof FormSchemaTypes}
                                 render={({ field: formField }) => (
                                     <FormItem className="form-item">
-                                        <FormLabel>{field.label}</FormLabel>
+                                        <p className="form-label">
+                                            {field.label}
+                                        </p>
                                         <FormControl>
                                             <Input
                                                 type={field.type}
