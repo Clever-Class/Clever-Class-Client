@@ -20,6 +20,7 @@ import { signupUserAction } from '~store/actions';
 import { AppDispatch } from '~store';
 
 import './signup.scss';
+import { validatePassword } from '~utils';
 
 export const Signup = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -37,16 +38,9 @@ export const Signup = () => {
   const { setError, clearErrors } = form;
 
   const onSubmit = async (values: FormSchemaTypes) => {
-    console.log('Clicked');
+    const passwordValid = validatePassword(values, setError);
+    if (!passwordValid) return;
 
-    // Custom validation for password and confirmPassword
-    if (values.password !== values.confirmPassword) {
-      setError('confirmPassword', {
-        type: 'manual',
-        message: 'Passwords do not match',
-      });
-      return;
-    }
     clearErrors('confirmPassword');
 
     try {
@@ -54,30 +48,17 @@ export const Signup = () => {
         signupUserAction(values),
       );
 
-      console.log(accountCreationMessage, 'accountCreationMessage');
+      // displaying success toast message
       toast.success(accountCreationMessage);
 
+      // redirecting user to login page
       setTimeout(() => {
         navigate('/login');
       }, 2000);
-    } catch (error: any) {
-      // Handle error
-      toast.error(error.response.data.message);
+    } catch (errorMessage: any) {
+      toast.error(errorMessage);
     }
   };
-
-  // const signupUser = async (userInfo: FormSchemaTypes) => {
-  //   try {
-  //     const { data } = await api.ccServer.post('/auth/signup', userInfo);
-  //     const userToken = data.token;
-
-  //     // saving token in cookies
-  //     Cookies.set('userToken', userToken);
-  //   } catch (error: any) {
-  //     const { response } = error;
-  //     alert(response.data.message);
-  //   }
-  // };
 
   return (
     <section className="signup_page-section">

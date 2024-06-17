@@ -31,3 +31,8 @@ export interface SignupUserData {
   password: string;
   confirmPassword: string;
 }
+
+export interface LoginUserData {
+  email: string;
+  password: string;
+}
