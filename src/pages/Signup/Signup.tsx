@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
 
 import { Button } from '~/components/ui/button';
@@ -15,11 +16,14 @@ import { Input } from '~/components/ui/input';
 import { formSchema } from './signupSchema';
 import { FormSchemaTypes } from './signup.types';
 import { formFields } from './signupFields';
+import { signupUserAction } from '~store/actions';
+import { AppDispatch } from '~store';
 import { api } from '~api';
 
 import './signup.scss';
 
 export const Signup = () => {
+  const dispatch: AppDispatch = useDispatch();
   const form = useForm<FormSchemaTypes>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,22 +46,21 @@ export const Signup = () => {
       return;
     }
     clearErrors('confirmPassword');
-
-    await signupUser(values);
+    dispatch(signupUserAction(values));
   };
 
-  const signupUser = async (userInfo: FormSchemaTypes) => {
-    try {
-      const { data } = await api.ccServer.post('/auth/signup', userInfo);
-      const userToken = data.token;
+  // const signupUser = async (userInfo: FormSchemaTypes) => {
+  //   try {
+  //     const { data } = await api.ccServer.post('/auth/signup', userInfo);
+  //     const userToken = data.token;
 
-      // saving token in cookies
-      Cookies.set('userToken', userToken);
-    } catch (error: any) {
-      const { response } = error;
-      alert(response.data.message);
-    }
-  };
+  //     // saving token in cookies
+  //     Cookies.set('userToken', userToken);
+  //   } catch (error: any) {
+  //     const { response } = error;
+  //     alert(response.data.message);
+  //   }
+  // };
 
   return (
     <section className="signup_page-section">
