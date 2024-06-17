@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import Cookies from 'js-cookie';
-
+import { useNavigate } from 'react-router-dom';
 import { Button } from '~/components/ui/button';
 import {
   Form,
@@ -18,12 +18,13 @@ import { FormSchemaTypes } from './signup.types';
 import { formFields } from './signupFields';
 import { signupUserAction } from '~store/actions';
 import { AppDispatch } from '~store';
-import { api } from '~api';
 
 import './signup.scss';
 
 export const Signup = () => {
   const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
+
   const form = useForm<FormSchemaTypes>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,10 +34,11 @@ export const Signup = () => {
       confirmPassword: '',
     },
   });
-
   const { setError, clearErrors } = form;
 
   const onSubmit = async (values: FormSchemaTypes) => {
+    console.log('Clicked');
+
     // Custom validation for password and confirmPassword
     if (values.password !== values.confirmPassword) {
       setError('confirmPassword', {
@@ -46,7 +48,22 @@ export const Signup = () => {
       return;
     }
     clearErrors('confirmPassword');
-    dispatch(signupUserAction(values));
+
+    try {
+      const accountCreationMessage: string = await dispatch(
+        signupUserAction(values),
+      );
+
+      console.log(accountCreationMessage, 'accountCreationMessage');
+      toast.success(accountCreationMessage);
+
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+    } catch (error: any) {
+      // Handle error
+      toast.error(error.response.data.message);
+    }
   };
 
   // const signupUser = async (userInfo: FormSchemaTypes) => {

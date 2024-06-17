@@ -24,3 +24,10 @@ export type UserActionTypes =
   | LoginPendingAction
   | LoginSuccessAction
   | LoginErrorAction;
+
+export interface SignupUserData {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}

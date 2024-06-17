@@ -1,12 +1,19 @@
-import { SIGNUP_FAILURE, SIGNUP_REQUEST } from '~constants';
+import { api } from '~api';
+import { SIGNUP_FAILURE, SIGNUP_REQUEST, SignupUserData } from '~constants';
 import { AppDispatch } from '~store';
 
 export const signupUserAction =
-  (userEntryData: any) => async (dispatch: AppDispatch) => {
+  (userEntryData: SignupUserData) => async (dispatch: AppDispatch) => {
     try {
-      console.log(userEntryData);
       dispatch({ type: SIGNUP_REQUEST });
+
+      const { data } = await api.ccServer.post('/auth/signup', userEntryData);
+      console.log(data);
+      const message = data.message;
+
+      return message;
     } catch (error: any) {
-      dispatch({ type: SIGNUP_FAILURE });
+      const { response } = error;
+      dispatch({ type: SIGNUP_FAILURE, payload: response.data.message });
     }
   };
