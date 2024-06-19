@@ -13,13 +13,16 @@ import {
 import { Input } from '~components/ui/input';
 import { Button } from '~components/ui/button';
 
-import { ResetPasswordFormTypes } from './ResetPassword.types';
+import { ResetPasswordFormTypes } from './resetPassword.types';
 import { resetPasswordSchema } from './resetPasswordSchema';
 import { resetPasswordFields } from './resetPasswordFields';
 
 import './resetPassword.scss';
+import { useAuth } from '~hooks';
+import toast from 'react-hot-toast';
 
 export const ResetPassword = () => {
+  const { handleResetPassword, error } = useAuth();
   // The useForm hook is used to create a form with the following options:
   const form = useForm<ResetPasswordFormTypes>({
     resolver: zodResolver(resetPasswordSchema),
@@ -31,17 +34,29 @@ export const ResetPassword = () => {
 
   // Submit the form
   const onSubmit = async (values: ResetPasswordFormTypes) => {
-    console.log(values);
-    // try {
-    //   const successfulLoginMessage: string = await dispatch(
-    //     loginUserAction(values),
-    //   );
-    //   // Display a success toast message
-    //   toast.success(successfulLoginMessage);
-    // } catch (errorMessage: any) {
-    //   // show error message
-    //   toast.error(errorMessage);
-    // }
+    // The resetToken is extracted from the URL
+    const resetToken = window.location.pathname.split('/').pop();
+
+    console.log(resetToken, values.password, values.confirmPassword);
+    // checking if the password and confirmPassword are the same
+    if (values.password !== values.confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    // The handleResetPassword function is called with the resetToken and password values from the form
+    const message = await handleResetPassword(
+      resetToken || '',
+      values.password,
+    );
+
+    console.log(message, 'message');
+    if (message) {
+      toast.success(message);
+    }
+    if (error) {
+      toast.error(error);
+    }
   };
   return (
     <section className="resetPassword_page-section">

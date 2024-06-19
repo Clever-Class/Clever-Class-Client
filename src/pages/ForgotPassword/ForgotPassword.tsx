@@ -13,6 +13,8 @@ import {
 import { Input } from '~components/ui/input';
 import { Button } from '~components/ui/button';
 
+import { useAuth } from '~hooks';
+
 import { ForgotPasswordFormTypes } from './forgotPassword.types';
 import { forgotPasswordFormSchema } from './forgotPasswordSchema';
 import { forgotPasswordFields } from './forgotPasswordFields';
@@ -20,6 +22,8 @@ import { forgotPasswordFields } from './forgotPasswordFields';
 import './forgotPassword.scss';
 
 export const ForgotPassword = () => {
+  const { loading, error, handleForgotPassword } = useAuth();
+
   // The useForm hook is used to create a form with the following options:
   const form = useForm<ForgotPasswordFormTypes>({
     resolver: zodResolver(forgotPasswordFormSchema),
@@ -30,17 +34,11 @@ export const ForgotPassword = () => {
 
   // Submit the form
   const onSubmit = async (values: ForgotPasswordFormTypes) => {
-    console.log(values);
-    // try {
-    //   const successfulLoginMessage: string = await dispatch(
-    //     loginUserAction(values),
-    //   );
-    //   // Display a success toast message
-    //   toast.success(successfulLoginMessage);
-    // } catch (errorMessage: any) {
-    //   // show error message
-    //   toast.error(errorMessage);
-    // }
+    // The handleForgotPassword function is called with the email value from the form
+    const message = await handleForgotPassword(values.email);
+    if (message) {
+      alert(message);
+    }
   };
   return (
     <section className="forgotPassword_page-section">
@@ -70,8 +68,9 @@ export const ForgotPassword = () => {
                 )}
               />
             ))}
-            <Button type="submit" className="submit-button">
-              Submit
+            {error && <p className="error-message">{error}</p>}
+            <Button type="submit" className="submit-button" disabled={loading}>
+              {loading ? 'Submitting...' : 'Submit'}
             </Button>
           </form>
         </Form>
