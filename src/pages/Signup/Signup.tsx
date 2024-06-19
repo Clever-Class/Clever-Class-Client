@@ -14,13 +14,13 @@ import {
 import { Input } from '~/components/ui/input';
 
 import { formSchema } from './signupSchema';
-import { FormSchemaTypes } from './signup.types';
 import { formFields } from './signupFields';
 import { signupUserAction } from '~store/actions';
 import { AppDispatch } from '~store';
+import { validatePassword } from '~utils';
+import { FormSchemaTypes } from './signup.types';
 
 import './signup.scss';
-import { validatePassword } from '~utils';
 
 export const Signup = () => {
   const dispatch: AppDispatch = useDispatch();

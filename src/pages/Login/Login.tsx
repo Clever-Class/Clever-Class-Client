@@ -12,7 +12,7 @@ import {
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 
-import { formSchema } from './loginSchema';
+import { loginFormSchema } from './loginSchema';
 import { FormSchemaTypes } from './login.types';
 import { formFields } from './loginFields';
 import { AppDispatch } from '~store';
@@ -26,7 +26,7 @@ export const Login = () => {
 
   // The useForm hook is used to create a form with the following options:
   const form = useForm<FormSchemaTypes>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(loginFormSchema),
     defaultValues: {
       email: '',
       password: '',
