@@ -44,17 +44,23 @@ export const Signup = () => {
     clearErrors('confirmPassword');
 
     try {
-      const accountCreationMessage: string = await dispatch(
-        signupUserAction(values),
+      const { message, paymentUrl, success } = await dispatch(
+        signupUserAction({
+          ...values,
+          priceId: 'price_1PNI9hKqk54qfeAmN1tVSeSN',
+        }),
       );
 
       // displaying success toast message
-      toast.success(accountCreationMessage);
+      if (message) {
+        if (success) toast.success(message);
+        else toast.error(message);
+      }
 
       // redirecting user to login page
       setTimeout(() => {
-        navigate('/login');
-      }, 2000);
+        window.location.href = paymentUrl;
+      }, 1000);
     } catch (errorMessage: any) {
       toast.error(errorMessage);
     }

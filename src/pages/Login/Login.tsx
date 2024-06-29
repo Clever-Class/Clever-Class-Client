@@ -16,9 +16,10 @@ import { loginFormSchema } from './loginSchema';
 import { FormSchemaTypes } from './login.types';
 import { formFields } from './loginFields';
 import { AppDispatch } from '~store';
+import { loginUserAction } from '~store/actions';
+import { AppRoutes } from '~constants';
 
 import './login.scss';
-import { loginUserAction } from '~store/actions';
 
 export const Login = () => {
   // Create a form using the useForm hook
@@ -75,6 +76,9 @@ export const Login = () => {
                 )}
               />
             ))}
+            <a className="forgot_password-link" href={AppRoutes.ForgotPassword}>
+              Forgot Password?
+            </a>
             <Button type="submit" className="submit-button">
               Submit
             </Button>
