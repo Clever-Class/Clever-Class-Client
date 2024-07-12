@@ -1,5 +1,6 @@
 import { initializePaddle, Paddle } from '@paddle/paddle-js';
 import { useEffect, useState } from 'react';
+import { Button } from '~components/ui/button';
 
 export function Payment() {
   // Create a local state to store Paddle instance
@@ -17,16 +18,44 @@ export function Payment() {
     });
   }, []);
 
+  // Update Paddle instance
+  const updateCheckout = async () => {
+    paddle?.Update({
+      pwCustomer: {
+        id: 'abir@gmail.com',
+      },
+    });
+  };
+
   // Callback to open a checkout
-  const openCheckout = () => {
+  const openCheckout = async () => {
     paddle?.Checkout.open({
+      settings: {
+        displayMode: 'inline',
+        locale: 'en',
+        allowedPaymentMethods: ['card', 'paypal', 'google_pay', 'apple_pay'],
+        frameTarget: 'checkout-container',
+        frameInitialHeight: 450,
+        frameStyle:
+          'width: 100%; min-width: 312px; background-color: transparent; border: none;',
+      },
       items: [{ priceId: 'pri_01j2m6kcy7zrwey4j07dzgc5ea', quantity: 1 }],
+
+      // customer
+      customer: {
+        email: 'abirhossainjuhan@gmail.com',
+        address: {
+          countryCode: 'BD',
+        },
+      },
     });
   };
 
   return (
     <div>
-      <button onClick={openCheckout}>Open Checkout</button>
+      <Button onClick={updateCheckout}>Update Paddle</Button>
+      <Button onClick={openCheckout}>Open Checkout</Button>
+      <div className="checkout-container"></div>
     </div>
   );
 }
