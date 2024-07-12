@@ -47,7 +47,7 @@ export const Signup = () => {
       const { message, paymentUrl, success } = await dispatch(
         signupUserAction({
           ...values,
-          priceId: 'price_1PNI9hKqk54qfeAmN1tVSeSN',
+          priceId: '436694',
         }),
       );
 
