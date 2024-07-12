@@ -1,13 +1,15 @@
 import { Route, Routes as ReactRouterRoutes } from 'react-router-dom';
 
-import { AppRoutes } from '~constants';
 import PrivateRoutes from './PrivateRoutes';
+
+import { AppRoutes } from '~constants';
 import { Login } from '~pages/Login';
 import { Dashboard } from '~pages/Dashboard';
 import { Homepage } from '~pages/Homepage';
 import { Signup } from '~pages/Signup';
 import { ForgotPassword } from '~pages/ForgotPassword';
 import { ResetPassword } from '~pages/ResetPassword/ResetPassword';
+import { Payment } from '~pages/Payment';
 
 export const Routes = () => {
   return (
@@ -20,6 +22,7 @@ export const Routes = () => {
       <Route path={AppRoutes.Login} element={<Login />} />
       <Route path={AppRoutes.ForgotPassword} element={<ForgotPassword />} />
       <Route path={AppRoutes.ResetPassword} element={<ResetPassword />} />
+      <Route path={AppRoutes.Payment} element={<Payment />} />
     </ReactRouterRoutes>
   );
 };
