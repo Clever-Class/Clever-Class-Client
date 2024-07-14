@@ -6,6 +6,7 @@ import { PADDLE_TOKEN } from '~constants';
 
 export function Payment() {
   const { state } = useLocation();
+  console.log(state);
 
   // Create a local state to store Paddle instance
   const [paddle, setPaddle] = useState<Paddle>();
@@ -15,9 +16,16 @@ export function Payment() {
     if (paddle) {
       paddle.Checkout.open({
         settings: {
-          displayMode: 'inline',
+          successUrl: 'http://localhost:5173/payment?success=true',
+          displayMode: 'overlay',
           locale: 'en',
-          allowedPaymentMethods: ['card', 'paypal', 'google_pay', 'apple_pay'],
+          allowedPaymentMethods: [
+            'card',
+            'paypal',
+            'google_pay',
+            'apple_pay',
+            'ideal',
+          ],
           frameTarget: 'checkout-container',
           frameInitialHeight: 450,
           frameStyle:
@@ -26,6 +34,7 @@ export function Payment() {
         customData: {
           userId: state.user?.id,
         },
+
         items: [{ priceId: state.priceId, quantity: 1 }],
         customer: {
           email: state.user.email,
