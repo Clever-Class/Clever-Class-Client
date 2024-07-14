@@ -17,11 +17,11 @@ export const signupUserAction =
       dispatch({ type: SIGNUP_REQUEST });
 
       const { data } = await api.ccServer.post('/auth/signup', userEntryData);
-      console.log(data, 'data from signup action...');
       const message = data.message;
-      const paymentUrl = data.payment_url;
+      const user = data.user;
+      const countryCode = data.countryCode;
 
-      return { message, paymentUrl, success: true };
+      return { message, countryCode, user, success: true };
     } catch (error: any) {
       const { response } = error;
       dispatch({ type: SIGNUP_FAILURE, payload: response.data.message });
