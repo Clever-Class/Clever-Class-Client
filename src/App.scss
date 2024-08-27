@@ -1,1 +1,24 @@
+@font-face {
+  font-family: 'PP Telegraph';
+  src: url('/src/assets/fonts/PPTelegraf-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
 
+@font-face {
+  font-family: 'PP Telegraph';
+  src: url('/src/assets/fonts/PPTelegraf-UltraBold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PP Telegraph';
+  src: url('/src/assets/fonts/PPTelegraf-UltraLight.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+* {
+  font-family: 'PP Telegraph', sans-serif;
+}

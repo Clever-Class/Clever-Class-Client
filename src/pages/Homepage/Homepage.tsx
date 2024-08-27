@@ -1,10 +1,11 @@
 import React from 'react';
-import { Packages } from '~pages/Packages';
+
+import './Homepage.scss';
 
 export const Homepage = () => {
   return (
-    <div>
-      <Packages />
+    <div className="homepage_wrapper">
+      <div></div>
     </div>
   );
 };
