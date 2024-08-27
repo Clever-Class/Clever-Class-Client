@@ -30,7 +30,6 @@ export interface SignupUserData {
   email: string;
   password: string;
   confirmPassword: string;
-  priceId: string;
 }
 
 export interface LoginUserData {

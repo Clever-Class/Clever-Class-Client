@@ -2,7 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
 import { Button } from '~/components/ui/button';
 import {
   Form,
@@ -23,8 +24,9 @@ import { FormSchemaTypes } from './signup.types';
 import './signup.scss';
 
 export const Signup = () => {
-  const dispatch: AppDispatch = useDispatch();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const dispatch: AppDispatch = useDispatch();
 
   const form = useForm<FormSchemaTypes>({
     resolver: zodResolver(formSchema),
@@ -44,10 +46,9 @@ export const Signup = () => {
     clearErrors('confirmPassword');
 
     try {
-      const { message, paymentUrl, success } = await dispatch(
+      const { message, countryCode, user, success } = await dispatch(
         signupUserAction({
           ...values,
-          priceId: '436694',
         }),
       );
 
@@ -57,10 +58,18 @@ export const Signup = () => {
         else toast.error(message);
       }
 
-      // redirecting user to login page
-      setTimeout(() => {
-        window.location.href = paymentUrl;
-      }, 1000);
+      // redirecting to payment page
+      const priceId = searchParams.get('priceId');
+
+      if (success) {
+        navigate('/payment', {
+          state: {
+            countryCode: countryCode,
+            priceId: priceId,
+            user,
+          },
+        });
+      }
     } catch (errorMessage: any) {
       toast.error(errorMessage);
     }

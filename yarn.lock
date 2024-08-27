@@ -720,6 +720,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@paddle/paddle-js@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@paddle/paddle-js/-/paddle-js-1.2.0.tgz#7738072ac7963b8ad8c745f20c5075c0ad697747"
+  integrity sha512-NPjFH5uK+AsMIxcyT2ERhJXhAcvotox45FUbxeuoIONMp6cM7/xse5X2qBz9ZoCaKGi5RdS8cdmd1bLob1I+wA==
+
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
