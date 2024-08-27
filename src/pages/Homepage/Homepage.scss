@@ -33,40 +33,53 @@
   align-items: center;
   border-radius: $border-radius-regular;
   max-width: $max-width;
+  min-height: calc(100vh - $nav-height);
 
   .hero-content {
     max-width: 50%;
 
     .new-badge {
-      background-color: #f0f4ff;
-      color: #1a73e8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: $spacing-small;
       padding: 5px 10px;
       font-size: 14px;
       font-weight: 600;
-      margin-bottom: 10px;
+      margin-bottom: 30px;
       border-radius: 80px;
       border: 1.6px rgba(0, 0, 0, 0.15);
       background: #fff;
       width: fit-content;
-
+      border: 1.6px solid rgba(0, 0, 0, 0.15);
+      background: #fff;
+      line-height: 1;
       span {
-        font-size: 12px;
+        font-size: 10px;
         font-weight: 400;
         margin-left: 5px;
+        background: $primary-color-light;
+        padding: 5px 8px;
+        border-radius: 80px;
+        line-height: 1;
+
+        color: $background-color-light;
       }
     }
 
     .highlight {
       color: $primary-color-light;
+      font-weight: 600;
     }
 
     h1 {
       font-size: 3.5rem;
       margin-bottom: 20px;
-      font-weight: 400;
+      font-weight: 600;
+      line-height: 1.4;
     }
 
-    p {
+    .description {
       font-size: 18px;
       margin-bottom: 30px;
       color: #4a4a4a;
@@ -87,6 +100,7 @@
       display: flex;
       align-items: center;
       margin-top: 20px;
+      gap: $spacing-small;
 
       span {
         font-size: 14px;
@@ -96,18 +110,21 @@
 
       .rating {
         display: flex;
-        align-items: center;
+        gap: 2px;
+        flex-direction: column;
         img {
-          width: 16px;
-          margin-right: 5px;
+          height: 20px;
+          width: fit-content;
+          object-fit: contain;
         }
       }
 
       .review-avatars {
         display: flex;
+
         img {
-          width: 32px;
-          height: 32px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
           margin-left: -10px;
           border: 2px solid white;

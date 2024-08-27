@@ -4,10 +4,11 @@
   background-color: $background-color-light;
   box-shadow: 0 1px 3px $box-shadow-color-light;
   margin: 0 auto;
-  padding: $spacing-medium $spacing-large;
+  padding: unset $spacing-large;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: $nav-height;
 }
 
 .navbar {
