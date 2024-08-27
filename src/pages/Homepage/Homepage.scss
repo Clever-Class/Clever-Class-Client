@@ -1,0 +1,19 @@
+@import '../../styles/variables';
+
+.mobile-navbar-wrapper {
+  display: none;
+}
+
+.desktop-navbar-wrapper {
+  display: block;
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .mobile-navbar-wrapper {
+    display: block;
+  }
+
+  .desktop-navbar-wrapper {
+    display: none;
+  }
+}
