@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   FeatureHighlightSection,
+  Footer,
   MobileNavbar,
   Navbar,
   SupportedAppSection,
@@ -10,6 +11,7 @@ import {
 import StarImage from '~assets/images/star.png';
 import './Homepage.scss';
 import { PricingPlans } from '~components/LandingPageComponent/PricingPlans/PricingPlans';
+import FAQ from '~components/LandingPageComponent/FaqSection/FaqSection';
 
 export const Homepage = () => {
   return (
@@ -83,6 +85,8 @@ export const Homepage = () => {
       <FeatureHighlightSection primary />
       <TestimonialsSection />
       <PricingPlans />
+      <FAQ />
+      <Footer />
     </div>
   );
 };
