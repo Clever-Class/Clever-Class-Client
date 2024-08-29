@@ -40,6 +40,12 @@
 }
 
 .supported-app-video-thumbnail {
+  cursor: pointer;
   width: 800px;
   object-fit: contain;
+  transition: scale 0.4s ease-in-out;
+
+  &:hover {
+    scale: 1.1;
+  }
 }

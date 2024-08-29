@@ -2,6 +2,7 @@ import React from 'react';
 import {
   FeatureHighlightSection,
   Footer,
+  LowerCTA,
   MobileNavbar,
   Navbar,
   SupportedAppSection,
@@ -76,8 +77,8 @@ export const Homepage = () => {
       </div>
 
       <SupportedAppSection />
-      <FeatureHighlightSection />
 
+      <FeatureHighlightSection />
       <FeatureHighlightSection primary />
       <FeatureHighlightSection />
       <FeatureHighlightSection primary />
@@ -86,6 +87,7 @@ export const Homepage = () => {
       <TestimonialsSection />
       <PricingPlans />
       <FAQ />
+      <LowerCTA />
       <Footer />
     </div>
   );
