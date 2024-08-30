@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CleverClassLogo from '~assets/images/logo.png';
+
+import { SignupPopup } from '~components/SignupPopup/SignupPopup';
 
 import './Navbar.scss';
 
 export const Navbar = () => {
+  const [showPopup, setShowPopup] = useState(false);
+
   return (
     <header className="header">
       <nav className="navbar desktop-nav">
@@ -32,11 +36,18 @@ export const Navbar = () => {
           <a href="#login" className="navbar__login">
             Log in
           </a>
-          <a href="#start-trial" className="navbar__start-trial">
+          <a
+            href="#start-trial"
+            className="navbar__start-trial"
+            onClick={() => setShowPopup(true)}
+          >
             Start free trial
           </a>
         </div>
       </nav>
+      <div>
+        {showPopup && <SignupPopup onClose={() => setShowPopup(false)} />}
+      </div>
     </header>
   );
 };
