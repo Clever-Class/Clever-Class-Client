@@ -22,10 +22,8 @@ import { AppRoutes } from '~constants';
 import './login.scss';
 
 export const Login = () => {
-  // Create a form using the useForm hook
   const dispatch: AppDispatch = useDispatch();
 
-  // The useForm hook is used to create a form with the following options:
   const form = useForm<FormSchemaTypes>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -34,16 +32,13 @@ export const Login = () => {
     },
   });
 
-  // Submit the form
   const onSubmit = async (values: FormSchemaTypes) => {
     try {
       const successfulLoginMessage: string = await dispatch(
         loginUserAction(values),
       );
-      // Display a success toast message
       toast.success(successfulLoginMessage);
     } catch (errorMessage: any) {
-      // show error message
       toast.error(errorMessage);
     }
   };

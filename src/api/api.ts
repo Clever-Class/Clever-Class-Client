@@ -6,12 +6,12 @@ import { LOCAL_SERVER_URL, PRODUCTION_SERVER_URL, NODE_ENV } from '~constants';
 type Environment = 'development' | 'production';
 
 class Api {
-  ccServer: AxiosInstance;
+  cc: AxiosInstance;
 
   constructor() {
-    this.ccServer = axios.create({
+    this.cc = axios.create({
       baseURL:
-        (NODE_ENV as Environment) === 'development'
+        (NODE_ENV as Environment) !== 'development'
           ? LOCAL_SERVER_URL
           : PRODUCTION_SERVER_URL,
     });
