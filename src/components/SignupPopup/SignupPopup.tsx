@@ -1,60 +1,134 @@
-// SignupPopup.jsx
-import React from 'react';
-import './SignupPopup.scss';
+import React, { useState } from 'react';
+
+import { LiaTimesSolid } from 'react-icons/lia';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+import { PiEyeThin, PiEyeSlashThin } from 'react-icons/pi';
+
+import { SocialButton } from '~components/Buttons';
+import { Button } from '~/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '~/components/ui/form';
+import { Input } from '~/components/ui/input';
+
+import { SIGNUP_FORM_FIELDS } from './SignupPopup.data';
+import { FormFieldTypes } from './SignupPopup.types';
+
+import styles from './SignupPopup.module.scss';
+
+const FormSchema = z.object({
+  name: z.string().min(2, {
+    message: 'Name is required',
+  }),
+  email: z.string().email({
+    message: 'Invalid email address',
+  }),
+
+  password: z.string().min(8, {
+    message: 'Password must be at least 8 characters long',
+  }),
+});
 
 export const SignupPopup = ({ onClose }: any) => {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+    },
+  });
+
+  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+    console.log(data, 'data');
+  };
+
   return (
-    <div className="signup-popup">
-      <div className="signup-content">
-        <button className="close-button" onClick={onClose}>
-          ×
-        </button>
-        <h2>Sign up to Clever Class</h2>
-
-        <button className="signup-button apple">
-          <img
-            src="https://pngimg.com/d/apple_logo_PNG19680.png"
-            alt="Google"
+    <div className={styles.signupPopup}>
+      <div className={styles.signupContent}>
+        <LiaTimesSolid className={styles.closeButton} onClick={onClose} />
+        <h2 className={styles.signupTitle}>Sign up to Clever Class</h2>
+        <div className={styles.socialLoginButtons}>
+          <SocialButton
+            logo="https://cdn4.iconfinder.com/data/icons/logos-brands-7/512/google_logo-google_icongoogle-512.png"
+            onClick={() => console.log('object')}
+            provider="Google"
           />
-          Sign up with Google
-        </button>
-        <button className="signup-button google">
-          <img
-            src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
-            alt="Google"
-          />
-          Sign up with Google
-        </button>
+        </div>
 
-        <div className="divider">OR</div>
+        <div className={styles.divider}>OR</div>
 
-        <form>
-          <input type="text" placeholder="Name*" required />
-          <input type="email" placeholder="Email*" required />
-          <div className="phone-input">
-            <select>
-              <option>+1</option>
-              {/* Add more country codes as needed */}
-            </select>
-            <input type="tel" placeholder="Phone" />
-          </div>
-          <div className="password-input">
-            <input type="password" placeholder="Password*" required />
-            <span className="password-toggle">👁</span>
-          </div>
-          <p className="password-hint">
-            Use at least 5 characters for your password
-          </p>
-          <button type="submit" className="submit-button">
-            Sign Up
-          </button>
-        </form>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="w-2/3 space-y-6"
+          >
+            {SIGNUP_FORM_FIELDS.map(
+              (formField: FormFieldTypes, index: number) => {
+                return (
+                  <FormField
+                    key={index}
+                    control={form.control}
+                    name={formField.name as any}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{formField.label}</FormLabel>
+                        <FormControl>
+                          <div className={styles.passwordInputWrapper}>
+                            <Input
+                              type={
+                                formField.name === 'password'
+                                  ? showPassword
+                                    ? 'text'
+                                    : 'password'
+                                  : 'text'
+                              }
+                              placeholder={formField.placeholder}
+                              {...field}
+                            />
+                            {formField.name === 'password' && (
+                              <button
+                                type="button"
+                                className={styles.passwordToggle}
+                                onClick={() => setShowPassword(!showPassword)}
+                              >
+                                {showPassword ? (
+                                  <PiEyeSlashThin className={styles.eyeIcon} />
+                                ) : (
+                                  <PiEyeThin className={styles.eyeIcon} />
+                                )}
+                              </button>
+                            )}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                );
+              },
+            )}
 
-        <p className="login-link">
+            <Button size={'lg'} type="submit">
+              Sign Up
+            </Button>
+          </form>
+        </Form>
+
+        <p className={styles.loginLink}>
           Already have an account? <a href="#">Log In</a>
         </p>
 
-        <p className="terms">
+        <p className={styles.terms}>
           By signing up, you agree to our <a href="#">Terms of Service</a> and{' '}
           <a href="#">Privacy Policy</a>. This site is protected by reCAPTCHA
           and the Google <a href="#">Privacy Policy</a> and{' '}

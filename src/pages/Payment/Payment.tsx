@@ -32,14 +32,14 @@ export function Payment() {
             'width: 100%; min-width: 312px; background-color: transparent; border: none;',
         },
         customData: {
-          userId: state.user?.id,
+          userId: '15454545',
         },
 
-        items: [{ priceId: state.priceId, quantity: 1 }],
+        items: [{ priceId: 'pri_01j2m6kcy7zrwey4j07dzgc5ea', quantity: 1 }],
         customer: {
-          email: state.user.email,
+          email: 'davidjuhan23@gmail.com',
           address: {
-            countryCode: state.countryCode,
+            countryCode: 'US',
           },
         },
       });

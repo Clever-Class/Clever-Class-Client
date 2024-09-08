@@ -77,7 +77,6 @@ export const Homepage = () => {
       </div>
 
       <SupportedAppSection />
-
       <FeatureHighlightSection />
       <FeatureHighlightSection primary />
       <FeatureHighlightSection />

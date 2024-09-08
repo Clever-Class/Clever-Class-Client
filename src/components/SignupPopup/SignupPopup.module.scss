@@ -1,0 +1,147 @@
+@import '../../styles/variables';
+
+.signupPopup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.passwordInputWrapper {
+  position: relative;
+
+  .eyeIcon {
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    transform: translateY(80%);
+  }
+}
+
+.socialLoginButtons {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-small;
+}
+
+.signupContent {
+  background-color: white;
+  padding: 28px;
+  padding-top: 38px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+
+  h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: $spacing-medium;
+    font-weight: $font-weight-medium;
+    color: $primary-color-light;
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.signupTitle {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.signupButton {
+  width: 100%;
+  height: 50px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  img {
+    margin-right: 10px;
+    height: 30px;
+  }
+
+  &.apple {
+    background-color: black;
+    color: white;
+
+    img {
+      height: 25px;
+    }
+  }
+
+  &.google {
+    background-color: white;
+    color: black;
+  }
+}
+
+.divider {
+  text-align: center;
+  margin: 20px 0;
+  color: #888;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-medium;
+
+  .passwordInput {
+    position: relative;
+
+    .passwordToggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+  }
+
+  .passwordHint {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 10px;
+  }
+
+  .submitButton {
+    width: 100%;
+    padding: 10px;
+    background-color: $primary-color-light;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+}
+
+.loginLink {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.terms {
+  font-size: 12px;
+  color: #888;
+  margin-top: 20px;
+}
