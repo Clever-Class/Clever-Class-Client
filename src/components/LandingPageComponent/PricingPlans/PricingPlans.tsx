@@ -1,14 +1,20 @@
 import React from 'react';
+import { pricingPlansData } from '~/data';
+
 import './PricingPlans.scss';
 
-const subscriptionDuration = ['Monthly', 'Annually'];
+const subscriptionDuration = ['monthly', 'annually'];
+
+type PriceDuration = 'monthly' | 'annually';
 
 export const PricingPlans = () => {
-  const [selectedDuration, setSelectedDuration] = React.useState('Monthly');
+  const [selectedDuration, setSelectedDuration] =
+    React.useState<PriceDuration>('monthly');
 
-  const handleDurationClick = (duration: string) => {
+  const handleDurationClick = (duration: PriceDuration) => {
     setSelectedDuration(duration);
   };
+
   return (
     <div className="pricing-plans-wrapper">
       <div className="pricing-plans">
@@ -21,73 +27,35 @@ export const PricingPlans = () => {
                 className={`duration-button ${
                   selectedDuration === duration ? 'active' : ''
                 }`}
-                onClick={() => handleDurationClick(duration)}
+                onClick={() => handleDurationClick(duration as PriceDuration)}
               >
-                {duration}
+                {duration.toUpperCase()}
               </button>
             ))}
-            {/* <span className="save-tag">Save 20%</span> */}
-
-            {/* <span className="save-tag">Save 20%</span> */}
           </div>
           <div className="plans-container">
-            <div className="plan free">
-              <div className="plan-body">
-                <h2>Free</h2>
-                <span className="plan-type">INDIVIDUAL PLAN</span>
-                <h3 className="price">$0</h3>
-                <p className="credits">50 CREDITS / MONTH | 5 OR 50</p>
-                <ul>
-                  <li>2 Actives Sequence</li>
-                  <li>Basic multichannel outreach (Email, call)</li>
-                  <li>Basic search filter</li>
-                  <li>Enrichment hub (.csv only)</li>
-                </ul>
+            {pricingPlansData.map((plan) => (
+              <div key={plan.id} className={`plan ${plan.id}`}>
+                <div className="plan-body">
+                  {plan.popular && (
+                    <span className="popular-tag">Most Popular</span>
+                  )}
+                  <h2>{plan.name}</h2>
+                  <span className="plan-type">{plan.planType}</span>
+                  <h3 className="price">
+                    ${plan.price[selectedDuration]}
+                    <span>/ {selectedDuration.toUpperCase()}</span>
+                  </h3>
+                  <p className="credits">{plan.credits}</p>
+                  <ul>
+                    {plan.features.map((feature, index) => (
+                      <li key={index}>{feature}</li>
+                    ))}
+                  </ul>
+                </div>
+                <button className="sign-up">{plan.buttonLabel}</button>
               </div>
-              <button className="sign-up">Sign up</button>
-            </div>
-            <div className="plan starter">
-              <div className="plan-body">
-                <span className="popular-tag">Most Popular</span>
-                <h2>Starter</h2>
-                <span className="plan-type">INDIVIDUAL PLAN</span>
-                <h3 className="price">
-                  $59<span>/user/month</span>
-                </h3>
-                <p className="credits">750 CREDITS / MONTH | 75 OR 750</p>
-                <ul>
-                  <li>Everything in Free</li>
-                  <li>Unlimited active sequence</li>
-                  <li>
-                    Advanced multichannel outreach (LinkedIn, Email, call)
-                  </li>
-                  <li>Advanced search filter</li>
-                  <li>CRM synchronization</li>
-                  <li>Enrichment hub (LinkedIn, Search...)</li>
-                </ul>
-              </div>
-              <button className="sign-up">Sign up</button>
-            </div>
-            <div className="plan custom">
-              <div className="plan-body">
-                <h2>Custom</h2>
-                <span className="plan-type">TEAM PLAN</span>
-                <h3 className="price">
-                  Start at $4.5k<span>/year</span>
-                </h3>
-                <p className="credits">
-                  24K CREDITS / YEAR / USER | 24K AND FREE
-                </p>
-                <ul>
-                  <li>Everything in Starter</li>
-                  <li>Team workspace</li>
-                  <li>Manager dashboard</li>
-                  <li>Dedicated account manager</li>
-                  <li>3 License Onwards</li>
-                </ul>
-              </div>
-              <button className="sign-up">Talk to Sales</button>
-            </div>
+            ))}
           </div>
         </div>
       </div>
