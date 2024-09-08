@@ -1,24 +1,30 @@
 @font-face {
-  font-family: 'PP Telegraph';
-  src: url('/src/assets/fonts/PPTelegraf-Regular.otf') format('opentype');
+  font-family: 'HK Grotesk';
+  src: url('/src/assets/fonts/HKGrotesk-Light.otf') format('opentype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'HK Grotesk';
+  src: url('/src/assets/fonts/HKGrotesk-Regular.otf') format('opentype');
   font-weight: 400;
-  font-style: normal;
 }
 
 @font-face {
-  font-family: 'PP Telegraph';
-  src: url('/src/assets/fonts/PPTelegraf-UltraBold.otf') format('opentype');
-  font-weight: 800;
-  font-style: normal;
+  font-family: 'HK Grotesk';
+  src: url('/src/assets/fonts/HKGrotesk-SemiBold.otf') format('opentype');
+  font-weight: 600;
 }
 
 @font-face {
-  font-family: 'PP Telegraph';
-  src: url('/src/assets/fonts/PPTelegraf-UltraLight.otf') format('opentype');
-  font-weight: 200;
-  font-style: normal;
+  font-family: 'HK Grotesk';
+  src: url('/src/assets/fonts/HKGrotesk-Bold.otf') format('opentype');
+  font-weight: 700;
 }
 
 * {
-  font-family: 'PP Telegraph', sans-serif;
+  font-family: 'HK Grotesk', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }

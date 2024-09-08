@@ -1,0 +1,147 @@
+// LeftPanel.scss
+
+.left-panel {
+  background-color: white;
+  height: 100vh;
+  width: 250px;
+  transition: width 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  &.collapsed {
+    width: 60px;
+
+    .brand-name,
+    .section-title,
+    .item-text,
+    .demo-mode span,
+    .upgrade-box p {
+      display: none;
+    }
+
+    .menu-item,
+    .panel-header {
+      justify-content: center;
+    }
+  }
+
+  .panel-content {
+    overflow-y: auto;
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .logo {
+        width: 2rem;
+        height: 2rem;
+        background-color: #10b981;
+        border-radius: 0.5rem;
+      }
+
+      .brand-name {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #1f2937;
+      }
+    }
+
+    .collapse-button {
+      color: #6b7280;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+  }
+
+  .menu-section {
+    margin-top: 1rem;
+
+    .section-title {
+      padding: 0 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #9ca3af;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: #6b7280;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #f3f4f6;
+    }
+
+    &.active {
+      background-color: #10b981;
+      color: white;
+    }
+
+    .item-text {
+      font-size: 0.875rem;
+    }
+  }
+
+  .panel-footer {
+    margin-top: auto;
+
+    .demo-mode {
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #6b7280;
+
+      span {
+        font-size: 0.875rem;
+      }
+    }
+
+    .upgrade-box {
+      margin: 1rem;
+      padding: 1rem;
+      background-color: #10b981;
+      border-radius: 0.5rem;
+      color: white;
+
+      .avatar {
+        width: 2rem;
+        height: 2rem;
+        background-color: #f59e0b;
+        border-radius: 9999px;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
+      }
+
+      button {
+        background-color: white;
+        color: #10b981;
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.25rem;
+        font-size: 0.75rem;
+        border: none;
+        cursor: pointer;
+      }
+    }
+  }
+}

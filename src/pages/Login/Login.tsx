@@ -1,90 +1,58 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
-import toast from 'react-hot-toast';
-import { Button } from '~/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from '~/components/ui/form';
-import { Input } from '~/components/ui/input';
+// LoginPage.jsx
+import React from 'react';
 
-import { loginFormSchema } from './loginSchema';
-import { FormSchemaTypes } from './login.types';
-import { formFields } from './loginFields';
-import { AppDispatch } from '~store';
-import { loginUserAction } from '~store/actions';
-import { AppRoutes } from '~constants';
+import GoogleIcon from '../../../public/asset/google-icon.png';
+import MicrosoftIcon from '../../../public/asset/microsoft-icon.png';
 
-import './login.scss';
+import './LoginPage.scss';
 
-export const Login = () => {
-  // Create a form using the useForm hook
-  const dispatch: AppDispatch = useDispatch();
-
-  // The useForm hook is used to create a form with the following options:
-  const form = useForm<FormSchemaTypes>({
-    resolver: zodResolver(loginFormSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
-
-  // Submit the form
-  const onSubmit = async (values: FormSchemaTypes) => {
-    try {
-      const successfulLoginMessage: string = await dispatch(
-        loginUserAction(values),
-      );
-      // Display a success toast message
-      toast.success(successfulLoginMessage);
-    } catch (errorMessage: any) {
-      // show error message
-      toast.error(errorMessage);
-    }
-  };
-
+export const LoginPage = () => {
   return (
-    <section className="login_page-section">
-      <div className="login_form-wrapper">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 login-form"
-          >
-            {formFields.map((field) => (
-              <FormField
-                key={field.name}
-                control={form.control}
-                name={field.name as keyof FormSchemaTypes}
-                render={({ field: formField }) => (
-                  <FormItem className="form-item">
-                    <p className="form-label">{field.label}</p>
-                    <FormControl>
-                      <Input
-                        type={field.type}
-                        placeholder={field.placeholder}
-                        {...formField}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ))}
-            <a className="forgot_password-link" href={AppRoutes.ForgotPassword}>
-              Forgot Password?
-            </a>
-            <Button type="submit" className="submit-button">
-              Submit
-            </Button>
+    <div>
+      <div className="login-page">
+        <div className="login-form">
+          <div className="logo">CLEVER CLASS</div>
+          <h2>Welcome back</h2>
+          <p>Log in to your account to continue</p>
+
+          <div className="o-auth-login-btns">
+            <button className="social-login google">
+              <img src={GoogleIcon} alt="Google" />
+              Sign in with Google
+            </button>
+            <button className="social-login microsoft">
+              <img src={MicrosoftIcon} alt="Microsoft" />
+              Sign in with Microsoft
+            </button>
+          </div>
+
+          <div className="divider">OR</div>
+
+          <form>
+            <input type="email" placeholder="Email" required />
+            <input type="password" placeholder="Password" required />
+            <button type="submit" className="login-button">
+              Login
+            </button>
           </form>
-        </Form>
+
+          <p className="signup-link">
+            Don't have an account? <a href="#">Sign up</a>
+          </p>
+          <p className="forgot-password">
+            <a href="#">Forgot password?</a>
+          </p>
+        </div>
+
+        <div className="promo-section">
+          <h2>450+ Million validated leads data-base</h2>
+          <img
+            src="https://getheroes-public.s3.eu-west-3.amazonaws.com/asset-auth/auth_img_4.webp"
+            alt="Promo"
+            className="promo-image"
+          />
+        </div>
       </div>
-    </section>
+    </div>
   );
 };
