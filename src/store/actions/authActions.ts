@@ -7,6 +7,7 @@ import {
   LoginUserData,
   SIGNUP_FAILURE,
   SIGNUP_REQUEST,
+  SIGNUP_SUCCESS,
   SignupUserData,
 } from '~constants';
 import { AppDispatch } from '~store';
@@ -19,13 +20,23 @@ export const signupUserAction =
       const { data } = await api.ccServer.post('/auth/signup', userEntryData);
       const message = data.message;
       const user = data.user;
+      const token = data.token;
       const countryCode = data.countryCode;
 
-      return { message, countryCode, user, success: true };
+      dispatch({ type: SIGNUP_SUCCESS, payload: token });
+
+      return { message, token, countryCode, user, success: true };
     } catch (error: any) {
       const { response } = error;
-      dispatch({ type: SIGNUP_FAILURE, payload: response.data.message });
-      return { message: response.data.message, success: false };
+
+      dispatch({
+        type: SIGNUP_FAILURE,
+        payload: response?.data?.message || 'Could Not Create Account',
+      });
+      throw {
+        message: response?.data?.message || 'Could Not Create Account',
+        success: false,
+      };
     }
   };
 

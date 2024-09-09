@@ -4,6 +4,7 @@ import {
   FETCH_USER_SUCCESS,
   SIGNUP_FAILURE,
   SIGNUP_REQUEST,
+  SIGNUP_SUCCESS,
 } from '~constants';
 import { UserState } from '~store/types';
 
@@ -21,6 +22,7 @@ const userReducer = (state = initialState, action: any): UserState => {
       return { ...state, loading: true };
 
     case FETCH_USER_SUCCESS:
+    case SIGNUP_SUCCESS:
       return { ...state, loading: false, userToken: action.payload };
 
     case FETCH_USER_FAILURE:

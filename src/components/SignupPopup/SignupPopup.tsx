@@ -23,6 +23,11 @@ import { SIGNUP_FORM_FIELDS } from './SignupPopup.data';
 import { FormFieldTypes } from './SignupPopup.types';
 
 import styles from './SignupPopup.module.scss';
+import { AppDispatch } from '~store';
+import { useDispatch } from 'react-redux';
+import { signupUserAction } from '~store/actions';
+import toast from 'react-hot-toast';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -38,7 +43,11 @@ const FormSchema = z.object({
 });
 
 export const SignupPopup = ({ onClose }: any) => {
+  const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -48,8 +57,38 @@ export const SignupPopup = ({ onClose }: any) => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log(data, 'data');
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    try {
+      const { message, token, countryCode, user, success } = await dispatch(
+        signupUserAction({
+          ...data,
+        }),
+      );
+
+      console.log(user);
+
+      // displaying success toast message
+      if (message) {
+        if (success) toast.success(message);
+        else toast.error(message);
+      }
+
+      // redirecting to payment page
+      const priceId = searchParams.get('priceId');
+
+      if (success) {
+        navigate('/dashboard?payment_popup=true', {
+          state: {
+            countryCode: countryCode,
+            priceId: priceId,
+            user,
+            token,
+          },
+        });
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   return (
