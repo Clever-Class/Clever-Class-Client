@@ -6,3 +6,5 @@ export * from './Footer/Footer';
 export * from './SignupPopup/SignupPopup';
 export * from './Buttons';
 export * from './Inputs';
+export * from './Sidebar/Sidebar';
+export * from './Layouts';

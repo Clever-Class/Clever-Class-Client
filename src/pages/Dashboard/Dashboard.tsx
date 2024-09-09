@@ -1,11 +1,12 @@
-import React from 'react'
+import React from 'react';
+import { DashboardLayout } from '~components/Layouts';
 
 export const Dashboard = () => {
   return (
-    <div>
-        <h1>Dashboard page</h1>
-    </div>
-  )
-}
+    <DashboardLayout>
+      <h1>Dashboard page</h1>
+    </DashboardLayout>
+  );
+};
 
-export default Dashboard
+export default Dashboard;

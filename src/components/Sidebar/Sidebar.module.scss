@@ -1,0 +1,210 @@
+// Sidebar.module.scss
+@import 'sidebar.variables';
+
+.sidebar {
+  background-color: $bg-white;
+  height: 100vh;
+  width: $sidebar-width;
+  transition: all $transition-duration $transition-timing;
+  display: flex;
+  flex-direction: column;
+  box-shadow: $box-shadow;
+  position: relative;
+  z-index: $z-index-sidebar;
+  overflow: hidden;
+
+  &.collapsed {
+    width: $sidebar-collapsed-width;
+
+    .brandName,
+    .itemText,
+    .demoMode span,
+    .upgradeBox p,
+    .upgradeBox button {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .menuItem {
+      padding: $spacing-md 0;
+      justify-content: center;
+    }
+
+    .collapseButton {
+      transform: rotate(180deg);
+    }
+
+    .sidebarFooter {
+      align-items: center;
+    }
+  }
+}
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-lg;
+  transition: padding $transition-duration ease-in-out;
+
+  .logoContainer {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    .logo {
+      width: 2.5rem;
+      height: 2.5rem;
+      background-color: $primary-color;
+      border-radius: $border-radius-lg;
+      transition: all $transition-duration ease-in-out;
+    }
+
+    .brandName {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      color: $text-dark;
+      transition: opacity $transition-duration ease-in-out,
+        visibility $transition-duration ease-in-out;
+    }
+  }
+
+  .collapseButton {
+    color: $text-muted;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform $transition-duration ease-in-out;
+  }
+}
+
+.sidebarContent {
+  flex-grow: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  color: $text-muted;
+  cursor: pointer;
+  transition: all $transition-duration ease-in-out;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    background-color: $bg-light;
+    color: $text-dark;
+  }
+
+  &.active {
+    background-color: $primary-color;
+    color: $text-white;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background-color: darken($primary-color, 10%);
+    }
+  }
+
+  .iconContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+  }
+
+  .itemText {
+    font-size: $font-size-md;
+    font-weight: $font-weight-medium;
+    transition: opacity $transition-duration ease-in-out,
+      visibility $transition-duration ease-in-out;
+  }
+}
+
+.sidebarFooter {
+  margin-top: auto;
+  padding: $spacing-lg;
+  transition: all $transition-duration ease-in-out;
+
+  .demoMode {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: $text-muted;
+    margin-bottom: $spacing-md;
+
+    span {
+      font-size: $font-size-sm;
+      transition: opacity $transition-duration ease-in-out,
+        visibility $transition-duration ease-in-out;
+    }
+  }
+
+  .upgradeBox {
+    padding: $spacing-md;
+    background-color: $primary-color;
+    border-radius: $border-radius-lg;
+    color: $text-white;
+    text-align: center;
+
+    .avatar {
+      width: 3rem;
+      height: 3rem;
+      background-color: $secondary-color;
+      border-radius: 50%;
+      margin: 0 auto $spacing-sm;
+    }
+
+    p {
+      font-size: $font-size-sm;
+      margin-bottom: $spacing-sm;
+      transition: opacity $transition-duration ease-in-out,
+        visibility $transition-duration ease-in-out;
+    }
+
+    button {
+      background-color: $bg-white;
+      color: $primary-color;
+      padding: $spacing-xs $spacing-md;
+      border-radius: $border-radius-sm;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      border: none;
+      cursor: pointer;
+      transition: all $transition-duration ease-in-out;
+
+      &:hover {
+        background-color: darken($bg-white, 5%);
+      }
+    }
+  }
+}
+
+// Add this at the end of the file
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.sidebar {
+  animation: fadeIn 0.5s ease-out;
+}
