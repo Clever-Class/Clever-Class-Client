@@ -1,8 +1,10 @@
 import React from 'react';
+
 import classNames from 'classnames';
+import { IconType } from 'react-icons/lib';
+
 import { MenuItemType } from '../types';
 import styles from '../Sidebar.module.scss';
-import { IconType } from 'react-icons/lib';
 
 interface MenuItemProps extends MenuItemType {
   isActive: boolean;
@@ -25,7 +27,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
   return (
     <div className={itemClass} onClick={onClick}>
       <div className={styles.iconContainer}>
-        <Icon />
+        <Icon size={20} />
       </div>
       {!isCollapsed && <span className={styles.itemText}>{name}</span>}
     </div>

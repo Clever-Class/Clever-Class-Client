@@ -4,11 +4,11 @@
 .sidebar {
   background-color: $bg-white;
   height: 100vh;
-  width: $sidebar-width;
+  width: 250px;
   transition: all $transition-duration $transition-timing;
   display: flex;
   flex-direction: column;
-  box-shadow: $box-shadow;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
   position: relative;
   z-index: $z-index-sidebar;
   overflow: hidden;
@@ -46,7 +46,10 @@
   justify-content: space-between;
   padding: $spacing-lg;
   transition: padding $transition-duration ease-in-out;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 
+  // border-bottom: 1px solid red;
+  margin-bottom: $spacing-md;
   .logoContainer {
     display: flex;
     align-items: center;
@@ -79,8 +82,9 @@
 }
 
 .sidebarContent {
-  flex-grow: 1;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
   scrollbar-width: none;
   -ms-overflow-style: none;
 
@@ -93,12 +97,14 @@
   display: flex;
   align-items: center;
   gap: $spacing-md;
-  padding: $spacing-md $spacing-lg;
+  padding: calc($spacing-md - 2px) $spacing-lg;
   color: $text-muted;
   cursor: pointer;
   transition: all $transition-duration ease-in-out;
   position: relative;
   overflow: hidden;
+  margin: 0px 4px;
+  border-radius: 6px;
 
   &:hover {
     background-color: $bg-light;
@@ -108,16 +114,6 @@
   &.active {
     background-color: $primary-color;
     color: $text-white;
-
-    &::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 4px;
-      background-color: darken($primary-color, 10%);
-    }
   }
 
   .iconContainer {
