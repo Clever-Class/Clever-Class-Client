@@ -17,6 +17,7 @@ import FAQ from '~components/LandingPageComponent/FaqSection/FaqSection';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '~store';
 import { SELECT_PRICING_PLAN } from '~constants';
+import { pricingPlansData } from '~/data';
 
 export const Homepage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -26,13 +27,21 @@ export const Homepage = () => {
     dispatch({ type: SELECT_PRICING_PLAN, payload: planId });
     setSignupPopup(true);
   };
+
+  const handleFreeTrial = () => {
+    dispatch({
+      type: SELECT_PRICING_PLAN,
+      payload: pricingPlansData[0].planId,
+    });
+    setSignupPopup(true);
+  };
   return (
     <div>
       <div className="mobile-navbar-wrapper">
         <MobileNavbar />
       </div>
       <div className="desktop-navbar-wrapper">
-        <Navbar onSignupClick={() => setSignupPopup(true)} />
+        <Navbar onSignupClick={handleFreeTrial} />
       </div>
 
       {/* Signup Popup */}

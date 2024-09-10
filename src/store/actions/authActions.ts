@@ -23,7 +23,7 @@ export const signupUserAction =
       const token = data.token;
       const countryCode = data.countryCode;
 
-      dispatch({ type: SIGNUP_SUCCESS, payload: token });
+      dispatch({ type: SIGNUP_SUCCESS, payload: { token, user, message } });
 
       return { message, token, countryCode, user, success: true };
     } catch (error: any) {

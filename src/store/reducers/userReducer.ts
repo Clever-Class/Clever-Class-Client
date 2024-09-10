@@ -8,7 +8,7 @@ import {
 } from '~constants';
 import { UserState } from '~store/types';
 
-const initialState: UserState = {
+export const initialState: UserState = {
   userToken: null,
   message: null,
   loading: false,
@@ -23,7 +23,12 @@ export const userReducer = (state = initialState, action: any): UserState => {
 
     case FETCH_USER_SUCCESS:
     case SIGNUP_SUCCESS:
-      return { ...state, loading: false, userToken: action.payload };
+      return {
+        ...state,
+        loading: false,
+        userToken: action.payload.token,
+        user: action.payload.user,
+      };
 
     case FETCH_USER_FAILURE:
     case SIGNUP_FAILURE:

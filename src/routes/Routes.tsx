@@ -8,7 +8,6 @@ import { Homepage } from '~pages/Homepage';
 import { Signup } from '~pages/Signup';
 import { ForgotPassword } from '~pages/ForgotPassword';
 import { ResetPassword } from '~pages/ResetPassword/ResetPassword';
-import { Payment } from '~pages/Payment';
 import { LoginPage } from '~pages/Login';
 
 export const Routes = () => {
@@ -22,7 +21,6 @@ export const Routes = () => {
       <Route path={AppRoutes.Login} element={<LoginPage />} />
       <Route path={AppRoutes.ForgotPassword} element={<ForgotPassword />} />
       <Route path={AppRoutes.ResetPassword} element={<ResetPassword />} />
-      <Route path={AppRoutes.Payment} element={<Payment />} />
     </ReactRouterRoutes>
   );
 };

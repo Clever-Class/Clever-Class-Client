@@ -3,4 +3,9 @@ export interface UserState {
   loading: boolean;
   message: string | null;
   error: string | null;
+  user?: {
+    id: string;
+    email: string;
+    country: string;
+  };
 }

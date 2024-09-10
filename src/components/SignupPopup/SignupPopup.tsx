@@ -72,8 +72,6 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
         }),
       );
 
-      console.log(user);
-
       // displaying success toast message
       if (message) {
         if (success) toast.success(message);

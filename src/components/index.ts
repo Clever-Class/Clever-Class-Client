@@ -8,3 +8,4 @@ export * from './Buttons';
 export * from './Inputs';
 export * from './Sidebar/Sidebar';
 export * from './Layouts';
+export * from './Payment';
