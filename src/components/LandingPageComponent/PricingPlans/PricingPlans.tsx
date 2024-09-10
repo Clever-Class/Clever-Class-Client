@@ -7,7 +7,13 @@ const subscriptionDuration = ['monthly', 'annually'];
 
 type PriceDuration = 'monthly' | 'annually';
 
-export const PricingPlans = () => {
+interface PricingPlansProps {
+  onSignupClick: (planId: string) => void;
+}
+
+export const PricingPlans: React.FC<PricingPlansProps> = ({
+  onSignupClick,
+}) => {
   const [selectedDuration, setSelectedDuration] =
     React.useState<PriceDuration>('monthly');
 
@@ -53,7 +59,12 @@ export const PricingPlans = () => {
                     ))}
                   </ul>
                 </div>
-                <button className="sign-up">{plan.buttonLabel}</button>
+                <button
+                  className="sign-up"
+                  onClick={() => onSignupClick(plan.planId)}
+                >
+                  {plan.buttonLabel}
+                </button>
               </div>
             ))}
           </div>

@@ -14,9 +14,18 @@ import StarImage from '~assets/images/star.png';
 import './Homepage.scss';
 import { PricingPlans } from '~components/LandingPageComponent/PricingPlans/PricingPlans';
 import FAQ from '~components/LandingPageComponent/FaqSection/FaqSection';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '~store';
+import { SELECT_PRICING_PLAN } from '~constants';
 
 export const Homepage = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const [signupPopup, setSignupPopup] = useState<boolean>(false);
+
+  const handlePricingSignupClick = (planId: string) => {
+    dispatch({ type: SELECT_PRICING_PLAN, payload: planId });
+    setSignupPopup(true);
+  };
   return (
     <div>
       <div className="mobile-navbar-wrapper">
@@ -89,7 +98,7 @@ export const Homepage = () => {
       <FeatureHighlightSection />
       <FeatureHighlightSection primary />
       <TestimonialsSection />
-      <PricingPlans />
+      <PricingPlans onSignupClick={handlePricingSignupClick} />
       <FAQ />
       <LowerCTA />
       <Footer />

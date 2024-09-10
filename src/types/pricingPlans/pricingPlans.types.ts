@@ -6,6 +6,7 @@ export interface PricingPlan {
     monthly: number;
     annually: number;
   };
+  planId: string;
   credits: string;
   features: string[];
   buttonLabel: string;

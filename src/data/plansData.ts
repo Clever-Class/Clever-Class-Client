@@ -5,23 +5,24 @@ import { PricingPlan } from '~types';
 export const pricingPlansData: PricingPlan[] = [
   {
     id: 'free',
-    name: 'Free',
-    planType: 'INDIVIDUAL PLAN',
+    name: 'Freemium',
+    planType: 'FREEMIUM PLAN',
     price: { monthly: 0, annually: 0 },
-    credits: '50 CREDITS / MONTH | 5 OR 50',
+    credits: '5 CREDITS / DAY',
     features: [
-      '2 Actives Sequence',
-      'Basic multichannel outreach (Email, call)',
-      'Basic search filter',
-      'Enrichment hub (.csv only)',
+      '2 Active Sequences: Run two concurrent outreach campaigns',
+      'Basic multichannel outreach: Connect via Email and Phone calls',
+      'Basic search filter: Find prospects with essential search criteria',
+      'Enrichment hub (.csv only): Import and enrich data from CSV files',
     ],
-    buttonLabel: 'Sign up',
+    planId: 'pri_01j2m6kcy7zrwey4j07dzgc5ea',
+    buttonLabel: 'Sign Up',
   },
   {
     id: 'starter',
     name: 'Starter',
-    planType: 'INDIVIDUAL PLAN',
-    price: { monthly: 7.99, annually: 5.99 },
+    planType: 'STARTER PLAN',
+    price: { monthly: 12.99, annually: 10.99 },
     credits: '750 CREDITS / MONTH | 75 OR 750',
     features: [
       'Everything in Free',
@@ -31,16 +32,18 @@ export const pricingPlansData: PricingPlan[] = [
       'CRM synchronization',
       'Enrichment hub (LinkedIn, Search...)',
     ],
-    buttonLabel: 'Sign up',
+    planId: 'pri_01j2pvh294ernfyf1hjwhxbbcb',
+
+    buttonLabel: 'Sign Up',
     popular: true,
   },
   {
-    id: 'custom',
-    name: 'Custom',
-    planType: 'TEAM PLAN',
+    id: 'pro',
+    name: 'Pro Plan',
+    planType: 'PRO PLAN',
     price: {
-      monthly: 12.99,
-      annually: 10.99,
+      monthly: 19.99,
+      annually: 17.99,
     },
     credits: '24K CREDITS / YEAR / USER | 24K AND FREE',
     features: [
@@ -50,6 +53,7 @@ export const pricingPlansData: PricingPlan[] = [
       'Dedicated account manager',
       '3 License Onwards',
     ],
-    buttonLabel: 'Talk to Sales',
+    planId: 'pri_01j2pvmb54ew8nbv3szzt0q39s',
+    buttonLabel: 'Sign Up',
   },
 ];
