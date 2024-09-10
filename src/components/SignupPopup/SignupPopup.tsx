@@ -28,6 +28,7 @@ import { useDispatch } from 'react-redux';
 import { signupUserAction } from '~store/actions';
 import toast from 'react-hot-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { CountrySelector } from '~components/Selector';
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -36,7 +37,9 @@ const FormSchema = z.object({
   email: z.string().email({
     message: 'Invalid email address',
   }),
-
+  country: z.string().min(2, {
+    message: 'Country is required',
+  }),
   password: z.string().min(8, {
     message: 'Password must be at least 8 characters long',
   }),
@@ -54,6 +57,7 @@ export const SignupPopup = ({ onClose }: any) => {
       name: '',
       email: '',
       password: '',
+      country: '',
     },
   });
 
@@ -118,40 +122,57 @@ export const SignupPopup = ({ onClose }: any) => {
                     key={index}
                     control={form.control}
                     name={formField.name as any}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{formField.label}</FormLabel>
-                        <FormControl>
-                          <div className={styles.passwordInputWrapper}>
-                            <Input
-                              type={
-                                formField.name === 'password'
-                                  ? showPassword
-                                    ? 'text'
-                                    : 'password'
-                                  : 'text'
-                              }
-                              placeholder={formField.placeholder}
-                              {...field}
-                            />
-                            {formField.name === 'password' && (
-                              <button
-                                type="button"
-                                className={styles.passwordToggle}
-                                onClick={() => setShowPassword(!showPassword)}
-                              >
-                                {showPassword ? (
-                                  <PiEyeSlashThin className={styles.eyeIcon} />
-                                ) : (
-                                  <PiEyeThin className={styles.eyeIcon} />
-                                )}
-                              </button>
-                            )}
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    render={({ field }) => {
+                      if (formField.type === 'country')
+                        return (
+                          <FormItem>
+                            <FormLabel>{formField.label}</FormLabel>
+                            <FormControl>
+                              <CountrySelector
+                                name={field.name}
+                                setValue={form.setValue}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        );
+                      return (
+                        <FormItem>
+                          <FormLabel>{formField.label}</FormLabel>
+                          <FormControl>
+                            <div className={styles.passwordInputWrapper}>
+                              <Input
+                                type={
+                                  formField.name === 'password'
+                                    ? showPassword
+                                      ? 'text'
+                                      : 'password'
+                                    : 'text'
+                                }
+                                placeholder={formField.placeholder}
+                                {...field}
+                              />
+                              {formField.name === 'password' && (
+                                <button
+                                  type="button"
+                                  className={styles.passwordToggle}
+                                  onClick={() => setShowPassword(!showPassword)}
+                                >
+                                  {showPassword ? (
+                                    <PiEyeSlashThin
+                                      className={styles.eyeIcon}
+                                    />
+                                  ) : (
+                                    <PiEyeThin className={styles.eyeIcon} />
+                                  )}
+                                </button>
+                              )}
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
                   />
                 );
               },
@@ -169,9 +190,7 @@ export const SignupPopup = ({ onClose }: any) => {
 
         <p className={styles.terms}>
           By signing up, you agree to our <a href="#">Terms of Service</a> and{' '}
-          <a href="#">Privacy Policy</a>. This site is protected by reCAPTCHA
-          and the Google <a href="#">Privacy Policy</a> and{' '}
-          <a href="#">Terms of Service</a> also apply.
+          <a href="#">Privacy Policy</a>.
         </p>
       </div>
     </div>

@@ -17,14 +17,14 @@ export const SIGNUP_FORM_FIELDS: FormFieldTypes[] = [
     label: 'Email',
     required: true,
   },
-  // {
-  //   id: 'phone',
-  //   name: 'phone',
-  //   type: 'tel',
-  //   placeholder: 'Enter your phone number',
-  //   label: 'Phone',
-  //   required: true,
-  // },
+  {
+    id: 'country',
+    name: 'country',
+    type: 'country',
+    placeholder: 'Select your country',
+    label: 'Country',
+    required: true,
+  },
   {
     id: 'password',
     name: 'password',
