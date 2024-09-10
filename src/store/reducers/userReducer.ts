@@ -15,7 +15,7 @@ const initialState: UserState = {
   error: null,
 };
 
-const userReducer = (state = initialState, action: any): UserState => {
+export const userReducer = (state = initialState, action: any): UserState => {
   switch (action.type) {
     case FETCH_USER_REQUEST:
     case SIGNUP_REQUEST:
@@ -33,5 +33,3 @@ const userReducer = (state = initialState, action: any): UserState => {
       return state;
   }
 };
-
-export default userReducer;

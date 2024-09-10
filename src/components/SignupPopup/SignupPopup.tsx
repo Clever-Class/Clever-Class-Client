@@ -45,7 +45,10 @@ const FormSchema = z.object({
   }),
 });
 
-export const SignupPopup = ({ onClose }: any) => {
+interface SignupPopupProps {
+  onClose: () => void;
+}
+export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();

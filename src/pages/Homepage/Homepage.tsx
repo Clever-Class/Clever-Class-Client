@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FeatureHighlightSection,
   Footer,
   LowerCTA,
   MobileNavbar,
   Navbar,
+  SignupPopup,
   SupportedAppSection,
   TestimonialsSection,
 } from '~components/index';
@@ -15,14 +16,18 @@ import { PricingPlans } from '~components/LandingPageComponent/PricingPlans/Pric
 import FAQ from '~components/LandingPageComponent/FaqSection/FaqSection';
 
 export const Homepage = () => {
+  const [signupPopup, setSignupPopup] = useState<boolean>(false);
   return (
     <div>
       <div className="mobile-navbar-wrapper">
         <MobileNavbar />
       </div>
       <div className="desktop-navbar-wrapper">
-        <Navbar />
+        <Navbar onSignupClick={() => setSignupPopup(true)} />
       </div>
+
+      {/* Signup Popup */}
+      {signupPopup && <SignupPopup onClose={() => setSignupPopup(false)} />}
 
       <div className="hero-wrapper">
         <section className="hero">
