@@ -24,6 +24,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       <DashboardSidebar />
       {user && selectedPackage && (
         <Payment
+          userId={user.id}
           priceId={selectedPackage}
           countryCode={user?.country}
           email={user?.email}

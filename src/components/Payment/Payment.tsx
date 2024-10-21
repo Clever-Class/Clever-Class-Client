@@ -1,9 +1,10 @@
 import { initializePaddle, Paddle } from '@paddle/paddle-js';
 import React, { useCallback, useEffect, useState } from 'react';
-import { PADDLE_TOKEN, PADDLE_ENVIRONMENT } from '~/constants';
+import { PADDLE_TOKEN, PADDLE_ENVIRONMENT, AppRoutes } from '~/constants';
 
 interface PaymentProps {
   priceId: string;
+  userId: string;
   email: string;
   countryCode: string;
   onError?: (error: Error) => void;
@@ -11,6 +12,7 @@ interface PaymentProps {
 
 export const Payment: React.FC<PaymentProps> = ({
   priceId,
+  userId,
   email,
   countryCode,
   onError,
@@ -31,11 +33,14 @@ export const Payment: React.FC<PaymentProps> = ({
               countryCode: countryCode.toUpperCase(),
             },
           },
+          customData: {
+            userId,
+          },
           settings: {
             displayMode: 'overlay',
             theme: 'light',
             locale: 'en',
-            successUrl: `${window.location.origin}/payment/success`,
+            successUrl: `${window.location.origin}${AppRoutes.PaymentSuccess}`,
           },
         });
       } catch (err) {
@@ -47,7 +52,7 @@ export const Payment: React.FC<PaymentProps> = ({
         );
       }
     }
-  }, [paddle, priceId, email, countryCode, onError]);
+  }, [paddle, priceId, email, countryCode, onError, userId]);
 
   useEffect(() => {
     const loadPaddle = async () => {
