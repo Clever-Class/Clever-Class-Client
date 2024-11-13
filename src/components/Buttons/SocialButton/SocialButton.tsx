@@ -1,21 +1,18 @@
 import React from 'react';
-
 import { SocialButtonProps } from './SocialButton.types';
-
 import styles from './SocialButton.module.scss';
 
 export const SocialButton: React.FC<SocialButtonProps> = ({
   provider,
-  logo,
+  icon: Icon,
   onClick,
 }) => {
-  console.log(provider, 'provider');
   return (
     <button
       className={`${styles.button} ${styles[provider.toLowerCase()]}`}
       onClick={onClick}
     >
-      <img src={logo} alt={`${provider} logo`} className={styles.logo} />
+      <Icon className={styles.icon} />
       <p className={styles.buttonText}>Sign Up with {provider}</p>
     </button>
   );

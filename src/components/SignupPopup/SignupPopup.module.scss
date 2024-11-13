@@ -19,8 +19,8 @@
   .eyeIcon {
     position: absolute;
     right: 10px;
-    top: 0px;
-    transform: translateY(80%);
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 
@@ -132,16 +132,16 @@ form {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin-bottom: 15px;
   }
 }
 
 .loginLink {
   text-align: center;
-  margin-top: 20px;
 }
 
 .terms {
   font-size: 12px;
   color: #888;
-  margin-top: 20px;
+  margin-top: 15px !important;
 }

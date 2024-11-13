@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-
-import { LiaTimesSolid } from 'react-icons/lia';
+import { useDispatch } from 'react-redux';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import toast from 'react-hot-toast';
 
+import { LiaTimesSolid } from 'react-icons/lia';
 import { PiEyeThin, PiEyeSlashThin } from 'react-icons/pi';
+import { FcGoogle } from 'react-icons/fc';
 
 import { SocialButton } from '~components/Buttons';
 import { Button } from '~/components/ui/button';
@@ -18,17 +20,15 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
+import { CountrySelector } from '~components/Selector';
 
 import { SIGNUP_FORM_FIELDS } from './SignupPopup.data';
 import { FormFieldTypes } from './SignupPopup.types';
+import { AppDispatch } from '~store';
+import { signupUserAction } from '~store/actions';
 
 import styles from './SignupPopup.module.scss';
-import { AppDispatch } from '~store';
-import { useDispatch } from 'react-redux';
-import { signupUserAction } from '~store/actions';
-import toast from 'react-hot-toast';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CountrySelector } from '~components/Selector';
+import { useState } from 'react';
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -103,7 +103,7 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
         <h2 className={styles.signupTitle}>Sign up to Clever Class</h2>
         <div className={styles.socialLoginButtons}>
           <SocialButton
-            logo="https://cdn4.iconfinder.com/data/icons/logos-brands-7/512/google_logo-google_icongoogle-512.png"
+            icon={FcGoogle}
             onClick={() => console.log('object')}
             provider="Google"
           />
@@ -114,7 +114,7 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="w-2/3 space-y-6"
+            className="w-2/3 space-y-6 "
           >
             {SIGNUP_FORM_FIELDS.map(
               (formField: FormFieldTypes, index: number) => {
@@ -179,7 +179,7 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
               },
             )}
 
-            <Button size={'lg'} type="submit">
+            <Button size={'lg'} type="submit" style={{ marginBottom: '15px' }}>
               Sign Up
             </Button>
           </form>
@@ -189,7 +189,7 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
           Already have an account? <a href="#">Log In</a>
         </p>
 
-        <p className={styles.terms}>
+        <p className={styles.terms} style={{ marginTop: '15px !important' }}>
           By signing up, you agree to our <a href="#">Terms of Service</a> and{' '}
           <a href="#">Privacy Policy</a>.
         </p>
