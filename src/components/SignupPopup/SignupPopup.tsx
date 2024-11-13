@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 import { LiaTimesSolid } from 'react-icons/lia';
 import { PiEyeThin, PiEyeSlashThin } from 'react-icons/pi';
@@ -29,6 +30,7 @@ import { signupUserAction } from '~store/actions';
 
 import styles from './SignupPopup.module.scss';
 import { useState } from 'react';
+import { firebaseApp } from '~/firebase/firebase-config';
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -53,6 +55,10 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  // Firebase Auth
+  const auth = getAuth(firebaseApp);
+  const provider = new GoogleAuthProvider();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -96,6 +102,33 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
     }
   };
 
+  // Google Signup
+  const handleGoogleSignup = async () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential ? credential.accessToken : null;
+        // The signed-in user info.
+        const user = result.user;
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+
+        console.log('User:', user);
+      })
+      .catch((error) => {
+        console.log('Error:', error);
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  };
+
   return (
     <div className={styles.signupPopup}>
       <div className={styles.signupContent}>
@@ -104,7 +137,7 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
         <div className={styles.socialLoginButtons}>
           <SocialButton
             icon={FcGoogle}
-            onClick={() => console.log('object')}
+            onClick={handleGoogleSignup}
             provider="Google"
           />
         </div>
@@ -179,17 +212,22 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
               },
             )}
 
-            <Button size={'lg'} type="submit" style={{ marginBottom: '15px' }}>
+            <Button
+              size={'lg'}
+              type="submit"
+              className={styles.signup_button}
+              onClick={handleGoogleSignup}
+            >
               Sign Up
             </Button>
           </form>
         </Form>
 
         <p className={styles.loginLink}>
-          Already have an account? <a href="#">Log In</a>
+          Already have an account? <a href="/login">Log In</a>
         </p>
 
-        <p className={styles.terms} style={{ marginTop: '15px !important' }}>
+        <p className={styles.terms}>
           By signing up, you agree to our <a href="#">Terms of Service</a> and{' '}
           <a href="#">Privacy Policy</a>.
         </p>

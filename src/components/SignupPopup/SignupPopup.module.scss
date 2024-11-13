@@ -138,10 +138,18 @@ form {
 
 .loginLink {
   text-align: center;
+  a {
+    color: $primary-color-light;
+    text-decoration: none;
+  }
 }
 
 .terms {
   font-size: 12px;
   color: #888;
   margin-top: 15px !important;
+}
+
+.signup_button {
+  margin-bottom: 15px;
 }
