@@ -13,6 +13,7 @@ export const initialState: UserState = {
   message: null,
   loading: false,
   error: null,
+  user: null,
 };
 
 export const userReducer = (state = initialState, action: any): UserState => {

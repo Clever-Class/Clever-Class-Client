@@ -26,7 +26,7 @@ import { CountrySelector } from '~components/Selector';
 import { SIGNUP_FORM_FIELDS } from './SignupPopup.data';
 import { FormFieldTypes } from './SignupPopup.types';
 import { AppDispatch } from '~store';
-import { signupUserAction } from '~store/actions';
+import { signupUserAction, signupWithGoogleAction } from '~store/actions';
 
 import styles from './SignupPopup.module.scss';
 import { useState } from 'react';
@@ -105,16 +105,10 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
   // Google Signup
   const handleGoogleSignup = async () => {
     signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential ? credential.accessToken : null;
-        // The signed-in user info.
+      .then(async (result) => {
         const user = result.user;
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
 
-        console.log('User:', user);
+        dispatch(signupWithGoogleAction(user));
       })
       .catch((error) => {
         console.log('Error:', error);
