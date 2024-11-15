@@ -82,9 +82,12 @@ export const signupWithGoogleAction =
       // saving the user token to cookies
       Cookies.set('userToken', token);
 
+      // redirecting to the dashboard
+      window.location.href = '/dashboard';
+
       // dispatching the success action
       return dispatch({
-        type: LOGIN_SUCCESS,
+        type: SIGNUP_SUCCESS,
         payload: {
           message,
           token,
@@ -93,7 +96,7 @@ export const signupWithGoogleAction =
       });
     } catch (error: any) {
       const { response } = error;
-      dispatch({ type: LOGIN_FAILURE, payload: response.data.message });
+      dispatch({ type: SIGNUP_FAILURE, payload: response.data.message });
       throw response.data.message;
     }
   };
