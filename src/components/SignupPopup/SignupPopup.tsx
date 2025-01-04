@@ -107,7 +107,6 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
     signInWithPopup(auth, provider)
       .then(async (result) => {
         const user = result.user;
-
         dispatch(signupWithGoogleAction(user));
       })
       .catch((error) => {

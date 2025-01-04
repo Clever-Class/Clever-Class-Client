@@ -1,5 +1,9 @@
 import React from 'react';
 import CleverClassLogo from '~assets/images/logo.png';
+import { RxDashboard } from 'react-icons/rx';
+
+import { useSelector } from 'react-redux';
+import { RootStateType } from '~store/types';
 
 import './Navbar.scss';
 
@@ -8,6 +12,8 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
+  const { userToken } = useSelector((state: RootStateType) => state.user);
+
   return (
     <header className="header">
       <nav className="navbar desktop-nav">
@@ -33,16 +39,29 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
           </li>
         </ul>
         <div className="navbar__actions">
-          <a href="#login" className="navbar__login">
-            Log in
-          </a>
-          <a
-            href="#start-trial"
-            className="navbar__start-trial"
-            onClick={onSignupClick}
-          >
-            Start free trial
-          </a>
+          {userToken ? (
+            <div className="navbar__dashboard">
+              <a href="/dashboard">
+                <RxDashboard className="icon" href="/dashboard" />
+              </a>
+              <a href="/dashboard" className="dashboard_link">
+                Dashboard
+              </a>
+            </div>
+          ) : (
+            <div>
+              <a href="#login" className="navbar__login">
+                Log in
+              </a>
+              <a
+                href="#start-trial"
+                className="navbar__start-trial"
+                onClick={onSignupClick}
+              >
+                Start free trial
+              </a>
+            </div>
+          )}
         </div>
       </nav>
     </header>

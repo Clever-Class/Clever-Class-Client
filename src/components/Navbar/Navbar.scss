@@ -56,6 +56,38 @@
   display: flex;
   align-items: center;
   gap: $spacing-semi;
+
+  .navbar__dashboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-small;
+    text-decoration: none;
+    color: $text-color-light;
+    font-weight: $font-weight-medium;
+    line-height: 16px;
+    font-size: 16px;
+
+    .icon {
+      width: 22px;
+      height: 22px;
+      color: $primary-color-light;
+      cursor: pointer;
+    }
+
+    .dashboard_link {
+      text-decoration: none;
+      color: $text-color-light;
+      font-weight: $font-weight-medium;
+      line-height: 16px;
+      font-size: 16px;
+      margin-top: 2.5px;
+
+      &:hover {
+        color: $text-color-hover-light;
+      }
+    }
+  }
 }
 
 .navbar__login {
