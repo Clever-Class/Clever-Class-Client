@@ -2,19 +2,17 @@
 @import 'sidebar.variables';
 
 .sidebar {
-  background-color: $bg-white;
-  height: 100vh;
-  width: 250px;
-  transition: all $transition-duration $transition-timing;
   display: flex;
   flex-direction: column;
-  box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  background: linear-gradient(180deg, #1a1f37 0%, #111827 100%);
+  color: #fff;
+  height: 100vh;
+  transition: width 0.3s ease;
+  width: 240px;
   position: relative;
-  z-index: $z-index-sidebar;
-  overflow: hidden;
 
   &.collapsed {
-    width: $sidebar-collapsed-width;
+    width: 90px;
 
     .brandName,
     .itemText,
@@ -41,50 +39,53 @@
 }
 
 .sidebarHeader {
+  padding: 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $spacing-lg;
-  transition: padding $transition-duration ease-in-out;
-  box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
-  // border-bottom: 1px solid red;
-  margin-bottom: $spacing-md;
   .logoContainer {
     display: flex;
     align-items: center;
-    gap: $spacing-sm;
+    gap: 12px;
 
     .logo {
-      width: 2.5rem;
-      height: 2.5rem;
-      background-color: $primary-color;
-      border-radius: $border-radius-lg;
-      transition: all $transition-duration ease-in-out;
+      width: 32px;
+      height: 32px;
+      background: #3b82f6;
+      border-radius: 8px;
     }
 
     .brandName {
-      font-size: $font-size-lg;
-      font-weight: $font-weight-bold;
-      color: $text-dark;
-      transition: opacity $transition-duration ease-in-out,
-        visibility $transition-duration ease-in-out;
+      font-size: 18px;
+      font-weight: 600;
+      color: white;
     }
   }
 
   .collapseButton {
-    color: $text-muted;
-    background: none;
+    background: transparent;
     border: none;
+    color: #64748b;
     cursor: pointer;
-    transition: transform $transition-duration ease-in-out;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
   }
 }
 
 .sidebarContent {
+  flex: 1;
+  padding: 20px 12px;
   display: flex;
   flex-direction: column;
-  gap: $spacing-sm;
+  gap: 8px;
   scrollbar-width: none;
   -ms-overflow-style: none;
 
@@ -96,24 +97,24 @@
 .menuItem {
   display: flex;
   align-items: center;
-  gap: $spacing-md;
-  padding: calc($spacing-md - 2px) $spacing-lg;
-  color: $text-muted;
+  padding: 12px 16px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all $transition-duration ease-in-out;
+  transition: all 0.2s;
+  color: #94a3b8;
+  gap: 12px;
   position: relative;
   overflow: hidden;
   margin: 0px 4px;
-  border-radius: 6px;
 
   &:hover {
-    background-color: $bg-light;
-    color: $text-dark;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
   }
 
   &.active {
-    background-color: $primary-color;
-    color: $text-white;
+    background: #3b82f6;
+    color: white;
   }
 
   .iconContainer {
@@ -125,24 +126,24 @@
   }
 
   .itemText {
-    font-size: $font-size-md;
-    font-weight: $font-weight-medium;
-    transition: opacity $transition-duration ease-in-out,
-      visibility $transition-duration ease-in-out;
+    font-size: 14px;
+    font-weight: 500;
   }
 }
 
 .sidebarFooter {
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   margin-top: auto;
-  padding: $spacing-lg;
   transition: all $transition-duration ease-in-out;
 
   .demoMode {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    color: $text-muted;
-    margin-bottom: $spacing-md;
+    gap: 12px;
+    color: #94a3b8;
+    margin-bottom: 16px;
+    font-size: 14px;
 
     span {
       font-size: $font-size-sm;
@@ -152,40 +153,44 @@
   }
 
   .upgradeBox {
-    padding: $spacing-md;
-    background-color: $primary-color;
-    border-radius: $border-radius-lg;
-    color: $text-white;
-    text-align: center;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
 
     .avatar {
-      width: 3rem;
-      height: 3rem;
-      background-color: $secondary-color;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      margin: 0 auto $spacing-sm;
+      background: #3b82f6;
     }
 
     p {
-      font-size: $font-size-sm;
-      margin-bottom: $spacing-sm;
+      font-size: 14px;
+      font-weight: 500;
+      color: white;
+      margin: 0;
       transition: opacity $transition-duration ease-in-out,
         visibility $transition-duration ease-in-out;
     }
 
     button {
-      background-color: $bg-white;
-      color: $primary-color;
-      padding: $spacing-xs $spacing-md;
-      border-radius: $border-radius-sm;
-      font-size: $font-size-sm;
-      font-weight: $font-weight-semibold;
+      background: #3b82f6;
+      color: white;
       border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
       cursor: pointer;
-      transition: all $transition-duration ease-in-out;
+      transition: all 0.2s;
+      width: 100%;
 
       &:hover {
-        background-color: darken($bg-white, 5%);
+        background: #2563eb;
       }
     }
   }

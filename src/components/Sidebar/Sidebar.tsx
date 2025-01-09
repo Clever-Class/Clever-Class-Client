@@ -1,40 +1,39 @@
-import React, { useState, useCallback } from 'react';
-import classNames from 'classnames';
-
+import React, { useState } from 'react';
+import {
+  RiDashboardLine,
+  RiTaskLine,
+  RiSettingsLine,
+  RiTeamLine,
+  RiCalendarLine,
+} from 'react-icons/ri';
+import styles from './Sidebar.module.scss';
 import { SidebarHeader } from './SidebarHeader/SidebarHeader';
 import { SidebarContent } from './SidebarContent/SidebarContent';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
-import { MenuItemType } from './types';
+import classNames from 'classnames';
 
-import styles from './Sidebar.module.scss';
-
-// icons import
-import { GrHomeRounded, GrPerformance, GrOrderedList } from 'react-icons/gr';
-
-export const DashboardSidebar: React.FC = () => {
+export const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [activeItem, setActiveItem] = useState<string>('Overview');
+  const [activeItem, setActiveItem] = useState('Dashboard');
 
-  const toggleCollapse = useCallback(() => {
-    setIsCollapsed((prev) => !prev);
-  }, []);
-
-  const handleItemClick = useCallback((itemName: string) => {
-    setActiveItem(itemName);
-  }, []);
-
-  const sidebarClass = classNames(styles.sidebar, {
-    [styles.collapsed]: isCollapsed,
-  });
-
-  const menuItems: MenuItemType[] = [
-    { name: 'Overview', icon: GrHomeRounded },
-    { name: 'Performance', icon: GrPerformance },
-    { name: 'Orders', icon: GrOrderedList },
+  const menuItems = [
+    { name: 'Dashboard', icon: RiDashboardLine },
+    { name: 'Tasks', icon: RiTaskLine },
+    { name: 'Calendar', icon: RiCalendarLine },
+    { name: 'Team', icon: RiTeamLine },
+    { name: 'Settings', icon: RiSettingsLine },
   ];
 
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+
   return (
-    <div className={sidebarClass}>
+    <aside
+      className={classNames(styles.sidebar, {
+        [styles.collapsed]: isCollapsed,
+      })}
+    >
       <SidebarHeader
         isCollapsed={isCollapsed}
         toggleCollapse={toggleCollapse}
@@ -43,9 +42,9 @@ export const DashboardSidebar: React.FC = () => {
         menuItems={menuItems}
         activeItem={activeItem}
         isCollapsed={isCollapsed}
-        onItemClick={handleItemClick}
+        onItemClick={setActiveItem}
       />
-      <SidebarFooter isCollapsed={isCollapsed} />
-    </div>
+      {!isCollapsed && <SidebarFooter />}
+    </aside>
   );
 };

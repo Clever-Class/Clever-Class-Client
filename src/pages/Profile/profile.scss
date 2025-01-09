@@ -1,9 +1,9 @@
 @import '../../components/Profile/variables';
 
 .profile-page {
-  max-width: 800px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 32px 16px;
+  padding: 32px 24px;
 
   &__title {
     @include heading-lg;

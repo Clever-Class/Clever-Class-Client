@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { DashboardSidebar } from '~components/Sidebar/Sidebar';
+import { Sidebar } from '~components/Sidebar/Sidebar';
 
 import styles from './DashboardLayout.module.scss';
 // import { Payment } from '~/components/Payment';
@@ -21,7 +21,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   return (
     <div className={styles.dashboard}>
-      <DashboardSidebar />
+      <Sidebar />
       {user && selectedPackage && (
         <Payment
           userId={user.id}

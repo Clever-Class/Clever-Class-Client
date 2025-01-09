@@ -9,7 +9,7 @@ export const Profile = () => {
     email: 'rafiqurrahman51@gmail.com',
     role: 'Team Manager',
     country: 'United Kingdom',
-    countryCode: 'US',
+    countryCode: 'GB',
     city: 'Leeds',
     joinedDate: '2023-12-01',
     trialCredits: 100,

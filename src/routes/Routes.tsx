@@ -11,19 +11,30 @@ import { ResetPassword } from '~pages/ResetPassword/ResetPassword';
 import { LoginPage } from '~pages/Login';
 import { SuccessPayment } from '~pages/SuccessPayment/SuccessPayment';
 import { Profile } from '~pages/Profile/Profile';
+import { DashboardLayout } from '~components/Layouts';
+
+const DashboardRoutes = () => {
+  return (
+    <DashboardLayout>
+      <ReactRouterRoutes>
+        <Route index element={<Dashboard />} />
+        <Route path={AppRoutes.Profile} element={<Profile />} />
+      </ReactRouterRoutes>
+    </DashboardLayout>
+  );
+};
 
 export const Routes = () => {
   return (
     <ReactRouterRoutes>
       <Route element={<PrivateRoutes />}>
-        <Route element={<Dashboard />} path={AppRoutes.Dashboard} />
+        <Route path="/dashboard/*" element={<DashboardRoutes />} />
       </Route>
       <Route path={AppRoutes.Homepage} element={<Homepage />} />
       <Route path={AppRoutes.Signup} element={<Signup />} />
       <Route path={AppRoutes.Login} element={<LoginPage />} />
       <Route path={AppRoutes.ForgotPassword} element={<ForgotPassword />} />
       <Route path={AppRoutes.ResetPassword} element={<ResetPassword />} />
-      <Route path={AppRoutes.Profile} element={<Profile />} />
       <Route path={AppRoutes.PaymentSuccess} element={<SuccessPayment />} />
     </ReactRouterRoutes>
   );
