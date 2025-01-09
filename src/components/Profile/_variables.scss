@@ -1,0 +1,39 @@
+// Colors
+$primary-color: #00875a;
+$secondary-color: #f7f9fc;
+$text-primary: #1d2939;
+$text-secondary: #667085;
+$border-color: #eaecf0;
+
+// Breakpoints
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+
+// Mixins
+@mixin card {
+  background: white;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1);
+}
+
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin heading-lg {
+  font-size: 24px;
+  font-weight: 600;
+  color: $text-primary;
+  margin: 0;
+}
+
+@mixin heading-md {
+  font-size: 16px;
+  font-weight: 600;
+  color: $text-primary;
+  margin: 0;
+}

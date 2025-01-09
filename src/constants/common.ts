@@ -6,5 +6,6 @@ export enum AppRoutes {
   ForgotPassword = '/forgot-password',
   ResetPassword = '/reset-password/:resetToken',
   Payment = '/payment',
+  Profile = '/dashboard/profile',
   PaymentSuccess = '/payment/success',
 }

@@ -88,6 +88,11 @@
       }
     }
   }
+  .navbar__auth {
+    display: flex;
+    align-items: center;
+    gap: $spacing-semi;
+  }
 }
 
 .navbar__login {

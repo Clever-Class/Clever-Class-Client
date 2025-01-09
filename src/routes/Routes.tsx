@@ -10,6 +10,7 @@ import { ForgotPassword } from '~pages/ForgotPassword';
 import { ResetPassword } from '~pages/ResetPassword/ResetPassword';
 import { LoginPage } from '~pages/Login';
 import { SuccessPayment } from '~pages/SuccessPayment/SuccessPayment';
+import { Profile } from '~pages/Profile/Profile';
 
 export const Routes = () => {
   return (
@@ -22,6 +23,7 @@ export const Routes = () => {
       <Route path={AppRoutes.Login} element={<LoginPage />} />
       <Route path={AppRoutes.ForgotPassword} element={<ForgotPassword />} />
       <Route path={AppRoutes.ResetPassword} element={<ResetPassword />} />
+      <Route path={AppRoutes.Profile} element={<Profile />} />
       <Route path={AppRoutes.PaymentSuccess} element={<SuccessPayment />} />
     </ReactRouterRoutes>
   );

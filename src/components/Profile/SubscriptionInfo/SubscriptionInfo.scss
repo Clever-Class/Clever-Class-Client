@@ -1,0 +1,113 @@
+@import '../variables';
+
+.subscription-info {
+  @include card;
+
+  &__title {
+    @include heading-md;
+    margin-bottom: 24px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+
+    @media (max-width: $breakpoint-tablet) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__plan,
+  &__credits {
+    padding: 16px;
+    border-radius: 8px;
+    background: $secondary-color;
+  }
+
+  &__plan {
+    &-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+
+      h4 {
+        @include heading-md;
+        font-size: 14px;
+        margin-bottom: 2px;
+      }
+
+      p {
+        font-size: 14px;
+        color: $text-secondary;
+      }
+    }
+
+    &-icon {
+      padding: 8px;
+      background: white;
+      border-radius: 8px;
+      color: $primary-color;
+    }
+
+    &-dates {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+
+      label {
+        display: block;
+        font-size: 12px;
+        color: $text-secondary;
+        margin-bottom: 4px;
+      }
+
+      div {
+        font-size: 14px;
+        color: $text-primary;
+      }
+    }
+  }
+
+  &__credits {
+    &-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+
+      h4 {
+        @include heading-md;
+        font-size: 14px;
+        margin-bottom: 2px;
+      }
+
+      p {
+        font-size: 14px;
+        color: $text-secondary;
+      }
+    }
+
+    &-icon {
+      padding: 8px;
+      background: white;
+      border-radius: 8px;
+      color: $primary-color;
+    }
+
+    &-bar {
+      height: 8px;
+      background: white;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    &-progress {
+      height: 100%;
+      background: $primary-color;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+  }
+}

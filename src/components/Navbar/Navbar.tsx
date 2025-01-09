@@ -49,8 +49,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
               </a>
             </div>
           ) : (
-            <div>
-              <a href="#login" className="navbar__login">
+            <div className="navbar__auth">
+              <a href="/login" className="navbar__login">
                 Log in
               </a>
               <a

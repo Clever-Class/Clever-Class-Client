@@ -1,0 +1,18 @@
+@import '../../components/Profile/variables';
+
+.profile-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px 16px;
+
+  &__title {
+    @include heading-lg;
+    margin-bottom: 24px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+}
