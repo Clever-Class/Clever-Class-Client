@@ -28,13 +28,13 @@ export const Payment: React.FC<PaymentProps> = ({
           items: [{ priceId, quantity: 1 }],
           customer: {
             email,
-
             address: {
               countryCode: countryCode.toUpperCase(),
             },
           },
           customData: {
             userId,
+            skipIntermediatePage: true,
           },
           settings: {
             displayMode: 'overlay',

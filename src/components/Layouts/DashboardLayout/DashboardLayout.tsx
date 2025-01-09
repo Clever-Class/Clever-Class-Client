@@ -2,7 +2,6 @@ import React, { ReactNode } from 'react';
 import { Sidebar } from '~components/Sidebar/Sidebar';
 
 import styles from './DashboardLayout.module.scss';
-// import { Payment } from '~/components/Payment';
 import { useSelector } from 'react-redux';
 import { RootStateType } from '~store/types';
 import { Payment } from '~components/Payment';
@@ -18,6 +17,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     (state: RootStateType) => state.register,
   );
   const { user } = useSelector((state: RootStateType) => state.user);
+  console.log(user, selectedPackage, 'user, selectedPackage');
 
   return (
     <div className={styles.dashboard}>

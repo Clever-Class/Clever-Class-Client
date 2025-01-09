@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+
 import {
   FeatureHighlightSection,
   Footer,
@@ -17,9 +19,11 @@ import FAQ from '~components/LandingPageComponent/FaqSection/FaqSection';
 import './Homepage.scss';
 
 export const Homepage = () => {
+  const dispatch = useDispatch();
   const [signupPopup, setSignupPopup] = useState<boolean>(false);
 
   const handlePricingSignupClick = (planId: string) => {
+    dispatch({ type: 'SELECT_PRICING_PLAN', payload: planId });
     setSignupPopup(true);
   };
 
