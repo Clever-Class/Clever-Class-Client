@@ -6,6 +6,7 @@ export const SocialButton: React.FC<SocialButtonProps> = ({
   provider,
   icon: Icon,
   onClick,
+  title,
 }) => {
   return (
     <button
@@ -13,7 +14,9 @@ export const SocialButton: React.FC<SocialButtonProps> = ({
       onClick={onClick}
     >
       <Icon className={styles.icon} />
-      <p className={styles.buttonText}>Sign Up with {provider}</p>
+      <p className={styles.buttonText}>
+        {title} {provider}
+      </p>
     </button>
   );
 };

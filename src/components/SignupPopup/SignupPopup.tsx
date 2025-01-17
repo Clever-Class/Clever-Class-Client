@@ -1,19 +1,22 @@
+// Core dependencies
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import toast from 'react-hot-toast';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { firebaseApp } from '~/firebase/firebase-config';
+import { toast } from 'react-hot-toast';
 
+// Form and validation
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+// Icons
 import { LiaTimesSolid } from 'react-icons/lia';
 import { PiEyeThin, PiEyeSlashThin } from 'react-icons/pi';
-import { FcGoogle } from 'react-icons/fc';
 
-import { SocialButton } from '~components/Buttons';
+// Components
+import { OAuthSignup } from '~components/OAuthSignup';
 import { Button } from '~/components/ui/button';
+import { CountrySelector } from '~components/Selector';
 import {
   Form,
   FormControl,
@@ -23,14 +26,15 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { CountrySelector } from '~components/Selector';
 
+// Local imports
 import { SIGNUP_FORM_FIELDS } from './SignupPopup.data';
 import { FormFieldTypes } from './SignupPopup.types';
-import { AppDispatch } from '~store';
-import { signupUserAction, signupWithGoogleAction } from '~store/actions';
-
 import styles from './SignupPopup.module.scss';
+
+// Store
+import { AppDispatch } from '~store';
+import { signupUserAction } from '~store/actions';
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -55,10 +59,6 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [showPassword, setShowPassword] = useState<boolean>(false);
-
-  // Firebase Auth
-  const auth = getAuth(firebaseApp);
-  const provider = new GoogleAuthProvider();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -102,31 +102,12 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
     }
   };
 
-  // Google Signup
-  const handleGoogleSignup = async () => {
-    signInWithPopup(auth, provider)
-      .then(async (result) => {
-        const user = result.user;
-        dispatch(signupWithGoogleAction(user));
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
-  };
-
   return (
     <div className={styles.signupPopup}>
       <div className={styles.signupContent}>
         <LiaTimesSolid className={styles.closeButton} onClick={onClose} />
         <h2 className={styles.signupTitle}>Sign up to Clever Class</h2>
-        <div className={styles.socialLoginButtons}>
-          <SocialButton
-            icon={FcGoogle}
-            onClick={handleGoogleSignup}
-            provider="Google"
-          />
-        </div>
-
+        <OAuthSignup />
         <div className={styles.divider}>OR</div>
 
         <Form {...form}>

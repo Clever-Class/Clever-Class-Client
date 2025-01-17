@@ -1,0 +1,7 @@
+@import '../../styles/variables';
+
+.socialLoginButtons {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-small;
+}
