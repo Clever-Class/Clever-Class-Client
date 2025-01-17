@@ -26,6 +26,8 @@ export const signupUserAction =
 
       dispatch({ type: SIGNUP_SUCCESS, payload: { token, user, message } });
 
+      Cookies.set('userToken', token);
+
       return { message, token, countryCode, user, success: true };
     } catch (error: any) {
       const { response } = error;

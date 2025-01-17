@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -5,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { firebaseApp } from '~/firebase/firebase-config';
 
 import { LiaTimesSolid } from 'react-icons/lia';
 import { PiEyeThin, PiEyeSlashThin } from 'react-icons/pi';
@@ -29,8 +31,6 @@ import { AppDispatch } from '~store';
 import { signupUserAction, signupWithGoogleAction } from '~store/actions';
 
 import styles from './SignupPopup.module.scss';
-import { useState } from 'react';
-import { firebaseApp } from '~/firebase/firebase-config';
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -70,7 +70,7 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+  const handleSignupWithEmail = async (data: z.infer<typeof FormSchema>) => {
     try {
       const { message, token, countryCode, user, success } = await dispatch(
         signupUserAction({
@@ -131,7 +131,7 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(handleSignupWithEmail)}
             className="w-2/3 space-y-6 "
           >
             {SIGNUP_FORM_FIELDS.map(
@@ -197,12 +197,7 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
               },
             )}
 
-            <Button
-              size={'lg'}
-              type="submit"
-              className={styles.signup_button}
-              onClick={handleGoogleSignup}
-            >
+            <Button size={'lg'} type="submit" className={styles.signup_button}>
               Sign Up
             </Button>
           </form>

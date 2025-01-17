@@ -11,9 +11,9 @@ import {
   SupportedAppSection,
   TestimonialsSection,
 } from '~components/index';
+import { PricingPlans } from '~components/LandingPageComponent/PricingPlans/PricingPlans';
 
 import StarImage from '~assets/images/star.png';
-import { PricingPlans } from '~components/LandingPageComponent/PricingPlans/PricingPlans';
 import FAQ from '~components/LandingPageComponent/FaqSection/FaqSection';
 
 import './Homepage.scss';

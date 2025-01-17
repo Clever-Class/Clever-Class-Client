@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
+import { validatePassword } from '~utils';
 
 import { formSchema } from './signupSchema';
 import { formFields } from './signupFields';
@@ -21,7 +22,6 @@ import { AppDispatch } from '~store';
 import { FormSchemaTypes } from './signup.types';
 
 import './signup.scss';
-import { validatePassword } from '~utils';
 
 export const Signup = () => {
   const [searchParams] = useSearchParams();

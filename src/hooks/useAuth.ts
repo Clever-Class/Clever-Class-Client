@@ -1,9 +1,16 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { forgotPassword, resetPassword } from '~api';
+import { RootState } from '~store';
 
 export const useAuth = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { userToken, user } = useSelector((state: RootState) => state.user);
+
+  // The isAuthenticated variable is created to check if the user is authenticated
+  const isAuthenticated = Boolean(userToken);
 
   // The handleForgotPassword function is created to handle the forgot password functionality
   const handleForgotPassword = async (email: string) => {
@@ -19,6 +26,7 @@ export const useAuth = () => {
     }
   };
 
+  // The handleResetPassword function is created to handle the reset password functionality
   const handleResetPassword = async (resetToken: string, password: string) => {
     setLoading(true);
     setError(null);
@@ -34,5 +42,13 @@ export const useAuth = () => {
     }
   };
 
-  return { loading, error, handleForgotPassword, handleResetPassword };
+  // The user variable is created to store the user data
+  return {
+    loading,
+    error,
+    handleForgotPassword,
+    handleResetPassword,
+    isAuthenticated,
+    user,
+  };
 };
