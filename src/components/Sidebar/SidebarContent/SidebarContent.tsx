@@ -2,6 +2,7 @@ import React from 'react';
 import { MenuItem } from '../MenuItem/MenuItem';
 import { MenuItemType } from '../types';
 import styles from '../Sidebar.module.scss';
+import Cookies from 'js-cookie';
 
 interface SidebarContentProps {
   menuItems: MenuItemType[];
@@ -15,17 +16,47 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
   activeItem,
   isCollapsed,
   onItemClick,
-}) => (
-  <div className={styles.sidebarContent}>
-    {menuItems.map((item) => (
-      <MenuItem
-        Icon={item.icon}
-        key={item.name}
-        {...item}
-        isActive={activeItem === item.name}
-        isCollapsed={isCollapsed}
-        onClick={() => onItemClick(item.name)}
-      />
-    ))}
-  </div>
-);
+}) => {
+  const handleLogout = () => {
+    Cookies.remove('userToken');
+    localStorage.clear();
+
+    // Redirect to home page
+    window.location.href = '/';
+  };
+  return (
+    <div>
+      <div className={styles.sidebarContent}>
+        {menuItems.map((item) => (
+          <MenuItem
+            Icon={item.icon}
+            key={item.name}
+            {...item}
+            isActive={activeItem === item.name}
+            isCollapsed={isCollapsed}
+            onClick={() => onItemClick(item.name)}
+          />
+        ))}
+      </div>
+      <div className={styles.logoutWrapper}>
+        <button className={styles.logoutButton} onClick={handleLogout}>
+          <svg
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            stroke="currentColor"
+            fill="none"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          {!isCollapsed && <span>Logout</span>}
+        </button>
+      </div>
+    </div>
+  );
+};

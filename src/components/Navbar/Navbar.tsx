@@ -41,7 +41,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
         <div className="navbar__actions">
           {userToken ? (
             <div className="navbar__dashboard">
-              <a href="/dashboard">
+              <a href="/dashboard" title="Go to Dashboard">
                 <RxDashboard className="icon" href="/dashboard" />
               </a>
               <a href="/dashboard" className="dashboard_link">
