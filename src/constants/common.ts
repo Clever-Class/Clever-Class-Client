@@ -8,4 +8,5 @@ export enum AppRoutes {
   Payment = '/payment',
   Profile = '/profile',
   PaymentSuccess = '/payment/success',
+  Chatbot = '/ai-chatbot',
 }

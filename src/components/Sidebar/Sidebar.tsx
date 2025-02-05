@@ -21,11 +21,15 @@ export const Sidebar = () => {
 
   const menuItems = [
     { name: 'Dashboard', icon: RiDashboardLine, route: '/dashboard' },
-    { name: 'AI Chatbot', icon: BotMessageSquare, route: '/ai-chatbot' },
-    { name: 'Tasks', icon: RiTaskLine, route: '/tasks' },
-    { name: 'Calendar', icon: RiCalendarLine, route: '/calendar' },
-    { name: 'Team', icon: RiTeamLine, route: '/team' },
-    { name: 'Settings', icon: RiSettingsLine, route: '/settings' },
+    {
+      name: 'AI Chatbot',
+      icon: BotMessageSquare,
+      route: '/dashboard/ai-chatbot',
+    },
+    { name: 'Tasks', icon: RiTaskLine, route: '/dashboard/tasks' },
+    { name: 'Calendar', icon: RiCalendarLine, route: '/dashboard/calendar' },
+    { name: 'Team', icon: RiTeamLine, route: '/dashboard/team' },
+    { name: 'Settings', icon: RiSettingsLine, route: '/dashboard/settings' },
   ];
 
   const toggleCollapse = () => {
