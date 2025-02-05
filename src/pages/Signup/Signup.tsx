@@ -50,7 +50,7 @@ export const Signup = () => {
       const { message, countryCode, user, success } = await dispatch(
         signupUserAction({
           ...values,
-          selectedPackage: DEFAULT_SELECTED_PACKAGE,
+          selectedPackageId: DEFAULT_SELECTED_PACKAGE,
         }),
       );
 

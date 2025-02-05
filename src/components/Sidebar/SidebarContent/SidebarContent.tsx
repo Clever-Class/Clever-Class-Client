@@ -3,12 +3,13 @@ import { MenuItem } from '../MenuItem/MenuItem';
 import { MenuItemType } from '../types';
 import styles from '../Sidebar.module.scss';
 import Cookies from 'js-cookie';
+import { IconType } from 'react-icons/lib';
 
-interface SidebarContentProps {
+export interface SidebarContentProps {
   menuItems: MenuItemType[];
   activeItem: string;
   isCollapsed: boolean;
-  onItemClick: (itemName: string) => void;
+  onItemClick?: (itemName: string, route: string) => void;
 }
 
 export const SidebarContent: React.FC<SidebarContentProps> = ({
@@ -29,12 +30,12 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
       <div className={styles.sidebarContent}>
         {menuItems.map((item) => (
           <MenuItem
-            Icon={item.icon}
+            Icon={item.icon as IconType}
             key={item.name}
             {...item}
             isActive={activeItem === item.name}
             isCollapsed={isCollapsed}
-            onClick={() => onItemClick(item.name)}
+            onClick={() => onItemClick?.(item.name, item.route)}
           />
         ))}
       </div>

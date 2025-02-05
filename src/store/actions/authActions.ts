@@ -22,7 +22,7 @@ export const signupUserAction =
       const message = data.message;
       const user = data.user;
       const token = data.token;
-
+      const countryCode = data.countryCode;
       console.log('Redirecting to dashboard with the following data:...', {
         user,
         token,
@@ -32,7 +32,7 @@ export const signupUserAction =
 
       Cookies.set('userToken', token);
 
-      return { message, token, user, success: true };
+      return { message, token, user, countryCode, success: true };
     } catch (error: any) {
       const { response } = error;
 
