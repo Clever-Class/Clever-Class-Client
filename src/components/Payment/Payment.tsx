@@ -8,6 +8,7 @@ interface PaymentProps {
   email: string;
   countryCode: string;
   onError?: (error: Error) => void;
+  onClose: () => void;
 }
 
 export const Payment: React.FC<PaymentProps> = ({
@@ -16,6 +17,7 @@ export const Payment: React.FC<PaymentProps> = ({
   email,
   countryCode,
   onError,
+  onClose,
 }) => {
   const [paddle, setPaddle] = useState<Paddle | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -92,5 +94,9 @@ export const Payment: React.FC<PaymentProps> = ({
     return <div>Error: {error.message}</div>;
   }
 
-  return <div id="paddle-checkout" />;
+  return (
+    <div id="paddle-checkout">
+      {/* <button onClick={onClose}>Close</button> */}
+    </div>
+  );
 };

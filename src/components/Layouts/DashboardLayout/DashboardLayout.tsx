@@ -1,12 +1,11 @@
-import React, { ReactNode, useCallback, useEffect } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { Sidebar } from '~components/Sidebar/Sidebar';
 
 import styles from './DashboardLayout.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootStateType } from '~store/types';
 import { Payment } from '~components/Payment';
-import { fetchUserDataAfterPayment } from '~/lib/dashboard';
-import { SET_USER } from '~constants';
+import { DEFAULT_SELECTED_PACKAGE } from '~constants';
 
 type DashboardLayoutProps = {
   children: ReactNode;
@@ -15,39 +14,67 @@ type DashboardLayoutProps = {
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
 }) => {
-  const dispatch = useDispatch();
-  const { selectedPackage } = useSelector(
-    (state: RootStateType) => state.register,
-  );
+  // const dispatch = useDispatch();
 
   const { user } = useSelector((state: RootStateType) => state.user);
   const searchParams = new URLSearchParams(window.location.search);
   const showPaymentPopup = searchParams.get('payment_popup') === 'true';
 
-  // Fetch user data after payment
-  const fetchUserData = useCallback(async () => {
-    try {
-      const userData = await fetchUserDataAfterPayment();
-      dispatch({ type: SET_USER, payload: { user: userData, token: null } });
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  }, [dispatch]);
+  const [showPopup, setShowPopup] = useState(false);
 
-  // Fetch user data after payment
+  // const fetchUserData = useCallback(async () => {
+  //   try {
+  //     const userData = await fetchUserDataAfterPayment();
+  //     dispatch({ type: SET_USER, payload: { user: userData, token: null } });
+  //   } catch (error) {
+  //     console.error('Error fetching user data:', error);
+  //   }
+  // }, [dispatch]);
+
   useEffect(() => {
-    fetchUserData();
-  }, [selectedPackage, fetchUserData]);
+    const lastShownDate = localStorage.getItem('paymentPopupLastShown');
+    const hasActiveSubscription = user?.subscription?.status === 'active';
+
+    const shouldShowPopup = () => {
+      if (!lastShownDate) return true;
+      const lastShown = new Date(lastShownDate);
+      const now = new Date();
+
+      // 24 hours in milliseconds
+      const hoursDifference =
+        Math.abs(now.getTime() - lastShown.getTime()) / (1000 * 60 * 60);
+      return hoursDifference > 24;
+    };
+
+    if (
+      (showPaymentPopup || shouldShowPopup()) &&
+      user &&
+      !hasActiveSubscription
+    ) {
+      setShowPopup(true);
+      if (!showPaymentPopup) {
+        localStorage.setItem('paymentPopupLastShown', new Date().toISOString());
+      }
+    }
+  }, [user, showPaymentPopup]);
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    localStorage.setItem('paymentPopupLastShown', new Date().toISOString());
+  };
+
+  const packageId = user?.selectedPackageId || DEFAULT_SELECTED_PACKAGE;
 
   return (
     <div className={styles.dashboard}>
       <Sidebar />
-      {user && selectedPackage && showPaymentPopup && (
+      {showPopup && user && (
         <Payment
           userId={user.id}
-          priceId={selectedPackage}
+          priceId={packageId}
           countryCode={user?.country}
           email={user?.email}
+          onClose={handleClosePopup}
         />
       )}
       <div className={styles.mainContent}>

@@ -22,6 +22,7 @@ import { AppDispatch } from '~store';
 import { FormSchemaTypes } from './signup.types';
 
 import './signup.scss';
+import { DEFAULT_SELECTED_PACKAGE } from '~constants';
 
 export const Signup = () => {
   const [searchParams] = useSearchParams();
@@ -49,6 +50,7 @@ export const Signup = () => {
       const { message, countryCode, user, success } = await dispatch(
         signupUserAction({
           ...values,
+          selectedPackage: DEFAULT_SELECTED_PACKAGE,
         }),
       );
 

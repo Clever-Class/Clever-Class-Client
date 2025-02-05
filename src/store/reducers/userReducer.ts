@@ -2,6 +2,7 @@ import {
   FETCH_USER_FAILURE,
   FETCH_USER_REQUEST,
   FETCH_USER_SUCCESS,
+  LOGIN_SUCCESS,
   SET_USER,
   SIGNUP_FAILURE,
   SIGNUP_REQUEST,
@@ -25,6 +26,7 @@ export const userReducer = (state = initialState, action: any): UserState => {
 
     case FETCH_USER_SUCCESS:
     case SIGNUP_SUCCESS:
+    case LOGIN_SUCCESS:
     case SET_USER:
       return {
         ...state,

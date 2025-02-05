@@ -15,7 +15,7 @@ export const pricingPlansData: PricingPlan[] = [
       'Basic search filter: Find prospects with essential search criteria',
       'Enrichment hub (.csv only): Import and enrich data from CSV files',
     ],
-    planId: 'pri_01j2m6kcy7zrwey4j07dzgc5ea',
+    planId: import.meta.env.VITE_PLAN_ID_FREE,
     buttonLabel: 'Sign Up',
   },
   {
@@ -32,8 +32,7 @@ export const pricingPlansData: PricingPlan[] = [
       'CRM synchronization',
       'Enrichment hub (LinkedIn, Search...)',
     ],
-    planId: 'pri_01j2pvh294ernfyf1hjwhxbbcb',
-
+    planId: import.meta.env.VITE_PLAN_ID_STARTER,
     buttonLabel: 'Sign Up',
     popular: true,
   },
@@ -53,7 +52,7 @@ export const pricingPlansData: PricingPlan[] = [
       'Dedicated account manager',
       '3 License Onwards',
     ],
-    planId: 'pri_01j2pvmb54ew8nbv3szzt0q39s',
+    planId: import.meta.env.VITE_PLAN_ID_PRO,
     buttonLabel: 'Sign Up',
   },
 ];

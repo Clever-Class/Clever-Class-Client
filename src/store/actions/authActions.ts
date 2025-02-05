@@ -22,13 +22,17 @@ export const signupUserAction =
       const message = data.message;
       const user = data.user;
       const token = data.token;
-      const countryCode = data.countryCode;
+
+      console.log('Redirecting to dashboard with the following data:...', {
+        user,
+        token,
+      });
 
       dispatch({ type: SIGNUP_SUCCESS, payload: { token, user, message } });
 
       Cookies.set('userToken', token);
 
-      return { message, token, countryCode, user, success: true };
+      return { message, token, user, success: true };
     } catch (error: any) {
       const { response } = error;
 
@@ -66,7 +70,8 @@ export const loginUserAction =
   };
 
 export const signupWithGoogleAction =
-  (googleUser: User) => async (dispatch: AppDispatch) => {
+  (googleUser: User, selectedPackageId: string) =>
+  async (dispatch: AppDispatch) => {
     try {
       dispatch({ type: SIGNUP_REQUEST });
       const userAccessToken = await googleUser.getIdToken();
@@ -74,6 +79,7 @@ export const signupWithGoogleAction =
       // calling to the server to signup or login with google
       const { data } = await api.ccServer.post('/auth/login-oauth', {
         accessToken: userAccessToken,
+        selectedPackageId,
       });
 
       // extracting the data from the response
@@ -85,7 +91,7 @@ export const signupWithGoogleAction =
       Cookies.set('userToken', token);
 
       // redirecting to the dashboard
-      window.location.href = '/dashboard';
+      window.location.href = '/dashboard?payment_popup=true';
 
       // dispatching the success action
       return dispatch({

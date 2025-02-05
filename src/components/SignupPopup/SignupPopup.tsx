@@ -1,6 +1,6 @@
 // Core dependencies
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
@@ -35,6 +35,8 @@ import styles from './SignupPopup.module.scss';
 // Store
 import { AppDispatch } from '~store';
 import { signupUserAction } from '~store/actions';
+import { DEFAULT_SELECTED_PACKAGE } from '~constants';
+import { RootStateType } from '~store/types';
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -60,6 +62,10 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
   const [searchParams] = useSearchParams();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
+  const selectedPackageId = useSelector(
+    (state: RootStateType) => state.register.selectedPackage,
+  );
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -72,9 +78,10 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
 
   const handleSignupWithEmail = async (data: z.infer<typeof FormSchema>) => {
     try {
-      const { message, token, countryCode, user, success } = await dispatch(
+      const { message, token, user, success } = await dispatch(
         signupUserAction({
           ...data,
+          selectedPackageId: selectedPackageId || DEFAULT_SELECTED_PACKAGE,
         }),
       );
 
@@ -84,14 +91,14 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
         else toast.error(message);
       }
 
-      // redirecting to payment page
-      const priceId = searchParams.get('priceId');
+      console.log('Redirecting to dashboard with the following data:', {
+        user,
+        token,
+      });
 
       if (success) {
         navigate('/dashboard?payment_popup=true', {
           state: {
-            countryCode: countryCode,
-            priceId: priceId,
             user,
             token,
           },

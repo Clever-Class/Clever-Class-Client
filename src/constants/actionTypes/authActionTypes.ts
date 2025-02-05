@@ -31,6 +31,7 @@ export interface SignupUserData {
   name: string;
   email: string;
   password: string;
+  selectedPackageId: string;
 }
 
 export interface LoginUserData {
