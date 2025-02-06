@@ -15,7 +15,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
     <div className={styles.sidebarHeader}>
       <div className={styles.logoContainer}>
         <div className={styles.logo} />
-        {!isCollapsed && <span className={styles.brandName}>Consist</span>}
+        {!isCollapsed && <span className={styles.brandName}>Clever Class</span>}
       </div>
       <button
         onClick={toggleCollapse}
