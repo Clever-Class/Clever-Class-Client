@@ -1,8 +1,14 @@
+@import '../../../styles/variables.scss';
+
 .chatContainer {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #1a1a1a;
+  background: linear-gradient(
+    180deg,
+    rgba(35, 47, 77, 0.569) 0%,
+    rgba(71, 124, 210, 0.56) 100%
+  ); // Modern SaaS gradient
   color: #ffffff;
   position: relative;
   flex: 1;
@@ -62,17 +68,29 @@
   font-size: 14px;
 }
 
+.mediaInputButtons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .searchButtons {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.iconButton {
+.attachButton {
   color: #8e8ea0;
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
+
+  input {
+    display: none;
+  }
+
+  font-size: 20px;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
@@ -118,40 +136,71 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  padding: 2rem;
+  padding: 2rem 8rem;
+  width: 100%;
 }
 
 .messageWrapper {
   display: flex;
-  justify-content: center;
+  width: 100%;
+  align-items: flex-start;
+  gap: 12px;
+
+  &.userMessage {
+    flex-direction: row-reverse;
+  }
+
+  &.aiMessage {
+    flex-direction: row;
+  }
+}
+
+.profilePicture {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 .message {
-  max-width: 600px;
-  width: 100%;
-  padding: 1rem;
-  border-radius: 8px;
-  color: #ffffff;
+  padding: 12px 16px;
+  max-width: calc(70% - 48px); // Accounting for profile picture width and gap
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .userMessage .message {
-  background-color: #2d2d2d;
+  background-color: #3b82f6;
+  color: #ffffff;
+  border-radius: 16px 16px 0 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .aiMessage .message {
   background-color: #444444;
+  color: #ffffff;
+  border-radius: 16px 16px 16px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .inputSection {
-  background: linear-gradient(180deg, rgba(26, 26, 26, 0) 0%, #1a1a1a 50%);
   padding: 24px 0;
+  width: 768px;
 }
 
 .inputContainer {
   display: flex;
   justify-content: center;
   margin: 0 auto;
-  max-width: 768px;
   padding: 0 24px;
 }
 
@@ -181,6 +230,24 @@
   &::placeholder {
     color: #8e8ea0;
   }
+
+  // Custom scrollbar styles
+  &::-webkit-scrollbar {
+    width: 8px; // Width of the scrollbar
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #2d2d2d; // Track color
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #444444; // Scrollbar color
+    border-radius: 10px; // Rounded corners
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #555555; // Scrollbar color on hover
+  }
 }
 
 .micButton {
@@ -199,4 +266,24 @@
   color: #8e8ea0;
   font-size: 12px;
   margin-top: 12px;
+}
+
+.sendButton {
+  background-color: $primary-color-light;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 16px;
+
+  &:hover {
+    background-color: $primary-color-hover-light;
+  }
+
+  &:disabled {
+    background-color: #ccc; // Gray background when disabled
+    cursor: not-allowed;
+  }
 }

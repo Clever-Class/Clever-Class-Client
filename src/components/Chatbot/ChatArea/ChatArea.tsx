@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { Mic } from 'lucide-react';
+import { ArrowUp, Mic, Paperclip } from 'lucide-react';
 import styles from './chatarea.module.scss';
+import { Avatar, AvatarFallback, AvatarImage } from '~components/ui/avatar';
 
 export default function ChatArea() {
   const [messages, setMessages] = useState<
@@ -32,7 +33,15 @@ export default function ChatArea() {
         ...prev,
         {
           role: 'assistant',
-          content: 'This is a simulated response from the AI assistant.',
+          content: `could u please deisign the chatbot page like this with my colors. in the left we already have the sidebar so u don't need to do anything in left. but in the right keep the chat histories like chat gpt there. and please design it like a pro front end engineer. and please use moduler scss. please make the design similar to this and also please don't forget to add the history of the chat. for reference I gave u two image but my chat history will appear on right side`,
+        },
+        {
+          role: 'assistant',
+          content: `could u please deisign the chatbot page like this with my colors. in the left we already have the sidebar so u don't need to do anything in left. but in the right keep the chat histories like chat gpt there. and please design it like a pro front end engineer. and please use moduler scss. please make the design similar to this and also please don't forget to add the history of the chat. for reference I gave u two image but my chat history will appear on right side`,
+        },
+        {
+          role: 'assistant',
+          content: `could u please deisign the chatbot page like this with my colors. in the left we already have the sidebar so u don't need to do anything in left. but in the right keep the chat histories like chat gpt there. and please design it like a pro front end engineer. and please use moduler scss. please make the design similar to this and also please don't forget to add the history of the chat. for reference I gave u two image but my chat history will appear on right side`,
         },
       ]);
     }, 1000);
@@ -58,11 +67,12 @@ export default function ChatArea() {
             <div className={styles.inputSection}>
               <form onSubmit={handleSubmit} className={styles.inputContainer}>
                 <div className={styles.inputWrapper}>
+                  {/* Text Input */}
                   <textarea
                     ref={textareaRef}
                     value={input}
                     onChange={handleTextareaChange}
-                    placeholder="Message ChatGPT"
+                    placeholder="Message Your Clever AI Tutor"
                     className={styles.input}
                     rows={1}
                     onKeyDown={(e) => {
@@ -72,11 +82,33 @@ export default function ChatArea() {
                       }
                     }}
                   />
-                  <Mic className={styles.micButton} size={20} />
+
+                  {/* Media Input Buttons */}
+                  <div className={styles.mediaInputButtons}>
+                    <Mic className={styles.micButton} size={30} />
+                    <div className={styles.attachButton}>
+                      <input
+                        type="file"
+                        id="file-upload"
+                        aria-label="Upload file"
+                      />
+                      <Paperclip size={20} />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className={`${styles.sendButton} ${styles.sendButtonCustom}`}
+                    aria-label="Send message"
+                  >
+                    <div className={styles.sendIcon}>
+                      <ArrowUp size={20} />
+                    </div>
+                  </button>
                 </div>
               </form>
               <div className={styles.disclaimer}>
-                ChatGPT can make mistakes. Consider checking important
+                Clever AI Tutor can make mistakes. Consider checking important
                 information.
               </div>
             </div>
@@ -92,6 +124,17 @@ export default function ChatArea() {
                     : styles.aiMessage
                 }`}
               >
+                <div className={styles.profilePicture}>
+                  <Avatar>
+                    {message.role === 'user' ? (
+                      <AvatarFallback style={{ color: 'black' }}>
+                        CC
+                      </AvatarFallback>
+                    ) : (
+                      <AvatarImage src="https://github.com/shadcn.png" />
+                    )}
+                  </Avatar>
+                </div>
                 <div className={styles.message}>{message.content}</div>
               </div>
             ))}
