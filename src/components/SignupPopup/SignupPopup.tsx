@@ -1,7 +1,7 @@
 // Core dependencies
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
 // Form and validation
@@ -12,20 +12,12 @@ import { z } from 'zod';
 // Icons
 import { LiaTimesSolid } from 'react-icons/lia';
 import { PiEyeThin, PiEyeSlashThin } from 'react-icons/pi';
+import { FcGoogle } from 'react-icons/fc';
 
 // Components
-import { OAuthSignup } from '~components/OAuthSignup';
-import { Button } from '~/components/ui/button';
-import { CountrySelector } from '~components/Selector';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '~/components/ui/form';
-import { Input } from '~/components/ui/input';
+import { Input } from '~/components/ui/Input/Input';
+import { Button } from '~/components/ui/Button/Button';
+import { CountrySelector } from '~/components/ui/CountrySelector/CountrySelector';
 
 // Local imports
 import { SIGNUP_FORM_FIELDS } from './SignupPopup.data';
@@ -37,6 +29,7 @@ import { AppDispatch } from '~store';
 import { signupUserAction } from '~store/actions';
 import { DEFAULT_SELECTED_PACKAGE } from '~constants';
 import { RootStateType } from '~store/types';
+import { OAuthSignup } from '~components/OAuthSignup';
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -53,30 +46,31 @@ const FormSchema = z.object({
   }),
 });
 
+type FormData = z.infer<typeof FormSchema>;
+
 interface SignupPopupProps {
   onClose: () => void;
 }
+
 export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const selectedPackageId = useSelector(
     (state: RootStateType) => state.register.selectedPackage,
   );
 
-  const form = useForm<z.infer<typeof FormSchema>>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-      country: '',
-    },
   });
 
-  const handleSignupWithEmail = async (data: z.infer<typeof FormSchema>) => {
+  const handleSignupWithEmail = async (data: FormData) => {
     try {
       const { message, token, user, success } = await dispatch(
         signupUserAction({
@@ -85,23 +79,14 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
         }),
       );
 
-      // displaying success toast message
       if (message) {
         if (success) toast.success(message);
         else toast.error(message);
       }
 
-      console.log('Redirecting to dashboard with the following data:', {
-        user,
-        token,
-      });
-
       if (success) {
         navigate('/dashboard?payment_popup=true', {
-          state: {
-            user,
-            token,
-          },
+          state: { user, token },
         });
       }
     } catch (error: any) {
@@ -109,95 +94,96 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
     }
   };
 
+  const handleGoogleSignup = () => {
+    // Implement Google signup logic here
+    console.log('Google signup clicked');
+  };
+
   return (
-    <div className={styles.signupPopup}>
-      <div className={styles.signupContent}>
-        <LiaTimesSolid className={styles.closeButton} onClick={onClose} />
-        <h2 className={styles.signupTitle}>Sign up to Clever Class</h2>
-        <OAuthSignup />
-        <div className={styles.divider}>OR</div>
+    <div className={styles.overlay}>
+      <div className={styles.popup}>
+        <button
+          className={styles.closeButton}
+          onClick={onClose}
+          aria-label="Close"
+        >
+          <LiaTimesSolid />
+        </button>
 
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSignupWithEmail)}
-            className="w-2/3 space-y-6 "
-          >
-            {SIGNUP_FORM_FIELDS.map(
-              (formField: FormFieldTypes, index: number) => {
-                return (
-                  <FormField
-                    key={index}
-                    control={form.control}
-                    name={formField.name as any}
-                    render={({ field }) => {
-                      if (formField.type === 'country')
-                        return (
-                          <FormItem>
-                            <FormLabel>{formField.label}</FormLabel>
-                            <FormControl>
-                              <CountrySelector
-                                name={field.name}
-                                setValue={form.setValue}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        );
-                      return (
-                        <FormItem>
-                          <FormLabel>{formField.label}</FormLabel>
-                          <FormControl>
-                            <div className={styles.passwordInputWrapper}>
-                              <Input
-                                type={
-                                  formField.name === 'password'
-                                    ? showPassword
-                                      ? 'text'
-                                      : 'password'
-                                    : 'text'
-                                }
-                                placeholder={formField.placeholder}
-                                {...field}
-                              />
-                              {formField.name === 'password' && (
-                                <button
-                                  type="button"
-                                  className={styles.passwordToggle}
-                                  onClick={() => setShowPassword(!showPassword)}
-                                >
-                                  {showPassword ? (
-                                    <PiEyeSlashThin
-                                      className={styles.eyeIcon}
-                                    />
-                                  ) : (
-                                    <PiEyeThin className={styles.eyeIcon} />
-                                  )}
-                                </button>
-                              )}
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      );
-                    }}
-                  />
-                );
-              },
-            )}
+        <div className={styles.header}>
+          <h2>Sign up to Clever Class</h2>
+          <p>Please enter your details to continue</p>
+        </div>
 
-            <Button size={'lg'} type="submit" className={styles.signup_button}>
-              Sign Up
-            </Button>
-          </form>
-        </Form>
+        <div className={styles.socialSignup}>
+          <OAuthSignup />
+        </div>
+
+        <div className={styles.divider}>
+          <span>or</span>
+        </div>
+
+        <form
+          onSubmit={handleSubmit(handleSignupWithEmail)}
+          className={styles.form}
+        >
+          {SIGNUP_FORM_FIELDS.map((field: FormFieldTypes, index: number) => {
+            if (field.name === 'country') {
+              return (
+                <CountrySelector
+                  key={index}
+                  label={field.label}
+                  placeholder={field.placeholder}
+                  error={errors[field.name]?.message}
+                  value={field.value}
+                  onChange={(value) => setValue(field.name, value)}
+                />
+              );
+            }
+
+            return (
+              <Input
+                key={index}
+                label={field.label}
+                placeholder={field.placeholder}
+                type={
+                  field.name === 'password'
+                    ? showPassword
+                      ? 'text'
+                      : 'password'
+                    : 'text'
+                }
+                error={errors[field.name]?.message}
+                rightIcon={
+                  field.name === 'password' ? (
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={
+                        showPassword ? 'Hide password' : 'Show password'
+                      }
+                    >
+                      {showPassword ? <PiEyeSlashThin /> : <PiEyeThin />}
+                    </button>
+                  ) : undefined
+                }
+                {...register(field.name)}
+              />
+            );
+          })}
+
+          <Button type="submit" size="lg" fullWidth>
+            Sign up
+          </Button>
+        </form>
 
         <p className={styles.loginLink}>
-          Already have an account? <a href="/login">Log In</a>
+          Already have an account? <a href="/login">Log in</a>
         </p>
 
         <p className={styles.terms}>
-          By signing up, you agree to our <a href="#">Terms of Service</a> and{' '}
-          <a href="#">Privacy Policy</a>.
+          By signing up, you agree to our <a href="/terms">Terms of Service</a>{' '}
+          and <a href="/privacy">Privacy Policy</a>
         </p>
       </div>
     </div>

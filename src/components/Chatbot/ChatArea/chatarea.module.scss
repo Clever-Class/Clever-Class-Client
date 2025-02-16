@@ -233,7 +233,7 @@
 }
 
 .inputSection {
-  padding: 24px 0;
+  padding: 30px 0;
   width: 100%;
   animation: fadeInSize 0.5s ease-out;
 
@@ -291,8 +291,8 @@
     ); // Gradient for glowing effect
     z-index: -1; // Place behind the input wrapper
     border-radius: 12px; // Match the border radius
-    filter: blur(7px); // Blur effect for glow
-    opacity: 0.6; // Slight transparency for the glow
+    filter: blur(15px); // Blur effect for glow
+    opacity: 0.7; // Slight transparency for the glow
     animation: glowing 2s infinite alternate; // Animation for glowing effect
   }
 
@@ -301,8 +301,8 @@
       box-shadow: 0 0 5px $primary-color-light, 0 0 10px $primary-color-light;
     }
     100% {
-      box-shadow: 0 0 20px $primary-color-hover-light,
-        0 0 30px $primary-color-hover-light;
+      box-shadow: 0 0 10px $primary-color-hover-light,
+        0 0 20px $primary-color-hover-light;
     }
   }
 }

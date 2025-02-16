@@ -20,9 +20,10 @@ import { signupUserAction } from '~store/actions';
 import { AppDispatch } from '~store';
 import { FormSchemaTypes } from './signup.types';
 
-import './signup.scss';
 import { DEFAULT_SELECTED_PACKAGE } from '~constants';
-import { validatePassword } from '~utils';
+import { validatePassword } from '../../utils';
+
+import './signup.scss';
 
 export const Signup = () => {
   const [searchParams] = useSearchParams();

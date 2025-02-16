@@ -1,8 +1,8 @@
 export interface FormFieldTypes {
   id: string;
-  name: string;
-  type: 'text' | 'email' | 'tel' | 'password' | 'country';
-  placeholder: string;
+  name: 'name' | 'email' | 'password' | 'country';
   label: string;
-  required: boolean;
+  placeholder: string;
+  type?: string;
+  value?: string;
 }
