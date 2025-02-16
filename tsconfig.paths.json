@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
     "paths": {
       "~api": ["src/api/index"],
       "~api/*": ["src/api/*"],
@@ -28,5 +30,6 @@
       "~styles/*": ["src/styles/*"],
       "~/*": ["src/*"]
     }
-  }
+  },
+  "include": ["src/**/*"]
 }
