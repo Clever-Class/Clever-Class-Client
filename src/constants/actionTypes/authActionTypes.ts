@@ -8,6 +8,9 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 
 export const SET_USER = 'SET_USER';
 
+export const LOGOUT = 'LOGOUT';
+export const UPDATE_USER_DATA = 'UPDATE_USER_DATA';
+
 export interface LoginPendingAction {
   type: typeof LOGIN_REQUEST;
 }

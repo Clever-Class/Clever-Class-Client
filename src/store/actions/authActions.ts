@@ -10,8 +10,11 @@ import {
   SIGNUP_REQUEST,
   SIGNUP_SUCCESS,
   SignupUserData,
+  LOGOUT,
+  UPDATE_USER_DATA,
 } from '~constants';
 import { AppDispatch } from '~store';
+import { Dispatch } from 'redux';
 
 export const signupUserAction =
   (userEntryData: SignupUserData) => async (dispatch: AppDispatch) => {
@@ -22,13 +25,17 @@ export const signupUserAction =
       const message = data.message;
       const user = data.user;
       const token = data.token;
+      const subscription = data.subscription;
       const countryCode = data.countryCode;
       console.log('Redirecting to dashboard with the following data:...', {
         user,
         token,
       });
 
-      dispatch({ type: SIGNUP_SUCCESS, payload: { token, user, message } });
+      dispatch({
+        type: SIGNUP_SUCCESS,
+        payload: { token, user, subscription, message },
+      });
 
       Cookies.set('userToken', token);
 
@@ -108,3 +115,35 @@ export const signupWithGoogleAction =
       throw response.data.message;
     }
   };
+
+export const fetchUserData = () => {
+  return async (dispatch: Dispatch) => {
+    try {
+      const { data } = await api.ccServer.get('/auth/me');
+
+      dispatch({
+        type: UPDATE_USER_DATA,
+        payload: {
+          user: data.user,
+          subscription: data.subscription,
+        },
+      });
+
+      return data;
+    } catch (error) {
+      // If the token is invalid or expired, logout the user
+      if ((error as any)?.response?.status === 401) {
+        dispatch({ type: LOGOUT });
+        Cookies.remove('userToken');
+      }
+      throw error;
+    }
+  };
+};
+
+export const logout = () => {
+  return (dispatch: Dispatch) => {
+    Cookies.remove('userToken');
+    dispatch({ type: LOGOUT });
+  };
+};

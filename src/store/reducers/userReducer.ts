@@ -7,6 +7,7 @@ import {
   SIGNUP_FAILURE,
   SIGNUP_REQUEST,
   SIGNUP_SUCCESS,
+  UPDATE_USER_DATA,
 } from '~constants';
 import { UserState } from '~store/types';
 
@@ -29,6 +30,7 @@ export const userReducer = (state = initialState, action: any): UserState => {
     case SIGNUP_SUCCESS:
     case LOGIN_SUCCESS:
     case SET_USER:
+    case UPDATE_USER_DATA:
       return {
         ...state,
         loading: false,
