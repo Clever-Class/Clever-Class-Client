@@ -14,53 +14,32 @@ type DashboardLayoutProps = {
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
 }) => {
-  // const dispatch = useDispatch();
-
-  const { user } = useSelector((state: RootStateType) => state.user);
-  const searchParams = new URLSearchParams(window.location.search);
-  const showPaymentPopup = searchParams.get('payment_popup') === 'true';
-
+  const { user, subscription } = useSelector(
+    (state: RootStateType) => state.user,
+  );
   const [showPopup, setShowPopup] = useState(false);
-
-  // const fetchUserData = useCallback(async () => {
-  //   try {
-  //     const userData = await fetchUserDataAfterPayment();
-  //     dispatch({ type: SET_USER, payload: { user: userData, token: null } });
-  //   } catch (error) {
-  //     console.error('Error fetching user data:', error);
-  //   }
-  // }, [dispatch]);
 
   useEffect(() => {
     const lastShownDate = localStorage.getItem('paymentPopupLastShown');
-    const hasActiveSubscription = user?.subscription?.status === 'active';
+    const hasPendingSubscription = subscription?.status === 'pending';
 
-    const shouldShowPopup = () => {
+    const is24HoursPassed = () => {
       if (!lastShownDate) return true;
       const lastShown = new Date(lastShownDate);
       const now = new Date();
-
-      // 24 hours in milliseconds
       const hoursDifference =
         Math.abs(now.getTime() - lastShown.getTime()) / (1000 * 60 * 60);
       return hoursDifference > 24;
     };
 
-    if (
-      (showPaymentPopup || shouldShowPopup()) &&
-      user &&
-      !hasActiveSubscription
-    ) {
+    if (user && hasPendingSubscription && is24HoursPassed()) {
       setShowPopup(true);
-      if (!showPaymentPopup) {
-        localStorage.setItem('paymentPopupLastShown', new Date().toISOString());
-      }
+      localStorage.setItem('paymentPopupLastShown', new Date().toISOString());
     }
-  }, [user, showPaymentPopup]);
+  }, [user]);
 
   const handleClosePopup = () => {
     setShowPopup(false);
-    localStorage.setItem('paymentPopupLastShown', new Date().toISOString());
   };
 
   const packageId = user?.selectedPackageId || DEFAULT_SELECTED_PACKAGE;

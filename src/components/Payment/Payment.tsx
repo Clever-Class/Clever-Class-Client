@@ -96,7 +96,7 @@ export const Payment: React.FC<PaymentProps> = ({
 
   return (
     <div id="paddle-checkout">
-      {/* <button onClick={onClose}>Close</button> */}
+      <button onClick={onClose}>Close</button>
     </div>
   );
 };

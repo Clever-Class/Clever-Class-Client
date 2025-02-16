@@ -36,6 +36,8 @@ export const OAuthSignup = () => {
         accessToken: userAccessToken,
       });
 
+      console.log(data, 'data o auth...');
+
       console.log(data.token, 'data o auth...');
 
       // Save the token
@@ -44,7 +46,11 @@ export const OAuthSignup = () => {
       // Save the token to the redux store
       dispatch({
         type: LOGIN_SUCCESS,
-        payload: { token: data.token, user: data.user },
+        payload: {
+          token: data.token,
+          user: data.user,
+          subscription: data.subscription,
+        },
       });
 
       // Redirect to dashboard with payment popup

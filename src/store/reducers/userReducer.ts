@@ -16,6 +16,7 @@ export const initialState: UserState = {
   loading: false,
   error: null,
   user: null,
+  subscription: null,
 };
 
 export const userReducer = (state = initialState, action: any): UserState => {
@@ -33,6 +34,7 @@ export const userReducer = (state = initialState, action: any): UserState => {
         loading: false,
         userToken: action.payload.token || state.userToken,
         user: action.payload.user || state.user,
+        subscription: action.payload.subscription || state.subscription,
       };
 
     case FETCH_USER_FAILURE:
