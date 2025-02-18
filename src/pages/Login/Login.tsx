@@ -22,6 +22,7 @@ import styles from './Login.module.scss';
 import { api } from '~api';
 import { LOGIN_SUCCESS } from '~constants';
 import { AppDispatch } from '~store';
+import Cookies from 'js-cookie';
 
 const FormSchema = z.object({
   email: z.string().email({
@@ -57,7 +58,7 @@ export const LoginPage = () => {
       const { token, user, subscription } = response.data;
 
       // Save the token to cookies (you might want to use a cookie library like js-cookie)
-      document.cookie = `userToken=${token}; path=/`;
+      Cookies.set('userToken', token);
 
       // Update Redux store
       dispatch({

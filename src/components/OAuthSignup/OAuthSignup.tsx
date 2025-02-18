@@ -38,8 +38,6 @@ export const OAuthSignup = () => {
 
       console.log(data, 'data o auth...');
 
-      console.log(data.token, 'data o auth...');
-
       // Save the token
       Cookies.set('userToken', data.token);
 
