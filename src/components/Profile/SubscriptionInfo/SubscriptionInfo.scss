@@ -1,113 +1,108 @@
 @import '../variables';
 
 .subscription-info {
-  @include card;
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
   &__title {
-    @include heading-md;
+    font-size: 18px;
+    font-weight: 600;
     margin-bottom: 24px;
+    color: #111;
   }
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     gap: 24px;
-
-    @media (max-width: $breakpoint-tablet) {
-      grid-template-columns: 1fr;
-    }
   }
 
   &__plan,
   &__credits {
-    padding: 16px;
+    background: #f8f9fa;
     border-radius: 8px;
-    background: $secondary-color;
+    padding: 20px;
   }
 
-  &__plan {
-    &-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
+  &__plan-header,
+  &__credits-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
 
-      h4 {
-        @include heading-md;
-        font-size: 14px;
-        margin-bottom: 2px;
-      }
-
-      p {
-        font-size: 14px;
-        color: $text-secondary;
-      }
+    h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #111;
     }
 
-    &-icon {
-      padding: 8px;
-      background: white;
-      border-radius: 8px;
-      color: $primary-color;
-    }
-
-    &-dates {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-
-      label {
-        display: block;
-        font-size: 12px;
-        color: $text-secondary;
-        margin-bottom: 4px;
-      }
-
-      div {
-        font-size: 14px;
-        color: $text-primary;
-      }
+    p {
+      font-size: 14px;
+      color: #666;
+      margin: 4px 0;
     }
   }
 
-  &__credits {
-    &-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
+  &__plan-icon,
+  &__credits-icon {
+    width: 24px;
+    height: 24px;
+    color: #4f46e5;
+  }
 
-      h4 {
-        @include heading-md;
-        font-size: 14px;
-        margin-bottom: 2px;
-      }
+  &__plan-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
 
-      p {
-        font-size: 14px;
-        color: $text-secondary;
-      }
+  &__action-link {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+
+    &:hover {
+      transform: translateY(-1px);
     }
 
-    &-icon {
-      padding: 8px;
-      background: white;
-      border-radius: 8px;
-      color: $primary-color;
+    &:active {
+      transform: translateY(0);
     }
 
-    &-bar {
-      height: 8px;
-      background: white;
-      border-radius: 4px;
-      overflow: hidden;
-    }
+    background-color: #4f46e5;
+    color: white;
 
-    &-progress {
-      height: 100%;
-      background: $primary-color;
-      border-radius: 4px;
-      transition: width 0.3s ease;
+    &--cancel {
+      background-color: #ef4444;
     }
+  }
+
+  &__credits-bar {
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 12px;
+  }
+
+  &__credits-progress {
+    height: 100%;
+    background: #4f46e5;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+}
+
+@media (min-width: 768px) {
+  .subscription-info__grid {
+    grid-template-columns: 1fr 1fr;
   }
 }

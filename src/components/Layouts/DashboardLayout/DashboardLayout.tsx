@@ -2,10 +2,12 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import moment from 'moment';
 
 // Components
 import { Sidebar } from '~components/Sidebar/Sidebar';
 import { Payment } from '~components/Payment';
+import { WarningBanner } from '~components/common/WarningBanner';
 
 // Store and Types
 import { RootStateType } from '~store/types';
@@ -21,6 +23,15 @@ import styles from './DashboardLayout.module.scss';
 type DashboardLayoutProps = {
   children: ReactNode;
 };
+
+const pastDueMessage =
+  'Your payment has failed. Please update your card details to continue using our services.';
+const cancelledMessage = (endDate: string | undefined) =>
+  `Your subscription is scheduled to be canceled on ${
+    endDate
+      ? moment(endDate).format('MMMM D YYYY')
+      : 'the end of your billing period'
+  }.`;
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
@@ -102,31 +113,22 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       <div className={styles.mainContent}>
         <main className={styles.content}>
           {subscription?.status === 'past_due' && (
-            <div className={styles.warningBanner}>
-              <div className={styles.bannerContent}>
-                <svg
-                  className={styles.warningIcon}
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-9v4a1 1 0 11-2 0V9a1 1 0 112 0zm0-4a1 1 0 11-2 0 1 1 0 012 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>
-                  Your payment has failed. Please update your card details to
-                  continue using our services.
-                </span>
-              </div>
-              <button
-                onClick={handleUpdateCard}
-                className={styles.updateButton}
-              >
-                Update Card Details
-              </button>
-            </div>
+            <WarningBanner
+              message={pastDueMessage}
+              buttonText="Update Card Details"
+              onButtonClick={handleUpdateCard}
+            />
+          )}
+          {subscription?.status === 'cancelled' && (
+            <WarningBanner
+              message={cancelledMessage(subscription?.billingPeriod?.ends_at)}
+              buttonText="Don't Cancel"
+              noButton={true}
+              onButtonClick={() =>
+                (window.location.href =
+                  subscription?.updatePaymentMethodUrl || '')
+              }
+            />
           )}
           <div className={styles.container}>{children}</div>
         </main>

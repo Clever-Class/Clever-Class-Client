@@ -1,23 +1,23 @@
 import { Edit2 } from 'lucide-react';
 import './PersonalInfo.scss';
+import { User } from '~types';
 
 interface PersonalInfoProps {
-  user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: string;
-    city: string;
-    joinedDate: string;
-  };
+  user: User | null;
 }
 
 export const PersonalInfo = ({ user }: PersonalInfoProps) => {
-  const joinedDate = new Date(user.joinedDate).toLocaleDateString('en-US', {
+  if (!user) return null;
+
+  const joinedDate = new Date(user.createdAt).toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
   });
+
+  // Split name into first and last name
+  const [firstName, ...lastNameParts] = user.name.split(' ');
+  const lastName = lastNameParts.join(' ');
 
   return (
     <div className="personal-info">
@@ -32,12 +32,12 @@ export const PersonalInfo = ({ user }: PersonalInfoProps) => {
       <div className="personal-info__grid">
         <div className="personal-info__field">
           <label>First Name</label>
-          <div>{user.firstName}</div>
+          <div>{firstName}</div>
         </div>
 
         <div className="personal-info__field">
           <label>Last Name</label>
-          <div>{user.lastName}</div>
+          <div>{lastName}</div>
         </div>
 
         <div className="personal-info__field">
@@ -45,15 +45,24 @@ export const PersonalInfo = ({ user }: PersonalInfoProps) => {
           <div>{user.email}</div>
         </div>
 
-        <div className="personal-info__field">
-          <label>Role</label>
-          <div>{user.role}</div>
+        <div className="personal-info__field country-field">
+          <label>Country</label>
+          <span className="country-field__flag">
+            <img
+              src={`https://flagcdn.com/24x18/${user.country.toLowerCase()}.png`}
+              alt={user.country}
+              width={24}
+              height={18}
+              className="user-info__flag"
+            />
+            <span>{user.country.toUpperCase()}</span>
+          </span>
         </div>
 
-        <div className="personal-info__field">
-          <label>City</label>
-          <div>{user.city}</div>
-        </div>
+        {/* <div className="personal-info__field">
+          <label>Trial Credits</label>
+          <div>{user.trialCredits}</div>
+        </div> */}
 
         <div className="personal-info__field">
           <label>Joined</label>

@@ -52,4 +52,21 @@
       color: $text-primary;
     }
   }
+
+  .country-field {
+    &__flag {
+      display: flex;
+      gap: 8px;
+
+      img {
+        width: 24px;
+        height: 18px;
+      }
+
+      span {
+        font-size: 14px;
+        color: $text-primary;
+      }
+    }
+  }
 }

@@ -1,17 +1,14 @@
 import { Edit2 } from 'lucide-react';
 import './UserInfo.scss';
+import { User } from '~types';
 
 interface UserInfoProps {
-  user: {
-    firstName: string;
-    lastName: string;
-    role: string;
-    country: string;
-    countryCode: string;
-  };
+  user: User | null;
 }
 
 export const UserInfo = ({ user }: UserInfoProps) => {
+  if (!user) return null;
+
   return (
     <div className="user-info">
       <div className="user-info__content">
@@ -26,21 +23,9 @@ export const UserInfo = ({ user }: UserInfoProps) => {
         </div>
 
         <div className="user-info__details">
-          <h2 className="user-info__name">
-            {user.firstName} {user.lastName}
-          </h2>
+          <h2 className="user-info__name">{user.name}</h2>
           <div className="user-info__meta">
-            <span className="user-info__role">{user.role}</span>
-            <span className="user-info__location">
-              <img
-                src={`https://flagcdn.com/24x18/${user.countryCode.toLowerCase()}.png`}
-                alt={user.country}
-                width={24}
-                height={18}
-                className="user-info__flag"
-              />
-              {user.country}
-            </span>
+            <span className="user-info__email">{user.email}</span>
           </div>
         </div>
       </div>

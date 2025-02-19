@@ -5,6 +5,10 @@ export interface Subscription {
   paymentStatus: PaymentStatus;
   updatePaymentMethodUrl: string;
   cancelSubscriptionUrl: string;
+  billingPeriod: {
+    starts_at: string;
+    ends_at: string;
+  };
 }
 
 export enum SubscriptionStatus {

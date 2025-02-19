@@ -10,7 +10,7 @@ import { ForgotPassword } from '~pages/ForgotPassword';
 import { ResetPassword } from '~pages/ResetPassword/ResetPassword';
 import { LoginPage } from '~pages/Login';
 import { SuccessPayment } from '~pages/SuccessPayment/SuccessPayment';
-import { Profile } from '~pages/Profile/Profile';
+import { Settings } from '~pages/Settings/Settings';
 import { DashboardLayout } from '~components/Layouts';
 import { Chatbot } from '~pages/Chatbot/Chatbot';
 
@@ -19,7 +19,7 @@ const DashboardRoutes = () => {
     <DashboardLayout>
       <ReactRouterRoutes>
         <Route index element={<Dashboard />} />
-        <Route path={AppRoutes.Profile} element={<Profile />} />
+        <Route path={AppRoutes.Settings} element={<Settings />} />
         <Route path={AppRoutes.Chatbot} element={<Chatbot />} />
       </ReactRouterRoutes>
     </DashboardLayout>

@@ -1,13 +1,12 @@
 import { Crown, Zap } from 'lucide-react';
+import { Subscription } from '~store/types';
+import { capitalizeFirstLetter } from '~/lib/utils';
+import moment from 'moment';
+
 import './SubscriptionInfo.scss';
 
 interface SubscriptionInfoProps {
-  subscription: {
-    plan: string;
-    startDate: string;
-    endDate: string;
-    status: string;
-  };
+  subscription: Subscription | null;
   trialCredits: number;
 }
 
@@ -15,20 +14,7 @@ export const SubscriptionInfo = ({
   subscription,
   trialCredits,
 }: SubscriptionInfoProps) => {
-  const startDate = new Date(subscription.startDate).toLocaleDateString(
-    'en-US',
-    {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    },
-  );
-
-  const endDate = new Date(subscription.endDate).toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  });
+  if (!subscription) return null;
 
   return (
     <div className="subscription-info">
@@ -39,19 +25,59 @@ export const SubscriptionInfo = ({
           <div className="subscription-info__plan-header">
             <Crown className="subscription-info__plan-icon" />
             <div>
-              <h4>{subscription.plan} Plan</h4>
-              <p>Active subscription</p>
+              <h4>
+                Subscription Status:{' '}
+                {capitalizeFirstLetter(subscription.status)}
+              </h4>
+              <p>
+                Current Billing Start Date:{' '}
+                {moment(subscription.billingPeriod.starts_at)
+                  .local()
+                  .format('MMMM Do YYYY')}
+              </p>
+              <p>
+                Current Billing End Date:{' '}
+                {moment(subscription.billingPeriod.ends_at)
+                  .local()
+                  .format('MMMM Do YYYY')}
+              </p>
+              {/* Show effective from date if subscription is cancelled */}
+              {subscription.status === 'cancelled' &&
+                subscription.billingPeriod?.ends_at && (
+                  <p>
+                    Effective From:{' '}
+                    {moment(subscription.billingPeriod.ends_at)
+                      .local()
+                      .format('MMMM Do YYYY')}
+                  </p>
+                )}
             </div>
           </div>
-          <div className="subscription-info__plan-dates">
-            <div>
-              <label>Start Date</label>
-              <div>{startDate}</div>
-            </div>
-            <div>
-              <label>End Date</label>
-              <div>{endDate}</div>
-            </div>
+          <div className="subscription-info__plan-actions">
+            {/* Show update payment method button if subscription has an update payment method url */}
+            {subscription.updatePaymentMethodUrl && (
+              <a
+                href={subscription.updatePaymentMethodUrl}
+                className="subscription-info__action-link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Update Payment Method
+              </a>
+            )}
+
+            {/* Show cancel subscription button if subscription is not cancelled */}
+            {subscription.cancelSubscriptionUrl &&
+              subscription.status !== 'cancelled' && (
+                <a
+                  href={subscription.cancelSubscriptionUrl}
+                  className="subscription-info__action-link subscription-info__action-link--cancel"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Cancel Subscription
+                </a>
+              )}
           </div>
         </div>
 
@@ -66,7 +92,7 @@ export const SubscriptionInfo = ({
           <div className="subscription-info__credits-bar">
             <div
               className="subscription-info__credits-progress"
-              style={{ width: `${(trialCredits / 100) * 100}%` }}
+              style={{ width: `${(trialCredits / 5) * 100}%` }}
             />
           </div>
         </div>
