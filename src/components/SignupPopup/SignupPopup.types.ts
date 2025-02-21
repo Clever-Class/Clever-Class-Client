@@ -5,4 +5,5 @@ export interface FormFieldTypes {
   placeholder: string;
   type?: string;
   value?: string;
+  required?: boolean;
 }
