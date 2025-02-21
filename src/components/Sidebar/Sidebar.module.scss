@@ -1,0 +1,242 @@
+// Sidebar.module.scss
+@import 'sidebar.variables';
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #1a1f37 0%, #111827 100%);
+  color: #fff;
+  height: 100vh;
+  transition: width 0.3s ease;
+  width: 240px;
+  position: relative;
+
+  &.collapsed {
+    width: 90px;
+
+    .brandName,
+    .itemText,
+    .demoMode span,
+    .upgradeBox p,
+    .upgradeBox button {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .menuItem {
+      padding: $spacing-md 0;
+      justify-content: center;
+    }
+
+    .collapseButton {
+      transform: rotate(180deg);
+    }
+
+    .sidebarFooter {
+      align-items: center;
+    }
+
+    .logoutButton span {
+      display: none;
+    }
+  }
+}
+
+.sidebarHeader {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  .logoContainer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/2023_Facebook_icon.svg/768px-2023_Facebook_icon.svg.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .brandName {
+      font-size: 18px;
+      font-weight: 600;
+      color: white;
+    }
+  }
+
+  .collapseButton {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+  }
+}
+
+.sidebarContent {
+  flex: 1;
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    width: 0 !important;
+    display: none;
+  }
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #94a3b8;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  margin: 0px 4px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  &.active {
+    background: #3b82f6;
+    color: white;
+  }
+
+  .iconContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+  }
+
+  .itemText {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+.sidebarFooter {
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto;
+  transition: all $transition-duration ease-in-out;
+
+  .demoMode {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #94a3b8;
+    margin-bottom: 16px;
+    font-size: 14px;
+
+    span {
+      font-size: $font-size-sm;
+      transition: opacity $transition-duration ease-in-out,
+        visibility $transition-duration ease-in-out;
+    }
+  }
+
+  .upgradeBox {
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #3b82f6;
+    }
+
+    p {
+      font-size: 14px;
+      font-weight: 500;
+      color: white;
+      margin: 0;
+      transition: opacity $transition-duration ease-in-out,
+        visibility $transition-duration ease-in-out;
+    }
+
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+
+      &:hover {
+        background: #2563eb;
+      }
+    }
+  }
+}
+
+.logoutWrapper {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logoutButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: #fb7185;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 4px;
+
+  svg {
+    min-width: 20px;
+  }
+
+  &:hover {
+    background: rgba(251, 113, 133, 0.1);
+    color: #f43f5e;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}

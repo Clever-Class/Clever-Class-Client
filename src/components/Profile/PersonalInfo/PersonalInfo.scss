@@ -1,0 +1,72 @@
+@import '../variables';
+
+.personal-info {
+  @include card;
+
+  &__header {
+    @include flex-between;
+    margin-bottom: 24px;
+  }
+
+  &__title {
+    @include heading-md;
+  }
+
+  &__edit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid $border-color;
+    background: white;
+    color: $text-secondary;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: $secondary-color;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+
+    @media (max-width: $breakpoint-tablet) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__field {
+    label {
+      display: block;
+      font-size: 14px;
+      color: $text-secondary;
+      margin-bottom: 4px;
+    }
+
+    div {
+      font-size: 14px;
+      color: $text-primary;
+    }
+  }
+
+  .country-field {
+    &__flag {
+      display: flex;
+      gap: 8px;
+
+      img {
+        width: 24px;
+        height: 18px;
+      }
+
+      span {
+        font-size: 14px;
+        color: $text-primary;
+      }
+    }
+  }
+}

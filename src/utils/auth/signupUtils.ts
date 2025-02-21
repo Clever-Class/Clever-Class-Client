@@ -1,6 +1,6 @@
 import { UseFormSetError } from 'react-hook-form';
 
-export const validatePassword = (
+const validatePassword = (
   values: {
     password: string;
     confirmPassword: string;
@@ -19,3 +19,5 @@ export const validatePassword = (
 
   return true;
 };
+
+export { validatePassword };

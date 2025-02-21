@@ -1,0 +1,119 @@
+@import '../../styles/variables';
+
+.header {
+  background-color: $background-color-light;
+  box-shadow: 0 1px 3px $box-shadow-color-light;
+  margin: 0 auto;
+  padding: unset $spacing-large;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: $nav-height;
+}
+
+.navbar {
+  display: flex;
+  max-width: $max-width;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.navbar__logo {
+  display: flex;
+  align-items: center;
+
+  img {
+    height: $img-height;
+    margin-right: $img-margin-right;
+  }
+
+  span {
+    font-weight: $font-weight-bold;
+    font-size: $font-size-large;
+  }
+}
+
+.navbar__links {
+  display: flex;
+  list-style: none;
+  gap: $spacing-large;
+
+  li {
+    a {
+      text-decoration: none;
+      color: $text-color-light;
+      font-weight: $font-weight-regular;
+
+      &:hover {
+        color: $text-color-hover-light;
+      }
+    }
+  }
+}
+
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-semi;
+
+  .navbar__dashboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-small;
+    text-decoration: none;
+    color: $text-color-light;
+    font-weight: $font-weight-medium;
+    line-height: 16px;
+    font-size: 16px;
+
+    .icon {
+      width: 22px;
+      height: 22px;
+      color: $primary-color-light;
+      cursor: pointer;
+    }
+
+    .dashboard_link {
+      text-decoration: none;
+      color: $text-color-light;
+      font-weight: $font-weight-medium;
+      line-height: 16px;
+      font-size: 16px;
+      margin-top: 2.5px;
+
+      &:hover {
+        color: $text-color-hover-light;
+      }
+    }
+  }
+  .navbar__auth {
+    display: flex;
+    align-items: center;
+    gap: $spacing-semi;
+  }
+}
+
+.navbar__login {
+  text-decoration: none;
+  color: $text-color-light;
+  font-weight: $font-weight-medium;
+
+  &:hover {
+    color: $text-color-hover-light;
+  }
+}
+
+.navbar__start-trial {
+  padding: $spacing-small $spacing-medium;
+  background-color: $primary-color-light;
+  color: $background-color-light;
+  text-decoration: none;
+  border-radius: $border-radius;
+  font-weight: $font-weight-regular;
+
+  &:hover {
+    background-color: $primary-color-hover-light;
+  }
+}

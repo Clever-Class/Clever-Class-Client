@@ -1,90 +1,146 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+// LoginPage.jsx
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import toast from 'react-hot-toast';
-import { Button } from '~/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from '~/components/ui/form';
-import { Input } from '~/components/ui/input';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { loginFormSchema } from './loginSchema';
-import { FormSchemaTypes } from './login.types';
-import { formFields } from './loginFields';
+// Components
+import { Input } from '~/components/ui/Input/Input';
+import { Button } from '~/components/ui/Button/Button';
+import { OAuthSignup } from '~/components/OAuthSignup';
+
+// Icons
+import { PiEyeThin, PiEyeSlashThin } from 'react-icons/pi';
+
+// Styles
+import styles from './Login.module.scss';
+
+// API and Types
+import { api } from '~api';
+import { LOGIN_SUCCESS } from '~constants';
 import { AppDispatch } from '~store';
-import { loginUserAction } from '~store/actions';
-import { AppRoutes } from '~constants';
+import Cookies from 'js-cookie';
 
-import './login.scss';
+const FormSchema = z.object({
+  email: z.string().email({
+    message: 'Invalid email address',
+  }),
+  password: z.string().min(8, {
+    message: 'Password must be at least 8 characters long',
+  }),
+});
 
-export const Login = () => {
-  // Create a form using the useForm hook
+type FormData = z.infer<typeof FormSchema>;
+
+export const LoginPage = () => {
   const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
-  // The useForm hook is used to create a form with the following options:
-  const form = useForm<FormSchemaTypes>({
-    resolver: zodResolver(loginFormSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(FormSchema),
   });
 
-  // Submit the form
-  const onSubmit = async (values: FormSchemaTypes) => {
+  const handleLogin = async (data: FormData) => {
     try {
-      const successfulLoginMessage: string = await dispatch(
-        loginUserAction(values),
-      );
-      // Display a success toast message
-      toast.success(successfulLoginMessage);
-    } catch (errorMessage: any) {
-      // show error message
-      toast.error(errorMessage);
+      const response = await api.ccServer.post('/auth/login', {
+        email: data.email,
+        password: data.password,
+      });
+
+      const { token, user, subscription } = response.data;
+
+      // Save the token to cookies (you might want to use a cookie library like js-cookie)
+      Cookies.set('userToken', token);
+
+      // Update Redux store
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: {
+          token,
+          user,
+          subscription,
+        },
+      });
+
+      // Redirect to dashboard
+      navigate('/dashboard');
+      toast.success('Successfully logged in!');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to login');
     }
   };
 
   return (
-    <section className="login_page-section">
-      <div className="login_form-wrapper">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 login-form"
-          >
-            {formFields.map((field) => (
-              <FormField
-                key={field.name}
-                control={form.control}
-                name={field.name as keyof FormSchemaTypes}
-                render={({ field: formField }) => (
-                  <FormItem className="form-item">
-                    <p className="form-label">{field.label}</p>
-                    <FormControl>
-                      <Input
-                        type={field.type}
-                        placeholder={field.placeholder}
-                        {...formField}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ))}
-            <a className="forgot_password-link" href={AppRoutes.ForgotPassword}>
-              Forgot Password?
-            </a>
-            <Button type="submit" className="submit-button">
-              Submit
-            </Button>
-          </form>
-        </Form>
+    <div className={styles.loginPage}>
+      <div className={styles.loginForm}>
+        <div className={styles.logo}>CLEVER CLASS</div>
+        <div className={styles.header}>
+          <h2>Welcome back</h2>
+          <p>Log in to your account to continue</p>
+        </div>
+
+        <div className={styles.oAuthSection}>
+          <OAuthSignup />
+        </div>
+
+        <div className={styles.divider}>
+          <span>or</span>
+        </div>
+
+        <form onSubmit={handleSubmit(handleLogin)} className={styles.form}>
+          <Input
+            label="Email"
+            placeholder="Enter your email"
+            error={errors.email?.message}
+            {...register('email')}
+          />
+
+          <Input
+            label="Password"
+            placeholder="Enter your password"
+            type={showPassword ? 'text' : 'password'}
+            error={errors.password?.message}
+            rightIcon={
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <PiEyeSlashThin /> : <PiEyeThin />}
+              </button>
+            }
+            {...register('password')}
+          />
+
+          <Button type="submit" size="lg" fullWidth>
+            Login
+          </Button>
+        </form>
+
+        <p className={styles.signupLink}>
+          Don't have an account? <a href="/signup">Sign up</a>
+        </p>
+        <p className={styles.forgotPassword}>
+          <a href="/forgot-password">Forgot password?</a>
+        </p>
       </div>
-    </section>
+
+      <div className={styles.promoSection}>
+        <h2>450+ Million validated leads data-base</h2>
+        <img
+          src="https://getheroes-public.s3.eu-west-3.amazonaws.com/asset-auth/auth_img_4.webp"
+          alt="Promo"
+          className={styles.promoImage}
+        />
+      </div>
+    </div>
   );
 };

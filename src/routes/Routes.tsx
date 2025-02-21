@@ -3,26 +3,41 @@ import { Route, Routes as ReactRouterRoutes } from 'react-router-dom';
 import PrivateRoutes from './PrivateRoutes';
 
 import { AppRoutes } from '~constants';
-import { Login } from '~pages/Login';
 import { Dashboard } from '~pages/Dashboard';
 import { Homepage } from '~pages/Homepage';
 import { Signup } from '~pages/Signup';
 import { ForgotPassword } from '~pages/ForgotPassword';
 import { ResetPassword } from '~pages/ResetPassword/ResetPassword';
-import { Payment } from '~pages/Payment';
+import { LoginPage } from '~pages/Login';
+import { SuccessPayment } from '~pages/SuccessPayment/SuccessPayment';
+import { Settings } from '~pages/Settings/Settings';
+import { DashboardLayout } from '~components/Layouts';
+import { Chatbot } from '~pages/Chatbot/Chatbot';
+
+const DashboardRoutes = () => {
+  return (
+    <DashboardLayout>
+      <ReactRouterRoutes>
+        <Route index element={<Dashboard />} />
+        <Route path={AppRoutes.Settings} element={<Settings />} />
+        <Route path={AppRoutes.Chatbot} element={<Chatbot />} />
+      </ReactRouterRoutes>
+    </DashboardLayout>
+  );
+};
 
 export const Routes = () => {
   return (
     <ReactRouterRoutes>
       <Route element={<PrivateRoutes />}>
-        <Route element={<Dashboard />} path={AppRoutes.Dashboard} />
+        <Route path="/dashboard/*" element={<DashboardRoutes />} />
       </Route>
       <Route path={AppRoutes.Homepage} element={<Homepage />} />
       <Route path={AppRoutes.Signup} element={<Signup />} />
-      <Route path={AppRoutes.Login} element={<Login />} />
+      <Route path={AppRoutes.Login} element={<LoginPage />} />
       <Route path={AppRoutes.ForgotPassword} element={<ForgotPassword />} />
       <Route path={AppRoutes.ResetPassword} element={<ResetPassword />} />
-      <Route path={AppRoutes.Payment} element={<Payment />} />
+      <Route path={AppRoutes.PaymentSuccess} element={<SuccessPayment />} />
     </ReactRouterRoutes>
   );
 };

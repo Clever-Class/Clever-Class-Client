@@ -18,10 +18,33 @@ import { formSchema } from './signupSchema';
 import { formFields } from './signupFields';
 import { signupUserAction } from '~store/actions';
 import { AppDispatch } from '~store';
-import { validatePassword } from '~utils';
 import { FormSchemaTypes } from './signup.types';
 
+import { DEFAULT_SELECTED_PACKAGE } from '~constants';
+
 import './signup.scss';
+
+import { UseFormSetError } from 'react-hook-form';
+
+const validatePassword = (
+  values: {
+    password: string;
+    confirmPassword: string;
+  },
+  setError: UseFormSetError<{
+    confirmPassword: string;
+  }>,
+) => {
+  if (values.password !== values.confirmPassword) {
+    setError('confirmPassword', {
+      type: 'manual',
+      message: 'Passwords do not match',
+    });
+    return false;
+  }
+
+  return true;
+};
 
 export const Signup = () => {
   const [searchParams] = useSearchParams();
@@ -49,6 +72,7 @@ export const Signup = () => {
       const { message, countryCode, user, success } = await dispatch(
         signupUserAction({
           ...values,
+          selectedPackageId: DEFAULT_SELECTED_PACKAGE,
         }),
       );
 
