@@ -1,4 +1,4 @@
-import { initializePaddle, Paddle } from '@paddle/paddle-js';
+import { Environments, initializePaddle, Paddle } from '@paddle/paddle-js';
 import React, { useCallback, useEffect, useState } from 'react';
 import { PADDLE_TOKEN, PADDLE_ENVIRONMENT, AppRoutes } from '~/constants';
 
@@ -61,7 +61,7 @@ export const Payment: React.FC<PaymentProps> = ({
       try {
         setIsLoading(true);
         const paddleInstance = await initializePaddle({
-          environment: PADDLE_ENVIRONMENT,
+          environment: PADDLE_ENVIRONMENT as Environments,
           token: PADDLE_TOKEN,
         });
         setPaddle(paddleInstance as Paddle);
