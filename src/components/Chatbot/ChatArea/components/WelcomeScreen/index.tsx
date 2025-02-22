@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import styles from './welcomescreen.module.scss';
 import { ChatInput } from '../ChatInput';
+import { TeacherTypeChips } from '../TeacherTypeChips';
 
 interface WelcomeScreenProps {
   input: string;
@@ -12,6 +14,12 @@ export function WelcomeScreen({
   onInputChange,
   onSubmit,
 }: WelcomeScreenProps) {
+  const [selectedType, setSelectedType] = useState<string | null>(null);
+
+  const handleTypeSelect = (type: string) => {
+    setSelectedType(type);
+  };
+
   return (
     <div className={styles.chatAreaEmpty}>
       <h1 className={styles.welcomeTitle}>What can I help with?</h1>
@@ -20,6 +28,10 @@ export function WelcomeScreen({
           input={input}
           onInputChange={onInputChange}
           onSubmit={onSubmit}
+        />
+        <TeacherTypeChips
+          onSelect={handleTypeSelect}
+          selectedType={selectedType}
         />
         <div className={styles.disclaimer}>
           Clever AI Tutor can make mistakes. Consider checking important
