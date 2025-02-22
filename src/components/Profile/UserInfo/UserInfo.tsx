@@ -1,6 +1,7 @@
 import { Edit2 } from 'lucide-react';
 import './UserInfo.scss';
 import { User } from '~types';
+import { Avatar, AvatarFallback, AvatarImage } from '~components/ui/avatar';
 
 interface UserInfoProps {
   user: User | null;
@@ -13,13 +14,12 @@ export const UserInfo = ({ user }: UserInfoProps) => {
     <div className="user-info">
       <div className="user-info__content">
         <div className="user-info__avatar">
-          <img
-            src="/placeholder.svg"
-            alt="Profile"
-            width={80}
-            height={80}
-            className="user-info__avatar-image"
-          />
+          <Avatar className="w-20 h-20">
+            <AvatarImage src="/placeholder.svg" alt={user.name} />
+            <AvatarFallback>
+              {user.name.slice(0, 2).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
         </div>
 
         <div className="user-info__details">
