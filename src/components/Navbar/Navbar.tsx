@@ -1,9 +1,8 @@
 import React from 'react';
+import Cookies from 'js-cookie';
+
 import CleverClassLogo from '~assets/images/logo.png';
 import { RxDashboard } from 'react-icons/rx';
-
-import { useSelector } from 'react-redux';
-import { RootStateType } from '~store/types';
 
 import './Navbar.scss';
 
@@ -12,7 +11,7 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
-  const { userToken } = useSelector((state: RootStateType) => state.user);
+  const userToken = Cookies.get('userToken');
 
   return (
     <header className="header">
