@@ -8,32 +8,32 @@
     180deg,
     rgba(35, 47, 77, 0.569) 0%,
     rgba(71, 124, 210, 0.56) 100%
-  ); // Modern SaaS gradient
+  );
   color: #ffffff;
   position: relative;
   flex: 1;
-  max-width: calc(100% - 260px); // Subtract history panel width
+  max-width: calc(100% - 260px);
 }
 
 .mainContent {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 180px; // Increased space for input section
+  // padding-bottom: 180px;
   height: 100%;
   position: relative;
-  // The scrollbar is not hidden anymore
+
   &::-webkit-scrollbar {
-    width: 8px; // Set a width for the scrollbar
+    width: 8px;
   }
   &::-webkit-scrollbar-track {
-    background: #2d2d2d; // Track color
+    background: #2d2d2d;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: $primary-color-hover-light; // Scrollbar color
-    border-radius: 10px; // Rounded corners
+    background-color: $primary-color-hover-light;
+    border-radius: 10px;
   }
   &::-webkit-scrollbar-thumb:hover {
-    background-color: #555555; // Scrollbar color on hover
+    background-color: #555555;
   }
 }
 
@@ -164,19 +164,18 @@
   padding: 2rem 8rem;
   width: 100%;
 
-  // The scrollbar is not hidden anymore
   &::-webkit-scrollbar {
-    width: 8px; // Set a width for the scrollbar
+    width: 8px;
   }
   &::-webkit-scrollbar-track {
-    background: #2d2d2d; // Track color
+    background: #2d2d2d;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #444444; // Scrollbar color
-    border-radius: 10px; // Rounded corners
+    background-color: #444444;
+    border-radius: 10px;
   }
   &::-webkit-scrollbar-thumb:hover {
-    background-color: #555555; // Scrollbar color on hover
+    background-color: #555555;
   }
 }
 
@@ -211,7 +210,7 @@
 
 .message {
   padding: 12px 16px;
-  max-width: calc(70% - 48px); // Accounting for profile picture width and gap
+  max-width: calc(70% - 48px);
   word-wrap: break-word;
   white-space: pre-wrap;
   font-size: 1rem;
@@ -240,26 +239,14 @@
   &.inputSectionFixed {
     position: fixed;
     bottom: 0;
-    left: 240px; // Account for sidebar width
-    right: 275px; // Account for chat history width
-    width: auto; // Let the right and left properties determine the width
+    left: 240px;
+    right: 275px;
+    width: auto;
     background: transparent;
     z-index: 10;
   }
-
-  &.inputSectionAnimation {
-    animation: fadeInSize 0.3s ease forwards; // Animation for empty chat
-  }
 }
 
-// ... existing code ...
-// .inputSection {
-//   position: fixed;
-//   bottom: 0;
-//   left: 260px; // Account for sidebar width
-//   right: 260px; // Account for chat history width
-// }
-// ... existing code ...
 .inputWrapper {
   position: relative;
   width: 100%;
@@ -273,38 +260,9 @@
   align-items: center;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 
-  border: 2px solid transparent; // Initial transparent border
-  background-clip: padding-box; // Ensures the border doesn't overlap the background
-  position: relative; // Positioning for the pseudo-element
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -5px; // Adjust to create a glowing effect
-    left: -5px; // Adjust to create a glowing effect
-    right: -5px; // Adjust to create a glowing effect
-    bottom: -5px; // Adjust to create a glowing effect
-    background: linear-gradient(
-      45deg,
-      $primary-color-light,
-      $primary-color-light
-    ); // Gradient for glowing effect
-    z-index: -1; // Place behind the input wrapper
-    border-radius: 12px; // Match the border radius
-    filter: blur(15px); // Blur effect for glow
-    opacity: 0.7; // Slight transparency for the glow
-    animation: glowing 2s infinite alternate; // Animation for glowing effect
-  }
-
-  @keyframes glowing {
-    0% {
-      box-shadow: 0 0 5px $primary-color-light, 0 0 10px $primary-color-light;
-    }
-    100% {
-      box-shadow: 0 0 10px $primary-color-hover-light,
-        0 0 20px $primary-color-hover-light;
-    }
-  }
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
 }
 
 .input {
@@ -322,22 +280,21 @@
     color: #8e8ea0;
   }
 
-  // Custom scrollbar styles
   &::-webkit-scrollbar {
-    width: 8px; // Width of the scrollbar
+    width: 8px;
   }
 
   &::-webkit-scrollbar-track {
-    background: #2d2d2d; // Track color
+    background: #2d2d2d;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: #444444; // Scrollbar color
-    border-radius: 10px; // Rounded corners
+    background-color: #444444;
+    border-radius: 10px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background-color: #555555; // Scrollbar color on hover
+    background-color: #555555;
   }
 }
 
@@ -375,7 +332,7 @@
   }
 
   &:disabled {
-    background-color: #ccc; // Gray background when disabled
+    background-color: #ccc;
     cursor: not-allowed;
   }
 }
@@ -404,6 +361,6 @@
 
 .inputSectionFixed {
   &.slideIn {
-    animation: slideIn 0.5s ease forwards; // Slide-in animation
+    animation: slideIn 0.5s ease forwards;
   }
 }

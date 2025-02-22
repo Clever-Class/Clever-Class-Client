@@ -1,0 +1,65 @@
+@import '../../../../../styles/variables.scss';
+
+.messageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem 8rem;
+  width: 100%;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #2d2d2d;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #444444;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #555555;
+  }
+}
+
+.inputSection {
+  padding: 30px 0;
+  width: 100%;
+  animation: fadeInSize 0.5s ease-out;
+
+  &.inputSectionFixed {
+    position: fixed;
+    bottom: 0;
+    left: 240px;
+    right: 275px;
+    width: auto;
+    background: transparent;
+    z-index: 10;
+  }
+}
+
+.slideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInSize {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
