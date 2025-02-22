@@ -16,7 +16,7 @@ export const WarningBanner: React.FC<WarningBannerProps> = ({
 }) => {
   return (
     <div className={styles.warningBanner}>
-      <div className={styles.bannerContent}>
+      <div className={`${styles.creditsIconContainer}`}>
         <svg
           className={styles.warningIcon}
           fill="currentColor"
@@ -28,8 +28,8 @@ export const WarningBanner: React.FC<WarningBannerProps> = ({
             clipRule="evenodd"
           />
         </svg>
-        <span>{message}</span>
       </div>
+      <span>{message}</span>
       {!noButton && (
         <button onClick={onButtonClick} className={styles.updateButton}>
           {buttonText}

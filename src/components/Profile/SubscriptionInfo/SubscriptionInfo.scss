@@ -1,6 +1,8 @@
 @import '../variables';
 
 .subscription-info {
+  @include card;
+
   background: white;
   border-radius: 12px;
   padding: 24px;
@@ -23,6 +25,7 @@
     background: #f8f9fa;
     border-radius: 8px;
     padding: 20px;
+    border: 1px solid #e9ecef;
   }
 
   &__plan-header,
@@ -46,11 +49,24 @@
     }
   }
 
+  &__plan-icon-container,
+  &__credits-icon-container {
+    background-color: #4f46e5;
+    padding: 10px;
+    border-radius: 20%;
+  }
+
   &__plan-icon,
   &__credits-icon {
+    color: #ffffff;
     width: 24px;
-    height: 24px;
-    color: #4f46e5;
+    border-radius: 50%;
+  }
+
+  &__credits-icon-container {
+    background-color: #4f46e5;
+    padding: 10px;
+    border-radius: 20%;
   }
 
   &__plan-actions {

@@ -23,7 +23,9 @@ export const SubscriptionInfo = ({
       <div className="subscription-info__grid">
         <div className="subscription-info__plan">
           <div className="subscription-info__plan-header">
-            <Crown className="subscription-info__plan-icon" />
+            <div className="subscription-info__plan-icon-container">
+              <Crown className="subscription-info__plan-icon" />
+            </div>
             <div>
               <h4>
                 Subscription Status:{' '}
@@ -83,7 +85,9 @@ export const SubscriptionInfo = ({
 
         <div className="subscription-info__credits">
           <div className="subscription-info__credits-header">
-            <Zap className="subscription-info__credits-icon" />
+            <div className="subscription-info__credits-icon-container">
+              <Zap className="subscription-info__credits-icon" />
+            </div>
             <div>
               <h4>Trial Credits</h4>
               <p>{trialCredits} credits remaining</p>
