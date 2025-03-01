@@ -6,6 +6,7 @@ interface WarningBannerProps {
   buttonText: string;
   onButtonClick: () => void;
   noButton?: boolean;
+  disabled?: boolean;
 }
 
 export const WarningBanner: React.FC<WarningBannerProps> = ({
@@ -13,25 +14,33 @@ export const WarningBanner: React.FC<WarningBannerProps> = ({
   buttonText,
   onButtonClick,
   noButton,
+  disabled = false,
 }) => {
   return (
     <div className={styles.warningBanner}>
-      <div className={`${styles.creditsIconContainer}`}>
-        <svg
-          className={styles.warningIcon}
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            fillRule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-9v4a1 1 0 11-2 0V9a1 1 0 112 0zm0-4a1 1 0 11-2 0 1 1 0 012 0z"
-            clipRule="evenodd"
-          />
-        </svg>
+      <div className={styles.bannerContent}>
+        <div className={`${styles.creditsIconContainer}`}>
+          <svg
+            className={styles.warningIcon}
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-9v4a1 1 0 11-2 0V9a1 1 0 112 0zm0-4a1 1 0 11-2 0 1 1 0 012 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </div>
+
+        <span>{message}</span>
       </div>
-      <span>{message}</span>
       {!noButton && (
-        <button onClick={onButtonClick} className={styles.updateButton}>
+        <button
+          onClick={onButtonClick}
+          className={styles.updateButton}
+          disabled={disabled}
+        >
           {buttonText}
         </button>
       )}

@@ -13,6 +13,7 @@ import { WarningBanner } from '~components/common/WarningBanner';
 import { RootStateType } from '~store/types';
 import { AppDispatch } from '~store';
 import { fetchUserData } from '~store/actions/authActions';
+import { api } from '~api';
 
 // Constants
 import { DEFAULT_SELECTED_PACKAGE } from '~constants';
@@ -42,6 +43,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     (state: RootStateType) => state.user,
   );
   const [showPopup, setShowPopup] = useState(false);
+  const [isResuming, setIsResuming] = useState(false);
+  const [isUpdatingCard, setIsUpdatingCard] = useState(false);
 
   // Fetch user data when component mounts and every 5 minutes
   useEffect(() => {
@@ -92,14 +95,36 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   };
 
   const handleUpdateCard = () => {
-    window.location.href = subscription?.updatePaymentMethodUrl || '';
+    setIsUpdatingCard(true);
+    // Add a small delay before redirect to show loading state
+    setTimeout(() => {
+      window.location.href = subscription?.updatePaymentMethodUrl || '';
+    }, 500);
+  };
+
+  const handleResumeSubscription = async () => {
+    setIsResuming(true);
+    try {
+      const response = await api.ccServer.post('/subscription/resume-canceled');
+      if (response.data.success) {
+        toast.success('Subscription resumed successfully');
+        dispatch(fetchUserData()); // Refresh user data
+      } else {
+        toast.error(response.data.message || 'Failed to resume subscription');
+      }
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message || 'Failed to resume subscription',
+      );
+    } finally {
+      setIsResuming(false);
+    }
   };
 
   const packageId = user?.selectedPackageId || DEFAULT_SELECTED_PACKAGE;
   const showBanner =
     subscription?.status === 'past_due' || subscription?.status === 'canceled';
 
-  console.log(showPopup, subscription?.status, 'show popup');
   return (
     <div className={styles.dashboard}>
       <Sidebar />
@@ -117,19 +142,20 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           {subscription?.status === 'past_due' && (
             <WarningBanner
               message={pastDueMessage}
-              buttonText="Update Card Details"
+              buttonText={
+                isUpdatingCard ? 'Redirecting...' : 'Update Card Details'
+              }
               onButtonClick={handleUpdateCard}
+              disabled={isUpdatingCard}
             />
           )}
           {subscription?.status === 'canceled' && (
             <WarningBanner
               message={cancelledMessage(subscription?.billingPeriod?.ends_at)}
-              buttonText="Don't Cancel"
-              noButton={true}
-              onButtonClick={() =>
-                (window.location.href =
-                  subscription?.updatePaymentMethodUrl || '')
-              }
+              buttonText={isResuming ? 'Resuming...' : "Don't Cancel"}
+              noButton={false}
+              onButtonClick={handleResumeSubscription}
+              disabled={isResuming}
             />
           )}
           <div
