@@ -1,20 +1,62 @@
 import { Crown, Zap } from 'lucide-react';
-import { Subscription } from '~store/types';
+import { Subscription, SubscriptionStatus } from '~store/types';
 import { capitalizeFirstLetter } from '~/lib/utils';
 import moment from 'moment';
+import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 import './SubscriptionInfo.scss';
+import { api } from '~api';
 
 interface SubscriptionInfoProps {
   subscription: Subscription | null;
   trialCredits: number;
+  onSubscriptionUpdate?: () => void; // Add callback to refresh subscription data
 }
 
 export const SubscriptionInfo = ({
   subscription,
   trialCredits,
+  onSubscriptionUpdate,
 }: SubscriptionInfoProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   if (!subscription) return null;
+
+  const handleCancelSubscription = async () => {
+    // Show confirmation dialog
+    if (
+      !window.confirm(
+        'Are you sure you want to cancel your subscription? You will still have access until the end of your current billing period.',
+      )
+    ) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await api.ccServer.post('/subscription/cancel');
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+        // Refresh subscription data if callback provided
+        if (onSubscriptionUpdate) {
+          onSubscriptionUpdate();
+        }
+      } else {
+        toast.error(response.data.message || 'Failed to cancel subscription');
+      }
+    } catch (error: any) {
+      console.error('Error canceling subscription:', error);
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          'Failed to cancel subscription',
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="subscription-info">
@@ -44,7 +86,7 @@ export const SubscriptionInfo = ({
                   .format('MMMM Do YYYY')}
               </p>
               {/* Show effective from date if subscription is cancelled */}
-              {subscription.status === 'cancelled' &&
+              {subscription.status === 'canceled' &&
                 subscription.billingPeriod?.ends_at && (
                   <p>
                     Effective From:{' '}
@@ -67,19 +109,16 @@ export const SubscriptionInfo = ({
                 Update Payment Method
               </a>
             )}
-
             {/* Show cancel subscription button if subscription is not cancelled */}
-            {subscription.cancelSubscriptionUrl &&
-              subscription.status !== 'cancelled' && (
-                <a
-                  href={subscription.cancelSubscriptionUrl}
-                  className="subscription-info__action-link subscription-info__action-link--cancel"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Cancel Subscription
-                </a>
-              )}
+            {subscription.status !== SubscriptionStatus.CANCELED && (
+              <button
+                onClick={handleCancelSubscription}
+                className="subscription-info__action-link subscription-info__action-link--cancel"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Canceling...' : 'Cancel Subscription'}
+              </button>
+            )}
           </div>
         </div>
 

@@ -1,4 +1,4 @@
-export const NODE_ENV = import.meta.env.NODE_ENV as string;
+export const NODE_ENV = import.meta.env.VITE_NODE_ENV as string;
 export const PADDLE_TOKEN = import.meta.env.VITE_PADDLE_TOKEN as string;
 export const PADDLE_ENVIRONMENT = import.meta.env
   .VITE_PADDLE_ENVIRONMENT as string;

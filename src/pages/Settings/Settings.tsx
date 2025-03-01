@@ -1,14 +1,14 @@
 import { PersonalInfo, SubscriptionInfo, UserInfo } from '~components/Profile';
 
-import { useSelector } from 'react-redux';
-import { RootState } from '~store';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '~store';
+import { fetchUserData } from '~store/actions';
 
 import './settings.scss';
 
 export const Settings = () => {
   const { user, subscription } = useSelector((state: RootState) => state.user);
-  console.log(user, subscription);
-
+  const dispatch = useDispatch<AppDispatch>();
   if (!user) {
     return (
       <div className="profile-page">
@@ -30,6 +30,9 @@ export const Settings = () => {
         <SubscriptionInfo
           subscription={subscription}
           trialCredits={user.trialCredits}
+          onSubscriptionUpdate={() => {
+            dispatch(fetchUserData());
+          }}
         />
       </div>
     </div>

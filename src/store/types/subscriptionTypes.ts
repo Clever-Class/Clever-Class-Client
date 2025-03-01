@@ -16,7 +16,7 @@ export enum SubscriptionStatus {
   PENDING = 'pending',
   NOT_STARTED = 'not_started',
   PAUSED = 'paused',
-  CANCELLED = 'cancelled',
+  CANCELED = 'canceled',
   EXPIRED = 'expired',
   PAST_DUE = 'past_due',
 }

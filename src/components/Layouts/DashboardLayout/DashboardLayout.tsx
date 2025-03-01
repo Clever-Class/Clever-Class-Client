@@ -96,6 +96,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   };
 
   const packageId = user?.selectedPackageId || DEFAULT_SELECTED_PACKAGE;
+  const showBanner =
+    subscription?.status === 'past_due' || subscription?.status === 'canceled';
 
   console.log(showPopup, subscription?.status, 'show popup');
   return (
@@ -119,7 +121,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               onButtonClick={handleUpdateCard}
             />
           )}
-          {subscription?.status === 'cancelled' && (
+          {subscription?.status === 'canceled' && (
             <WarningBanner
               message={cancelledMessage(subscription?.billingPeriod?.ends_at)}
               buttonText="Don't Cancel"
@@ -130,7 +132,13 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               }
             />
           )}
-          <div className={styles.container}>{children}</div>
+          <div
+            className={`${styles.container} ${
+              showBanner ? styles.withBanner : ''
+            }`}
+          >
+            {children}
+          </div>
         </main>
       </div>
     </div>
