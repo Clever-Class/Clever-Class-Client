@@ -18,6 +18,7 @@ import FAQ from '~components/LandingPageComponent/FaqSection/FaqSection';
 
 import './Homepage.scss';
 import Hero from '~components/Hero';
+import FeatureSection from '~components/FeatureSection';
 
 export const Homepage = () => {
   const dispatch = useDispatch();
@@ -44,7 +45,7 @@ export const Homepage = () => {
       {signupPopup && <SignupPopup onClose={() => setSignupPopup(false)} />}
 
       <Hero />
-
+      <FeatureSection onGetStarted={handleFreeTrial} />
       <SupportedAppSection />
       <FeatureHighlightSection />
       <FeatureHighlightSection primary />
