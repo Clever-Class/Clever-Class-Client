@@ -394,7 +394,7 @@ $desktop-lg: 1440px;
             @include respond-to(mobile) {
               height: 100px;
               gap: 0.35rem;
-              bottom: 10px;
+              bottom: 15px;
               padding: 0.75rem;
               left: -50%; // Extend further on mobile
               width: 200%; // Wider on mobile for seamless scroll
@@ -409,15 +409,21 @@ $desktop-lg: 1440px;
               height: 100%;
               background: linear-gradient(
                   to right,
-                  rgba($primary-pink, 0.75) 0%,
+                  rgba($primary-pink, 0.3) 0%,
+                  // Reduced opacity
+                  // Reduced opacity
                   rgba($primary-pink, 0) 15%,
                   rgba($primary-pink, 0) 85%,
-                  rgba($primary-pink, 0.75) 100%
+                  rgba($primary-pink, 0.3) 100% // Reduced opacity
                 ),
                 linear-gradient(
                   to top,
-                  rgba($primary-pink, 0.75) 0%,
-                  rgba($primary-pink, 0.5) 30%,
+                  rgba($primary-pink, 0.3) 0%,
+                  // Reduced opacity
+                  // Reduced opacity
+                  rgba($primary-pink, 0.2) 30%,
+                  // Reduced opacity
+                  // Reduced opacity
                   rgba($primary-pink, 0) 100%
                 );
               z-index: 1;
@@ -426,15 +432,18 @@ $desktop-lg: 1440px;
               @include respond-to(mobile) {
                 background: linear-gradient(
                     to right,
-                    rgba($primary-pink, 0.95) 0%,
+                    rgba($primary-pink, 0.75) 0%,
+                    // Reduced opacity
                     rgba($primary-pink, 0) 20%,
                     rgba($primary-pink, 0) 80%,
-                    rgba($primary-pink, 0.95) 100%
+                    rgba($primary-pink, 0.75) 100% // Reduced opacity
                   ),
                   linear-gradient(
                     to top,
-                    rgba($primary-pink, 0.95) 0%,
-                    rgba($primary-pink, 0.7) 40%,
+                    rgba($primary-pink, 0.75) 0%,
+                    // Reduced opacity
+                    rgba($primary-pink, 0.5) 40%,
+                    // Reduced opacity
                     rgba($primary-pink, 0) 100%
                   );
               }
