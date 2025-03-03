@@ -44,7 +44,22 @@ import {
 
 const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Check for mobile devices
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 480);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
 
   // Subjects with their icons for the scrolling animation
   const subjectsRow1 = [
@@ -89,14 +104,16 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
     { name: 'Differential Equations', icon: <TbDiff /> },
   ];
 
-  // Create a seamless loop by duplicating the subjects
+  // Create a seamless loop by duplicating the subjects with optimized count for different devices
   const createSeamlessLoop = (
     subjects: Array<{ name: string; icon: JSX.Element }>,
   ) => {
-    return [...subjects, ...subjects];
+    // For mobile, use fewer duplicates to improve performance
+    const duplicateCount = isMobile ? 2 : 3;
+    return Array(duplicateCount).fill(subjects).flat();
   };
 
-  // Intersection Observer for animations
+  // Intersection Observer with optimized threshold for different devices
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -107,8 +124,8 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
       },
       {
         root: null,
-        rootMargin: '0px',
-        threshold: 0.1,
+        rootMargin: isMobile ? '0px' : '50px',
+        threshold: isMobile ? 0.1 : 0.2,
       },
     );
 
@@ -121,19 +138,31 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
         observer.unobserve(sectionRef.current);
       }
     };
-  }, []);
+  }, [isMobile]);
 
-  // Animation classes based on visibility
+  // Animation classes based on visibility and device type
   const animationClass = isVisible ? styles.visible : '';
 
   return (
-    <div className={styles.featureSection} ref={sectionRef}>
+    <div
+      className={styles.featureSection}
+      ref={sectionRef}
+      style={{
+        // Optimize paint performance
+        willChange: 'transform, opacity',
+        // Enable hardware acceleration
+        transform: 'translateZ(0)',
+      }}
+    >
       <div className={styles.heroBackground}>
         <div className={styles.gradientOverlay}></div>
       </div>
 
       <div className={styles.contentContainer}>
-        <div className={`${styles.topSection} ${animationClass}`}>
+        <div
+          className={`${styles.topSection} ${animationClass}`}
+          style={{ willChange: 'transform, opacity' }}
+        >
           <button
             className={styles.chromeExtensionButton}
             onClick={() =>
@@ -146,7 +175,10 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
           </button>
         </div>
 
-        <div className={`${styles.heroContent} ${animationClass}`}>
+        <div
+          className={`${styles.heroContent} ${animationClass}`}
+          style={{ willChange: 'transform, opacity' }}
+        >
           <h1 className={styles.heroTitle}>
             The modern approach
             <br />
@@ -170,14 +202,23 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
           </button>
         </div>
 
-        <div className={`${styles.featureCards} ${animationClass}`}>
+        <div
+          className={`${styles.featureCards} ${animationClass}`}
+          style={{ willChange: 'transform, opacity' }}
+        >
           <div className={`${styles.featureCard} ${styles.pinkCard}`}>
             <h2>Any subject, any level</h2>
             <p>
               Get expert help from beginner to advanced, tailored to your
               learning needs.
             </p>
-            <div className={styles.scrollingSubjects}>
+            <div
+              className={styles.scrollingSubjects}
+              style={{
+                willChange: 'transform',
+                perspective: '1000px',
+              }}
+            >
               <div className={styles.scrollRow}>
                 {createSeamlessLoop(subjectsRow1).map((subject, index) => (
                   <span key={`row1-${index}`}>
@@ -214,7 +255,10 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
           </div>
         </div>
 
-        <div className={`${styles.featureCards} ${animationClass}`}>
+        <div
+          className={`${styles.featureCards} ${animationClass}`}
+          style={{ willChange: 'transform, opacity' }}
+        >
           <div className={`${styles.featureCard} ${styles.blueCard}`}>
             <h2>Step-by-step solutions</h2>
             <p>
