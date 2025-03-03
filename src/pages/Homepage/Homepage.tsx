@@ -19,6 +19,7 @@ import FAQ from '~components/LandingPageComponent/FaqSection/FaqSection';
 import './Homepage.scss';
 import Hero from '~components/Hero';
 import FeatureSection from '~components/FeatureSection';
+import ReviewsFeature from '~components/ReviewsFeature';
 
 export const Homepage = () => {
   const dispatch = useDispatch();
@@ -46,6 +47,7 @@ export const Homepage = () => {
 
       <Hero />
       <FeatureSection onGetStarted={handleFreeTrial} />
+      <ReviewsFeature />
       <SupportedAppSection />
       <FeatureHighlightSection />
       <FeatureHighlightSection primary />

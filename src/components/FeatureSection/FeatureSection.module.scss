@@ -1,57 +1,4 @@
-// Variables
-$primary-blue: #2563ff;
-$primary-blue-light: #c1d3ff;
-$primary-pink: #ff3f8f;
-$dark-bg: #191b1d;
-$white: #ffffff;
-
-// Breakpoints with modern device sizes
-$mobile-sm: 375px;
-$mobile: 480px;
-$tablet-sm: 640px;
-$tablet: 768px;
-$laptop: 1024px;
-$desktop: 1280px;
-$desktop-lg: 1440px;
-
-// Mixins for responsive design
-@mixin respond-to($breakpoint) {
-  @if $breakpoint == mobile-sm {
-    @media (max-width: $mobile-sm) {
-      @content;
-    }
-  }
-  @if $breakpoint == mobile {
-    @media (max-width: $mobile) {
-      @content;
-    }
-  }
-  @if $breakpoint == tablet-sm {
-    @media (max-width: $tablet-sm) {
-      @content;
-    }
-  }
-  @if $breakpoint == tablet {
-    @media (max-width: $tablet) {
-      @content;
-    }
-  }
-  @if $breakpoint == laptop {
-    @media (max-width: $laptop) {
-      @content;
-    }
-  }
-  @if $breakpoint == desktop {
-    @media (max-width: $desktop) {
-      @content;
-    }
-  }
-  @if $breakpoint == desktop-lg {
-    @media (min-width: $desktop-lg) {
-      @content;
-    }
-  }
-}
+@import '../../styles/variables';
 
 // Animation keyframes
 @keyframes fadeInUp {
@@ -321,7 +268,7 @@ $desktop-lg: 1440px;
 
         @include respond-to(tablet) {
           &.pinkCard {
-            min-height: 250px;
+            min-height: 280px;
           }
         }
         @include respond-to(mobile) {

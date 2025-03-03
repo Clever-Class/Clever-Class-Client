@@ -1,0 +1,332 @@
+@import '../../styles/variables';
+
+// Animation keyframes
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scrollRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.reviewsSection {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: clamp(2rem, 6vw, 6rem) 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+
+  @include respond-to(mobile) {
+    padding: 2rem 0;
+  }
+
+  .contentContainer {
+    width: 100%;
+    max-width: min(90%, 1200px);
+    margin: 0 auto;
+    padding: 0 clamp(1rem, 3vw, 2rem);
+
+    .sectionHeader {
+      text-align: center;
+      margin-bottom: clamp(2rem, 6vw, 4rem);
+      opacity: 0;
+
+      &.visible {
+        animation: fadeInUp 0.8s ease forwards;
+      }
+
+      .title {
+        font-size: clamp(24px, 5vw, 48px);
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: clamp(1rem, 3vw, 1.5rem);
+        color: $dark-bg;
+        letter-spacing: -0.04em;
+
+        @include respond-to(mobile) {
+          font-size: 28px;
+        }
+      }
+
+      .description {
+        font-size: clamp(14px, 2.5vw, 18px);
+        line-height: 1.55;
+        color: rgba($dark-bg, 0.8);
+        max-width: 600px;
+        margin: 0 auto;
+        letter-spacing: -0.02em;
+
+        @include respond-to(mobile) {
+          font-size: 14px;
+          padding: 0 1rem;
+        }
+      }
+    }
+
+    .scrollingReviews {
+      position: relative;
+      width: 100vw;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      overflow: hidden;
+      padding: 0 calc((100vw - min(90%, 1200px)) / 2);
+
+      @include respond-to(desktop-lg) {
+        padding: 0 calc((100vw - 1320px) / 2);
+      }
+
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 25%;
+        height: 100%;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      &::before {
+        left: 0;
+        background: linear-gradient(
+          to right,
+          rgba(248, 249, 250, 1) 0%,
+          rgba(248, 249, 250, 0.9) 20%,
+          rgba(248, 249, 250, 0) 100%
+        );
+      }
+
+      &::after {
+        right: 0;
+        background: linear-gradient(
+          to left,
+          rgba(248, 249, 250, 1) 0%,
+          rgba(248, 249, 250, 0.9) 20%,
+          rgba(248, 249, 250, 0) 100%
+        );
+      }
+
+      .scrollRow1,
+      .scrollRow2 {
+        display: flex;
+        gap: 1.5rem;
+        width: fit-content;
+        padding: 1rem 0;
+        position: relative;
+
+        &::before,
+        &::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          height: 100%;
+          width: 4rem;
+          z-index: 1;
+          pointer-events: none;
+        }
+
+        &::before {
+          left: -4rem;
+          background: linear-gradient(
+            to right,
+            rgba(248, 249, 250, 1),
+            rgba(248, 249, 250, 0)
+          );
+        }
+
+        &::after {
+          right: -4rem;
+          background: linear-gradient(
+            to left,
+            rgba(248, 249, 250, 1),
+            rgba(248, 249, 250, 0)
+          );
+        }
+
+        .reviewCard {
+          width: 350px;
+          flex-shrink: 0;
+          background: $white;
+          border-radius: 1rem;
+          padding: 1.5rem;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+          z-index: 1;
+
+          &:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+          }
+
+          .reviewHeader {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+
+            .avatar {
+              width: 3rem;
+              height: 3rem;
+              border-radius: 50%;
+              overflow: hidden;
+              flex-shrink: 0;
+
+              img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+              }
+            }
+
+            .userInfo {
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+
+              .name {
+                font-size: 16px;
+                font-weight: 600;
+                color: $dark-bg;
+                margin: 0;
+              }
+
+              .role {
+                font-size: 12px;
+                color: rgba($dark-bg, 0.6);
+                margin: 0;
+              }
+
+              .rating {
+                display: flex;
+                gap: 0.25rem;
+                color: #ffc438;
+                font-size: 14px;
+                margin-top: 0.25rem;
+              }
+            }
+          }
+
+          .reviewContent {
+            font-size: 14px;
+            line-height: 1.6;
+            color: rgba($dark-bg, 0.8);
+            margin-bottom: 0.75rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+
+          .reviewDate {
+            font-size: 12px;
+            color: rgba($dark-bg, 0.5);
+          }
+        }
+      }
+
+      .scrollRow1 {
+        animation: scrollLeft 45s linear infinite;
+        animation-play-state: running;
+        margin-left: 0;
+
+        &:hover {
+          animation-play-state: paused;
+        }
+      }
+
+      .scrollRow2 {
+        animation: scrollRight 50s linear infinite;
+        animation-play-state: running;
+        margin-left: -50%;
+
+        &:hover {
+          animation-play-state: paused;
+        }
+      }
+    }
+  }
+}
+
+@include respond-to(mobile) {
+  .reviewsSection {
+    .contentContainer {
+      .scrollingReviews {
+        padding: 0 1rem;
+
+        &::before,
+        &::after {
+          width: 15%;
+        }
+
+        .scrollRow1,
+        .scrollRow2 {
+          &::before,
+          &::after {
+            width: 2rem;
+          }
+
+          .reviewCard {
+            width: 300px;
+            padding: 1.25rem;
+
+            .reviewContent {
+              -webkit-line-clamp: 4;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@include respond-to(desktop-lg) {
+  .reviewsSection {
+    .contentContainer {
+      max-width: 1320px;
+    }
+  }
+}
+
+@include respond-to(mobile-sm) {
+  .reviewsSection {
+    .contentContainer {
+      .sectionHeader {
+        .title {
+          font-size: 24px;
+        }
+        .description {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+}
