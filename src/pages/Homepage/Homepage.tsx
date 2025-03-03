@@ -17,6 +17,7 @@ import StarImage from '~assets/images/star.png';
 import FAQ from '~components/LandingPageComponent/FaqSection/FaqSection';
 
 import './Homepage.scss';
+import Hero from '~components/Hero';
 
 export const Homepage = () => {
   const dispatch = useDispatch();
@@ -42,57 +43,7 @@ export const Homepage = () => {
       {/* Signup Popup */}
       {signupPopup && <SignupPopup onClose={() => setSignupPopup(false)} />}
 
-      <div className="hero-wrapper">
-        <section className="hero">
-          <div className="hero-content">
-            <div className="new-badge">
-              <span>NEW</span> Latest integration just arrived
-            </div>
-            <h1>
-              Fast and Reliable <br />
-              <span className="highlight">AI-Powered</span> <br />
-              Homework Assistance
-            </h1>
-            <p className="description">
-              Experience swift and dependable homework help with our AI-driven
-              solution, ensuring clarity and improved academic results.
-            </p>
-            <a href="#" className="cta-button">
-              Get Started Free
-            </a>
-            <div className="reviews">
-              <div className="review-avatars">
-                <img
-                  src="https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1724630400&semt=ais_hybrid"
-                  alt="Reviewer"
-                />
-                <img
-                  src="https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1724630400&semt=ais_hybrid"
-                  alt="Reviewer"
-                />
-                <img
-                  src="https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1724630400&semt=ais_hybrid"
-                  alt="Reviewer"
-                />
-                <img
-                  src="https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1724630400&semt=ais_hybrid"
-                  alt="Reviewer"
-                />
-              </div>
-              <span className="rating">
-                <img src={StarImage} alt="Star" />
-                <p>4,000+ Students Boosting Grades with Us</p>
-              </span>
-            </div>
-          </div>
-          <div className="hero-image">
-            <img
-              src="https://pelostudio-storyblok-assets.b-cdn.net/f/230682/2584x2584/2952209d67/enrichment-usecases-mockup-1.png/m/fit-in/1200x1200/smart/filters:quality(70)"
-              alt="App screenshot"
-            />
-          </div>
-        </section>
-      </div>
+      <Hero />
 
       <SupportedAppSection />
       <FeatureHighlightSection />
