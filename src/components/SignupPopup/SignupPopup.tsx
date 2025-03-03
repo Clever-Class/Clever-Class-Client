@@ -12,7 +12,6 @@ import { z } from 'zod';
 // Icons
 import { LiaTimesSolid } from 'react-icons/lia';
 import { PiEyeThin, PiEyeSlashThin } from 'react-icons/pi';
-import { FcGoogle } from 'react-icons/fc';
 
 // Components
 import { Input } from '~/components/ui/Input/Input';

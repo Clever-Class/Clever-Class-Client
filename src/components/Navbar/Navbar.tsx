@@ -22,19 +22,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
         </div>
         <ul className="navbar__links">
           <li>
-            <a href="#features">Feature</a>
+            <a href="#extention">Chrome Extension</a>
           </li>
           <li>
-            <a href="#demo">Demo</a>
+            <a href="#notebook">Notebook</a>
+          </li>
+          <li>
+            <a href="#help-center">Help Center</a>
           </li>
           <li>
             <a href="#pricing">Pricing</a>
-          </li>
-          <li>
-            <a href="#faq">FAQ</a>
-          </li>
-          <li>
-            <a href="#about-us">About Us</a>
           </li>
         </ul>
         <div className="navbar__actions">
@@ -54,10 +51,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
               </a>
               <a
                 href="#start-trial"
-                className="navbar__start-trial"
+                className="navbar__join-free"
                 onClick={onSignupClick}
               >
-                Start free trial
+                Join for free
               </a>
             </div>
           )}

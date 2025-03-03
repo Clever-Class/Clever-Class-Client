@@ -2,14 +2,15 @@
 
 .hero {
   width: 100%;
-  padding: 4rem 0rem;
+  height: 100vh !important;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  padding-top: 4rem;
   gap: 2rem;
 
   @media (min-width: 768px) {
-    padding: 3rem 0rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
@@ -17,7 +18,6 @@
   }
 
   @media (min-width: 1024px) {
-    padding: 4rem 0rem;
     gap: 4rem;
     max-width: 1200px;
     margin: 0 auto;
@@ -281,10 +281,6 @@
 }
 
 @media (max-width: 480px) {
-  .hero {
-    padding: 2rem 1rem;
-  }
-
   .stats {
     grid-template-columns: 1fr;
     text-align: center;
@@ -344,21 +340,6 @@
 
     @media (min-width: 768px) {
       min-height: calc(100dvh - 70px); // Subtract header height
-    }
-  }
-}
-
-// Safe area insets for notched devices
-@supports (padding: env(safe-area-inset-bottom)) {
-  .hero {
-    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
-
-    @media (min-width: 768px) {
-      padding-bottom: calc(3rem + env(safe-area-inset-bottom));
-    }
-
-    @media (min-width: 1024px) {
-      padding-bottom: calc(4rem + env(safe-area-inset-bottom));
     }
   }
 }
