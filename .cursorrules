@@ -1,0 +1,174 @@
+Clever Class Client – React TypeScript Project
+
+You are an expert in TypeScript, React, Next.js, Redux Toolkit, SCSS Modules, and best practices for scalable front-end development.
+
+## Key Principles
+
+- Write modular, reusable, and scalable TypeScript code.
+- Use functional components and React Hooks; avoid class components.
+- Maintain a clear and consistent file structure for better maintainability.
+- Keep business logic separate from UI components using hooks and utilities.
+- Use Redux Toolkit for state management with persistence where needed.
+- Prefer SCSS Modules for styling with BEM-like naming conventions.
+- Follow best practices for performance optimization and accessibility.
+- Feel free to add comments where you think you need.
+
+## File Structure
+
+### Components
+
+**path:** `src/components`
+**description:** Reusable UI components
+**naming:** PascalCase for component directories and files
+**structure:**
+
+- `ui/` (for shadcn components when needed)
+- `common/` (shared components)
+- `{ComponentName}/` - `index.tsx` - Main component file
+- `{ComponentName}.module.scss` - Module SCSS styles
+- `{ComponentName}.types.ts` - TypeScript types
+- `{ComponentName}.utils.ts` - Helper functions
+
+**rules:**
+
+- Use module SCSS for styling
+- Keep components focused and single-responsibility
+- Place shared UI elements in `common` directory
+- Place shadcn components in `ui` directory when needed
+- Extract complex logic to `utils.ts`
+- Use functional components only
+- Modals and popups should be placed in their own directories
+
+### Pages
+
+**path:** `src/pages`
+**description:** Page-level components
+**naming:** PascalCase for page directories and files
+**structure:**
+
+- Follow the same structure as components
+- Use `index.tsx` for the main page component
+- `{PageName}.module.scss` for page-specific styles
+
+### Store
+
+**path:** `src/store`
+**description:** Redux store with persist configuration
+**rules:**
+
+- Use slice pattern for reducers
+- Follow Redux Toolkit conventions
+- Use persist whitelist for specific slices
+- Use TypeScript for action and state types
+
+### Hooks
+
+**path:** `src/hooks`
+**description:** Custom React hooks
+**naming:** Prefix with `use` (e.g., `useAuth`)
+**rules:**
+
+- Keep hooks focused on a single responsibility
+- Extract Firebase-related logic to separate hooks
+- Place authentication hooks in `auth/` directory
+
+### Utils
+
+**path:** `src/utils`
+**description:** Shared utility functions
+**rules:**
+
+- Create separate files for different utility categories
+- Export named functions
+- Use TypeScript for type safety
+
+### Assets
+
+**path:** `src/assets`
+**description:** Static assets
+**structure:**
+
+- `assets/images/` - For image files
+- `assets/icons/` - For icon files
+  **rules:**
+- Use relative imports from components
+- Optimize images before adding
+
+---
+
+## Coding Rules
+
+### TypeScript
+
+**description:** TypeScript conventions
+**rules:**
+
+- Use TypeScript for all files
+- Create explicit interfaces for props
+- Use type inference where possible
+- Define proper return types for functions
+- Use union types for variants
+
+### Styling
+
+**description:** Styling with CSS Modules
+**rules:**
+
+- Use `.module.scss` extension for style files
+- Follow BEM-like naming in modules
+- Use CSS variables for theming
+- Follow mobile-first responsive design
+
+---
+
+## Best Practices
+
+### Performance
+
+**description:** Performance optimization
+**rules:**
+
+- Implement proper code splitting
+- Use `React.memo` for expensive renders
+- Optimize images and assets
+- Use proper loading states
+
+### Error Handling
+
+**description:** Error management
+**rules:**
+
+- Implement proper error boundaries
+- Use typed error responses
+- Handle async errors properly
+- Show user-friendly error messages
+
+### Forms
+
+**description:** Form handling
+**rules:**
+
+- Use proper form validation
+- Implement proper error messages
+- Handle loading states during submission
+- Use controlled components
+
+### Authentication
+
+**description:** Auth state management
+**rules:**
+
+- Use Firebase auth hooks
+- Implement proper protected routes
+- Handle auth state persistence
+- Show proper loading states
+
+### Routing
+
+**description:** Route management
+**rules:**
+
+- Use React Router v6
+- Implement lazy loading for routes
+- Handle protected routes properly
+- Use proper route types
