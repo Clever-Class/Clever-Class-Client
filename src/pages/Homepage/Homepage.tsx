@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import {
+  FeatureHighlight,
   FeatureHighlightSection,
   Footer,
   LowerCTA,
@@ -18,8 +19,8 @@ import FAQ from '~components/LandingPageComponent/FaqSection/FaqSection';
 
 import './Homepage.scss';
 import Hero from '~components/Hero';
-import FeatureSection from '~components/FeatureSection';
-import ReviewsFeature from '~components/ReviewsFeature';
+import FeatureSection from '~components/LandingPageComponent/FeatureSection';
+import ReviewsFeature from '~components/LandingPageComponent/ReviewsFeature';
 
 export const Homepage = () => {
   const dispatch = useDispatch();
@@ -48,6 +49,7 @@ export const Homepage = () => {
       <Hero />
       <FeatureSection onGetStarted={handleFreeTrial} />
       <ReviewsFeature />
+      <FeatureHighlight />
       <SupportedAppSection />
       <FeatureHighlightSection />
       <FeatureHighlightSection primary />

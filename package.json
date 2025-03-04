@@ -29,6 +29,7 @@
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
     "firebase": "^11.0.1",
+    "framer-motion": "^12.4.10",
     "hamburger-react": "^2.5.1",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.474.0",
@@ -46,7 +47,7 @@
     "redux-persist": "^6.0.0",
     "sass": "^1.77.4",
     "shadcn-ui": "^0.8.0",
-    "tailwind-merge": "^3.0.1",
+    "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",
     "vite-tsconfig-paths": "^4.3.2",
     "zod": "^3.24.2"
