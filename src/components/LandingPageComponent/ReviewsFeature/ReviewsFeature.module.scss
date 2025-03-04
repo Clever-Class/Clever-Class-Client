@@ -97,24 +97,9 @@
       overflow: hidden;
       padding: 0 calc((100vw - min(90%, 1200px)) / 2);
 
-      @include respond-to(tablet) {
-        width: 100%;
-        left: auto;
-        right: auto;
-        margin-left: 0;
-        margin-right: 0;
-        padding: 0;
-      }
-
       @include respond-to(mobile) {
-        width: 100%;
-        left: auto;
-        right: auto;
-        margin-left: 0;
-        margin-right: 0;
-        padding: 0;
+        gap: 0.8rem;
       }
-
       @include respond-to(desktop-lg) {
         padding: 0 calc((100vw - 1320px) / 2);
       }
