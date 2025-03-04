@@ -1,0 +1,128 @@
+@import '../../../styles/variables';
+
+.finalLowerCTA {
+  position: relative;
+  width: 100%;
+  padding: clamp(4rem, 8vw, 8rem) 0;
+  background: linear-gradient(
+    to bottom right,
+    $primary-blue,
+    $primary-color-hover
+  );
+  overflow: hidden;
+
+  .gradientOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.1),
+      transparent 70%
+    );
+    z-index: 1;
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    max-width: min(90%, 1200px);
+    margin: 0 auto;
+    padding: 0 clamp(1rem, 3vw, 2rem);
+    text-align: center;
+    color: $white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .title {
+      font-size: clamp(28px, 6vw, 56px);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: clamp(1rem, 3vw, 1.5rem);
+      letter-spacing: -0.02em;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .description {
+      font-size: clamp(16px, 2.5vw, 20px);
+      line-height: 1.6;
+      margin-bottom: clamp(2rem, 4vw, 3rem);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease forwards;
+      animation-delay: 0.2s;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .notebookWrapper {
+      width: 100%;
+      max-width: 900px;
+      margin: 3rem auto;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards;
+      animation-delay: 0.3s;
+
+      .notebookImage {
+        width: 100%;
+        height: auto;
+        border-radius: 16px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        will-change: transform;
+        transform: perspective(1000px) rotateX(6deg) scale(0.98);
+        transform-origin: center bottom;
+      }
+    }
+
+    .ctaButton {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $white;
+      color: $primary-blue;
+      font-weight: 600;
+      font-size: clamp(16px, 2.5vw, 18px);
+      padding: clamp(1rem, 2.5vw, 1.25rem) clamp(2rem, 4vw, 3rem);
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease forwards;
+      animation-delay: 0.4s;
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        background-color: rgba(255, 255, 255, 0.95);
+      }
+
+      &:active {
+        transform: translateY(-1px);
+      }
+
+      @include respond-to(mobile) {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

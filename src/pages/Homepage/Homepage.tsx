@@ -21,6 +21,7 @@ import './Homepage.scss';
 import Hero from '~components/Hero';
 import FeatureSection from '~components/LandingPageComponent/FeatureSection';
 import ReviewsFeature from '~components/LandingPageComponent/ReviewsFeature';
+import FinalLowerCTA from '~/components/LandingPageComponent/FinalLowerCTA';
 
 export const Homepage = () => {
   const dispatch = useDispatch();
@@ -34,6 +35,11 @@ export const Homepage = () => {
   const handleFreeTrial = () => {
     setSignupPopup(true);
   };
+
+  const handleGetStarted = () => {
+    // Your get started logic here
+  };
+
   return (
     <div>
       <div className="mobile-navbar-wrapper">
@@ -50,10 +56,13 @@ export const Homepage = () => {
       <FeatureSection onGetStarted={handleFreeTrial} />
       <ReviewsFeature />
       <FeatureHighlight />
-      {/* <SupportedAppSection />
+      <FinalLowerCTA onGetStarted={handleGetStarted} />
       <FeatureHighlightSection />
       <FeatureHighlightSection primary />
       <FeatureHighlightSection />
+      <FeatureHighlightSection />
+      <FeatureHighlightSection />
+      {/* <SupportedAppSection />
       <FeatureHighlightSection primary />
       <FeatureHighlightSection />
       <FeatureHighlightSection primary />
