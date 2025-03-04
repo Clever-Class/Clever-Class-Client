@@ -50,7 +50,7 @@ export const Homepage = () => {
       <FeatureSection onGetStarted={handleFreeTrial} />
       <ReviewsFeature />
       <FeatureHighlight />
-      <SupportedAppSection />
+      {/* <SupportedAppSection />
       <FeatureHighlightSection />
       <FeatureHighlightSection primary />
       <FeatureHighlightSection />
@@ -61,7 +61,7 @@ export const Homepage = () => {
       <PricingPlans onSignupClick={handlePricingSignupClick} />
       <FAQ />
       <LowerCTA />
-      <Footer />
+      <Footer /> */}
     </div>
   );
 };
