@@ -22,6 +22,7 @@ import Hero from '~components/Hero';
 import FeatureSection from '~components/LandingPageComponent/FeatureSection';
 import ReviewsFeature from '~components/LandingPageComponent/ReviewsFeature';
 import FinalLowerCTA from '~/components/LandingPageComponent/FinalLowerCTA';
+import LandingShowcase from '~components/LandingShowcase';
 
 export const Homepage = () => {
   const dispatch = useDispatch();
@@ -56,12 +57,9 @@ export const Homepage = () => {
       <FeatureSection onGetStarted={handleFreeTrial} />
       <ReviewsFeature />
       <FeatureHighlight />
+      <LandingShowcase />
+      <LandingShowcase theme="dark" />
       <FinalLowerCTA onGetStarted={handleGetStarted} />
-      <FeatureHighlightSection />
-      <FeatureHighlightSection primary />
-      <FeatureHighlightSection />
-      <FeatureHighlightSection />
-      <FeatureHighlightSection />
       {/* <SupportedAppSection />
       <FeatureHighlightSection primary />
       <FeatureHighlightSection />

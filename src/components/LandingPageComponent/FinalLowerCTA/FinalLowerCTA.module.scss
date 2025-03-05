@@ -214,3 +214,13 @@
     transform: translateX(100%);
   }
 }
+
+@keyframes subtleTearWave {
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(1.02);
+  }
+}
