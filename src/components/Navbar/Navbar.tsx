@@ -32,25 +32,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
   const menuVariants = {
     closed: {
       opacity: 0,
-      y: -10,
-      scale: 0.95,
+      scale: 0.98,
+      y: -5,
       transition: {
         duration: 0.25,
-        ease: [0.4, 0, 0.2, 1],
-        staggerChildren: 0.05,
-        staggerDirection: -1,
-        when: 'afterChildren',
+        ease: [0.32, 0, 0.67, 0],
       },
     },
     open: {
       opacity: 1,
-      y: 0,
       scale: 1,
+      y: 0,
       transition: {
-        duration: 0.3,
-        ease: [0, 0, 0.2, 1],
-        staggerChildren: 0.07,
-        delayChildren: 0.1,
+        duration: 0.25,
+        ease: [0.33, 1, 0.68, 1],
       },
     },
   };
@@ -58,18 +53,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
   const menuItemVariants = {
     closed: {
       opacity: 0,
-      x: -20,
       transition: {
-        duration: 0.2,
-        ease: [0.4, 0, 1, 1],
+        duration: 0.1,
       },
     },
     open: {
       opacity: 1,
-      x: 0,
       transition: {
-        duration: 0.3,
-        ease: [0, 0, 0.2, 1],
+        duration: 0.15,
+        delay: 0.1,
       },
     },
   };
@@ -149,32 +141,32 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
             exit="closed"
             variants={menuVariants}
           >
-            <motion.ul className={styles.mobileMenuLinks}>
-              <motion.li variants={menuItemVariants}>
+            <ul className={styles.mobileMenuLinks}>
+              <li>
                 <a href="#extention">Chrome Extension</a>
-              </motion.li>
-              <motion.li variants={menuItemVariants}>
+              </li>
+              <li>
                 <a href="#notebook">Notebook</a>
-              </motion.li>
-              <motion.li variants={menuItemVariants}>
+              </li>
+              <li>
                 <a href="#help-center">Help Center</a>
-              </motion.li>
-              <motion.li variants={menuItemVariants}>
+              </li>
+              <li>
                 <a href="#pricing">Pricing</a>
-              </motion.li>
+              </li>
               {userToken ? (
-                <motion.li variants={menuItemVariants}>
+                <li>
                   <a href="/dashboard" className={styles.mobileMenuDashboard}>
                     <RxDashboard className={styles.icon} />
                     Dashboard
                   </a>
-                </motion.li>
+                </li>
               ) : (
                 <>
-                  <motion.li variants={menuItemVariants}>
+                  <li>
                     <a href="/login">Log in</a>
-                  </motion.li>
-                  <motion.li variants={menuItemVariants}>
+                  </li>
+                  <li>
                     <a
                       href="#start-trial"
                       className={styles.mobileMenuJoinFree}
@@ -182,10 +174,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
                     >
                       Join for free
                     </a>
-                  </motion.li>
+                  </li>
                 </>
               )}
-            </motion.ul>
+            </ul>
           </motion.div>
         )}
       </AnimatePresence>
