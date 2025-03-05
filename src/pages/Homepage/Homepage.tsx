@@ -54,13 +54,13 @@ export const Homepage = () => {
       <LandingShowcase />
       <LandingShowcase theme="dark" />
       <FinalLowerCTA onGetStarted={handleGetStarted} />
+      <FAQ />
       {/* <SupportedAppSection />
       <FeatureHighlightSection primary />
       <FeatureHighlightSection />
       <FeatureHighlightSection primary />
       <TestimonialsSection />
       <PricingPlans onSignupClick={handlePricingSignupClick} />
-      <FAQ />
       <LowerCTA />
       <Footer /> */}
     </div>
