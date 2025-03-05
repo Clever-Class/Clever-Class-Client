@@ -454,7 +454,9 @@ $desktop-lg: 1440px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background-color: #f8f9fa;
+  background: #f8f9fa;
+  position: relative;
+  z-index: 2;
 
   @media (max-width: $laptop) {
     transform: none;
@@ -477,6 +479,7 @@ $desktop-lg: 1440px;
     margin-top: 1rem;
     border-radius: 0.75rem;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    background: #f8f9fa;
   }
 
   .heroVideo {
@@ -484,6 +487,7 @@ $desktop-lg: 1440px;
     height: 100%;
     object-fit: cover;
     border-radius: inherit;
+    background: #f8f9fa;
   }
 }
 

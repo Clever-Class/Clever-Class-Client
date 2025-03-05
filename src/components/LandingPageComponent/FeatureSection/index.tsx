@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styles from './FeatureSection.module.scss';
 import { FeatureSectionProps } from './FeatureSection.types';
 import ChromeExtensionIcon from '../../../assets/icons/ChromeExtensionIcon';
+import featureSectionSideBackground from '../../../assets/images/extension-bg-browser.png';
 import {
   FaSquareRootAlt,
   FaAtom,
@@ -154,6 +155,11 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
         transform: 'translateZ(0)',
       }}
     >
+      <img
+        src={featureSectionSideBackground}
+        alt="Feature Section Side Background"
+        className={styles.featureSectionSideBackground}
+      />
       <div className={styles.heroBackground}>
         <div className={styles.gradientOverlay}></div>
       </div>
