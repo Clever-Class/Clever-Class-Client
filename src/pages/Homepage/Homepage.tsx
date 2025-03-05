@@ -6,7 +6,6 @@ import {
   FeatureHighlightSection,
   Footer,
   LowerCTA,
-  MobileNavbar,
   Navbar,
   SignupPopup,
   SupportedAppSection,
@@ -43,12 +42,7 @@ export const Homepage = () => {
 
   return (
     <div>
-      <div className="mobile-navbar-wrapper">
-        <MobileNavbar />
-      </div>
-      <div className="desktop-navbar-wrapper">
-        <Navbar onSignupClick={handleFreeTrial} />
-      </div>
+      <Navbar onSignupClick={handleFreeTrial} />
 
       {/* Signup Popup */}
       {signupPopup && <SignupPopup onClose={() => setSignupPopup(false)} />}

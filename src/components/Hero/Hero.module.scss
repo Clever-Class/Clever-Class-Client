@@ -167,11 +167,13 @@ $desktop-lg: 1440px;
   }
 
   @include respond-to(tablet) {
-    padding: 2rem 0;
     justify-content: flex-start;
+    padding: 2rem 0;
+    padding-top: 6rem;
   }
   @include respond-to(mobile) {
     padding: 2rem 0;
+    padding-top: 6rem;
     min-height: auto;
   }
 }
