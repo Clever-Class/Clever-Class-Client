@@ -291,13 +291,36 @@
       border: 1px solid rgba(37, 99, 235, 0.1);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1),
         0 0 0 1px rgba(37, 99, 235, 0.05);
-      transform: perspective(1000px) rotateY(5deg) rotateX(5deg);
+      transform: perspective(1000px) rotateX(6deg) rotateY(6deg) rotateZ(0.5deg);
+      transform-origin: center center;
+      animation: floatLight 6s ease-in-out infinite;
+
+      @keyframes floatLight {
+        0%,
+        100% {
+          transform: perspective(1000px) rotateX(6deg) rotateY(6deg)
+            rotateZ(0.5deg) translateY(0);
+        }
+        50% {
+          transform: perspective(1000px) rotateX(6deg) rotateY(6deg)
+            rotateZ(0.5deg) translateY(-10px);
+        }
+      }
 
       &:hover {
-        transform: perspective(1000px) rotateY(2deg) rotateX(2deg)
-          translateY(-5px);
+        transform: perspective(1000px) rotateX(4deg) rotateY(4deg)
+          rotateZ(0.25deg) translateY(-5px);
         box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15),
           0 0 0 1px rgba(37, 99, 235, 0.1);
+      }
+
+      @include respond-to(tablet) {
+        transform: none;
+        animation: none;
+
+        &:hover {
+          transform: translateY(-5px);
+        }
       }
 
       .qualityOption {
@@ -417,7 +440,11 @@
 
       .title {
         color: $white;
-        background: linear-gradient(to bottom, white, rgba(37, 99, 255, 0.1));
+        background: linear-gradient(
+          to bottom,
+          white,
+          rgba(143, 175, 255, 0.225)
+        );
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -432,6 +459,7 @@
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+          font-weight: 800;
         }
       }
 
@@ -445,10 +473,37 @@
       border: 1px solid rgba(37, 99, 255, 0.15);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
         0 0 0 1px rgba(37, 99, 255, 0.1), 0 0 40px rgba(37, 99, 255, 0.2);
+      transform: perspective(1000px) rotateX(6deg) rotateY(-6deg)
+        rotateZ(-0.5deg);
+      transform-origin: center center;
+      animation: float 6s ease-in-out infinite;
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: perspective(1000px) rotateX(6deg) rotateY(-6deg)
+            rotateZ(-0.5deg) translateY(0);
+        }
+        50% {
+          transform: perspective(1000px) rotateX(6deg) rotateY(-6deg)
+            rotateZ(-0.5deg) translateY(-10px);
+        }
+      }
 
       &:hover {
+        transform: perspective(1000px) rotateX(4deg) rotateY(-4deg)
+          rotateZ(-0.25deg) translateY(-5px);
         box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5),
           0 0 0 1px rgba(37, 99, 255, 0.15), 0 0 60px rgba(37, 99, 255, 0.25);
+      }
+
+      @include respond-to(tablet) {
+        transform: none;
+        animation: none;
+
+        &:hover {
+          transform: translateY(-5px);
+        }
       }
 
       .qualityOption {
