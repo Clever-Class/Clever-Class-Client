@@ -180,7 +180,6 @@
     border-radius: 12px;
     border: none;
     cursor: pointer;
-    width: 80%;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
     &:hover {
@@ -320,7 +319,8 @@
   }
 
   .cardFooter {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 1.5rem;
     padding-top: 1.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);

@@ -75,8 +75,8 @@ $desktop-lg: 1440px;
     background-size: 500px auto;
     background-repeat: repeat;
     opacity: 0.08;
-    animation: floatBackground 40s linear infinite;
     filter: blur(0.5px);
+    z-index: 1;
   }
 
   &::after {
@@ -88,6 +88,7 @@ $desktop-lg: 1440px;
       rgba(37, 99, 235, 0.08),
       transparent 60%
     );
+    z-index: 1;
   }
 
   .gradientOverlay {
@@ -119,13 +120,12 @@ $desktop-lg: 1440px;
     overflow: hidden;
     opacity: 0.035;
     pointer-events: none;
-    z-index: 2;
+    z-index: 1;
 
     .row {
       position: absolute;
       display: flex;
       gap: 4rem;
-      animation: floatLeft 120s linear infinite;
       opacity: 0.7;
       width: max-content;
 
@@ -134,34 +134,19 @@ $desktop-lg: 1440px;
         height: 32px;
         opacity: 0.5;
         filter: brightness(0);
-        transition: transform 0.3s ease;
-
-        &:hover {
-          transform: translateY(-2px);
-        }
       }
 
       &:nth-child(1) {
         top: 15%;
-        animation: floatLeft 110s linear infinite;
       }
-
       &:nth-child(2) {
         top: 40%;
-        animation: floatRight 100s linear infinite;
-        animation-delay: -30s;
       }
-
       &:nth-child(3) {
         top: 65%;
-        animation: floatLeft 90s linear infinite;
-        animation-delay: -20s;
       }
-
       &:nth-child(4) {
         top: 85%;
-        animation: floatRight 80s linear infinite;
-        animation-delay: -50s;
       }
     }
   }
@@ -179,6 +164,8 @@ $desktop-lg: 1440px;
 }
 
 .heroContainer {
+  position: relative;
+  z-index: 2;
   width: 100%;
   max-width: min(90%, 1200px);
   margin: 0 auto;
@@ -207,6 +194,8 @@ $desktop-lg: 1440px;
 }
 
 .heroCTAContainer {
+  position: relative;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -490,38 +479,5 @@ $desktop-lg: 1440px;
     object-fit: cover;
     border-radius: inherit;
     background: #f8f9fa;
-  }
-}
-
-@keyframes floatBackground {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 600px -600px;
-  }
-}
-
-@keyframes floatLeft {
-  0% {
-    transform: translateX(100%) translateY(0);
-  }
-  50% {
-    transform: translateX(0) translateY(-10px);
-  }
-  100% {
-    transform: translateX(-100%) translateY(0);
-  }
-}
-
-@keyframes floatRight {
-  0% {
-    transform: translateX(-100%) translateY(0);
-  }
-  50% {
-    transform: translateX(0) translateY(-10px);
-  }
-  100% {
-    transform: translateX(100%) translateY(0);
   }
 }
