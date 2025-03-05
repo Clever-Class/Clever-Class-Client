@@ -1,127 +1,134 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
+import { FaGithub, FaTwitter, FaLinkedinIn, FaInstagram } from 'react-icons/fa';
+import styles from './Footer.module.scss';
 
-import { FaTiktok, FaInstagram, FaFacebookF } from 'react-icons/fa';
-import { RiTwitterXFill } from 'react-icons/ri';
+const Footer = () => {
+  const currentYear = new Date().getFullYear();
 
-import ChromeWebStoreBadge from '../../../public/asset/chrome_web_store.svg';
-import AppleStoreBadge from '../../../public/asset/Download_on_the_App_Store_Badge.svg.webp';
-import PlayStoreBadge from '../../../public/asset/GetItOnGooglePlay_Badge_Web_color_English.png';
+  const footerLinks = {
+    product: [
+      { name: 'Features', href: '/features' },
+      { name: 'Pricing', href: '/pricing' },
+      { name: 'Use Cases', href: '/use-cases' },
+      { name: 'Resources', href: '/resources' },
+    ],
+    company: [
+      { name: 'About Us', href: '/about' },
+      { name: 'Blog', href: '/blog' },
+      { name: 'Careers', href: '/careers' },
+      { name: 'Contact', href: '/contact' },
+    ],
+    support: [
+      { name: 'Help Center', href: '/help' },
+      { name: 'Terms of Service', href: '/terms' },
+      { name: 'Privacy Policy', href: '/privacy' },
+      { name: 'Status', href: '/status' },
+    ],
+  };
 
-import './Footer.scss';
+  const socialLinks = [
+    {
+      name: 'GitHub',
+      href: 'https://github.com',
+      icon: FaGithub,
+    },
+    {
+      name: 'Twitter',
+      href: 'https://twitter.com',
+      icon: FaTwitter,
+    },
+    {
+      name: 'LinkedIn',
+      href: 'https://linkedin.com',
+      icon: FaLinkedinIn,
+    },
+    {
+      name: 'Instagram',
+      href: 'https://instagram.com',
+      icon: FaInstagram,
+    },
+  ];
 
-const socialIcons = [
-  <FaTiktok />,
-  <FaInstagram />,
-  <FaFacebookF />,
-  <RiTwitterXFill />,
-];
-
-export const Footer = () => {
   return (
-    <footer className="footer">
-      <div className="footer-body">
-        <div className="title-and-logo">
-          <h2>Clever Class</h2>
-          <div className="footer-social-icons">
-            {socialIcons.map((icon, index) => (
-              <div key={index} className="social-icon">
-                {icon}
-              </div>
-            ))}
+    <footer className={styles.footer}>
+      <div className={styles.container}>
+        <div className={styles.content}>
+          {/* Brand Section */}
+          <div className={styles.brand}>
+            <Link to="/" className={styles.logo}>
+              Clever Class
+            </Link>
+            <p className={styles.description}>
+              Empowering education through AI-powered learning assistance.
+              Transform the way you learn with personalized study tools and
+              instant support.
+            </p>
+            <div className={styles.social}>
+              {socialLinks.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.socialLink}
+                  aria-label={item.name}
+                >
+                  <item.icon />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Links Sections */}
+          <div className={styles.links}>
+            <div className={styles.linkGroup}>
+              <h3>Product</h3>
+              <ul>
+                {footerLinks.product.map((link) => (
+                  <li key={link.name}>
+                    <Link to={link.href}>{link.name}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className={styles.linkGroup}>
+              <h3>Company</h3>
+              <ul>
+                {footerLinks.company.map((link) => (
+                  <li key={link.name}>
+                    <Link to={link.href}>{link.name}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className={styles.linkGroup}>
+              <h3>Support</h3>
+              <ul>
+                {footerLinks.support.map((link) => (
+                  <li key={link.name}>
+                    <Link to={link.href}>{link.name}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-        <div className="download-store-badges">
-          <img src={AppleStoreBadge} alt="" />
-          <img src={PlayStoreBadge} alt="" />
-        </div>
-      </div>
-      <div className="footer-content">
-        <div className="footer-links">
-          <div className="footer-column">
-            <h3>PRODUCT</h3>
-            <ul>
-              <li>
-                <a href="#">Extension</a>
-              </li>
-              <li>
-                <a href="#">Mobile</a>
-              </li>
-              <li>
-                <a href="#">Chat</a>{' '}
-                <i className="fas fa-external-link-alt"></i>
-              </li>
-              <li>
-                <a href="#">Write</a>{' '}
-                <i className="fas fa-external-link-alt"></i>
-              </li>
-              <li>
-                <a href="#">Pricing</a>
-              </li>
-            </ul>
-          </div>
-          <div className="footer-column">
-            <h3>PLATFORM</h3>
-            <ul>
-              <li>
-                <a href="#">Log In</a>
-              </li>
-              <li>
-                <a href="#">Sign Up</a>
-              </li>
-              <li>
-                <a href="#">Recover</a>
-              </li>
-            </ul>
-          </div>
-          <div className="footer-column">
-            <h3>RESOURCES</h3>
-            <ul>
-              <li>
-                <a href="#">Help Center</a>{' '}
-                <i className="fas fa-external-link-alt"></i>
-              </li>
-              <li>
-                <a href="#">Support</a>
-              </li>
-              <li>
-                <a href="#">Academic Honesty</a>
-              </li>
-              <li>
-                <a href="#">FAQ</a> <i className="fas fa-external-link-alt"></i>
-              </li>
-              <li>
-                <a href="#">Influencer Program</a>
-              </li>
-              <li>
-                <a href="#">Careers</a>
-              </li>
-            </ul>
-          </div>
-          <div className="footer-column">
-            <h3>LEGAL</h3>
-            <ul>
-              <li>
-                <a href="#">Terms of Use</a>
-              </li>
-              <li>
-                <a href="#">Privacy Policy</a>
-              </li>
-              <li>
-                <a href="#">Acceptable Use</a>
-              </li>
-            </ul>
+
+        {/* Bottom Bar */}
+        <div className={styles.bottom}>
+          <p className={styles.copyright}>
+            © {currentYear} Clever Class. All rights reserved.
+          </p>
+          <div className={styles.locale}>
+            <span>English (US)</span>
+            <span>USD $</span>
           </div>
         </div>
-      </div>
-      <div className="horizontal-line"></div>
-      <div className="footer-bottom">
-        <p>© 2024 - Coursology LLC. All rights reserved.</p>
-        <p>
-          <a href="#">
-            English <i className="fas fa-globe"></i>
-          </a>
-        </p>
       </div>
     </footer>
   );
 };
+
+export default Footer;

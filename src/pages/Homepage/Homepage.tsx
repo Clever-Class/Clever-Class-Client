@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import {
   FeatureHighlight,
   FeatureHighlightSection,
-  Footer,
   LowerCTA,
   Navbar,
   SignupPopup,
@@ -22,6 +21,8 @@ import FeatureSection from '~components/LandingPageComponent/FeatureSection';
 import ReviewsFeature from '~components/LandingPageComponent/ReviewsFeature';
 import FinalLowerCTA from '~/components/LandingPageComponent/FinalLowerCTA';
 import LandingShowcase from '~components/LandingShowcase';
+import Footer from '~components/Footer/Footer';
+import CTASection from '~components/CTASection';
 
 export const Homepage = () => {
   const dispatch = useDispatch();
@@ -55,6 +56,8 @@ export const Homepage = () => {
       <LandingShowcase theme="dark" />
       <FinalLowerCTA onGetStarted={handleGetStarted} />
       <FAQ />
+      <CTASection />
+      <Footer />
       {/* <SupportedAppSection />
       <FeatureHighlightSection primary />
       <FeatureHighlightSection />
@@ -62,7 +65,7 @@ export const Homepage = () => {
       <TestimonialsSection />
       <PricingPlans onSignupClick={handlePricingSignupClick} />
       <LowerCTA />
-      <Footer /> */}
+      */}
     </div>
   );
 };

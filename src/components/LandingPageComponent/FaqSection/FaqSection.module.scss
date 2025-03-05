@@ -115,7 +115,7 @@
     transform: translateX(-50%);
     width: 80px;
     height: 4px;
-    background: linear-gradient(90deg, $primary-blue, $primary-pink);
+    background: $primary-blue;
     border-radius: 2px;
 
     @media (max-width: $tablet) {
