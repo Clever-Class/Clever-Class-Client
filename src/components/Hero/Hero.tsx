@@ -37,8 +37,52 @@ const Hero: React.FC = () => {
     console.log('Get Started clicked');
   };
 
+  const studyIcons = [
+    'math',
+    'chemistry',
+    'physics',
+    'biology',
+    'computer',
+    'notes',
+    'book',
+    'calculator',
+    'pencil',
+    'flask',
+    'dna',
+    'atom',
+    'graph',
+    'microscope',
+    'formula',
+    'notebook',
+    'laptop',
+    'globe',
+    'test',
+    'brain',
+  ];
+
+  const renderIconRow = (start: number, count: number) => (
+    <div className={styles.row}>
+      {studyIcons.slice(start, start + count).map((icon, index) => (
+        <img
+          key={`${icon}-${index}`}
+          src={`/study-icons/${icon}.svg`}
+          alt={icon}
+          loading="lazy"
+        />
+      ))}
+    </div>
+  );
+
   return (
     <section ref={heroRef} className={styles.hero} aria-label="Hero Section">
+      <div className={styles.gradientOverlay} />
+      <div className={styles.patternBackground}>
+        {renderIconRow(0, 5)}
+        {renderIconRow(5, 5)}
+        {renderIconRow(10, 5)}
+        {renderIconRow(15, 5)}
+      </div>
+
       <div className={styles.heroContainer}>
         <div className={styles.heroCTAContainer}>
           <div className={styles.content}>

@@ -73,6 +73,8 @@
 
     @include respond-to(mobile) {
       padding: 2rem 0;
+      opacity: 0.04;
+      animation: scrollBackgroundMobile 25s linear infinite;
 
       &::before,
       &::after {
@@ -91,6 +93,17 @@
     100% {
       transform: translateY(calc(-50% + 4rem));
       opacity: 0.15;
+    }
+  }
+
+  @keyframes scrollBackgroundMobile {
+    0% {
+      transform: translateY(0);
+      opacity: 0.08;
+    }
+    100% {
+      transform: translateY(calc(-50% + 4rem));
+      opacity: 0.08;
     }
   }
 
