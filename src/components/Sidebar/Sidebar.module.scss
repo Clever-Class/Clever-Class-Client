@@ -1,5 +1,6 @@
 // Sidebar.module.scss
 @import 'sidebar.variables';
+@import '../../styles/variables';
 
 .sidebar {
   display: flex;
@@ -16,8 +17,9 @@
   border-right: 1px solid rgba(37, 99, 255, 0.15);
   box-shadow: 20px 0 40px rgba(0, 0, 0, 0.4);
   z-index: 100;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: width;
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: width, transform;
+  transform-origin: left center;
   // overflow: hidden;
 
   &::before {
@@ -31,11 +33,15 @@
     );
     opacity: 0.5;
     pointer-events: none;
-    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   &.collapsed {
-    width: fit-content;
+    width: 100px;
+    transform: translateX(0);
+    background: rgba(11, 20, 55, 0.98);
+    border-right: 1px solid rgba(37, 99, 255, 0.2);
+    box-shadow: 12px 0 32px rgba(0, 0, 0, 0.3);
 
     .brandName,
     .itemText,
@@ -44,62 +50,161 @@
     .upgradeBox button {
       opacity: 0;
       visibility: hidden;
-      transform: translateX(-10px) scale(0.9);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateX(-20px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       width: 0;
     }
 
     .menuItem {
-      padding: $spacing-md 0;
+      padding: 16px;
+      margin: 4px 12px;
       justify-content: center;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      width: 90px;
+      border-radius: 16px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      width: auto;
+      background: rgba(37, 99, 255, 0.05);
+      border: 1px solid rgba(37, 99, 255, 0.1);
 
       .iconContainer {
         transform: scale(1.1);
+        svg {
+          width: 24px;
+          height: 24px;
+        }
       }
 
       &:hover {
         background: rgba(37, 99, 255, 0.15);
-        transform: translateY(-2px) scale(1.05);
+        transform: translateY(-2px);
+        border-color: rgba(37, 99, 255, 0.2);
+        box-shadow: 0 8px 24px rgba(37, 99, 255, 0.2);
+      }
+
+      &.active {
+        background: rgba(37, 99, 255, 0.2);
+        border-color: rgba(37, 99, 255, 0.3);
+        box-shadow: 0 8px 24px rgba(37, 99, 255, 0.25);
+
+        .iconContainer {
+          color: #fff;
+        }
+
+        &::before {
+          width: 3px;
+          box-shadow: 0 0 12px rgba(37, 99, 255, 0.4);
+        }
       }
     }
 
     .collapseButton {
       transform: rotate(180deg);
-      right: -13px;
-    }
+      right: -14px;
+      background: rgba(37, 99, 255, 0.1);
+      border-color: rgba(37, 99, 255, 0.25);
+      box-shadow: 4px 0 16px rgba(0, 0, 0, 0.2);
 
-    .sidebarFooter {
-      align-items: center;
-      padding: 20px 10px;
-
-      .upgradeBox {
-        padding: 12px;
-        width: 70px;
-        height: 70px;
-        justify-content: center;
-
-        .avatar {
-          width: 32px;
-          height: 32px;
-          margin: 0;
-        }
+      &:hover {
+        background: rgba(37, 99, 255, 0.2);
+        transform: rotate(180deg) translateY(-2px);
       }
     }
 
     .sidebarHeader {
       padding: 24px 12px;
       justify-content: center;
+      border-bottom: 1px solid rgba(37, 99, 255, 0.1);
 
       .logoContainer {
         justify-content: center;
 
         .logo {
-          transform: scale(1.1);
+          width: 44px;
+          height: 44px;
           margin: 0;
+          transform: scale(1);
+          border-color: rgba(37, 99, 255, 0.25);
+          box-shadow: 0 8px 24px rgba(37, 99, 255, 0.2);
         }
       }
+    }
+
+    .sidebarContent {
+      padding: 20px 0;
+    }
+
+    .sidebarFooter {
+      padding: 16px;
+      min-height: 100px;
+      justify-content: center;
+
+      .upgradeBox {
+        width: 68px;
+        height: 68px;
+        padding: 12px;
+        border-radius: 16px;
+        background: rgba(37, 99, 255, 0.1);
+        border: 1px solid rgba(37, 99, 255, 0.2);
+        box-shadow: 0 8px 24px rgba(37, 99, 255, 0.15);
+        margin: 0;
+
+        .avatar {
+          width: 44px;
+          height: 44px;
+          margin: 0;
+          border-radius: 14px;
+        }
+
+        &:hover {
+          transform: translateY(-2px);
+          background: rgba(37, 99, 255, 0.15);
+          border-color: rgba(37, 99, 255, 0.3);
+          box-shadow: 0 12px 28px rgba(37, 99, 255, 0.2);
+        }
+
+        p,
+        button {
+          display: none;
+        }
+      }
+
+      .demoMode {
+        display: none;
+      }
+    }
+
+    .logoutButton {
+      padding: 16px;
+      margin: 4px 12px;
+      justify-content: center;
+      border-radius: 16px;
+      width: 76%;
+      background: rgba(251, 113, 133, 0.05);
+      border: 1px solid rgba(251, 113, 133, 0.1);
+
+      span {
+        display: none;
+      }
+
+      .iconContainer {
+        transform: scale(1.1);
+        svg {
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(251, 113, 133, 0.2);
+        background: rgba(251, 113, 133, 0.15);
+        border-color: rgba(251, 113, 133, 0.2);
+      }
+    }
+
+    .logoutWrapper {
+      padding: 0;
+      margin: 16px 0 0 0;
+      width: 100%;
     }
   }
 }
@@ -189,10 +294,10 @@
 
 .sidebarContent {
   flex: 1;
-  padding: 20px 16px;
+  padding: 24px 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
   overflow-y: auto;
 
   &::-webkit-scrollbar {
@@ -217,17 +322,18 @@
 .menuItem {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
-  border-radius: 12px;
+  padding: 14px 18px;
+  border-radius: 14px;
   cursor: pointer;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: rgba(255, 255, 255, 0.7);
-  gap: 12px;
+  gap: 16px;
   position: relative;
   border: 1px solid transparent;
   will-change: transform;
   overflow: hidden;
-  min-height: 48px;
+  min-height: 54px;
+  margin: 2px 0;
 
   &:hover {
     background: rgba(37, 99, 255, 0.1);
@@ -241,7 +347,7 @@
     background: rgba(37, 99, 255, 0.15);
     color: white;
     border: 1px solid rgba(37, 99, 255, 0.25);
-    box-shadow: 0 4px 12px rgba(37, 99, 255, 0.15);
+    box-shadow: 0 8px 24px rgba(37, 99, 255, 0.15);
 
     &::before {
       content: '';
@@ -252,8 +358,12 @@
       width: 3px;
       background: #2563ff;
       border-radius: 0 4px 4px 0;
-      box-shadow: 0 0 12px rgba(37, 99, 255, 0.5);
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 12px rgba(37, 99, 255, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .iconContainer {
+      color: #fff;
     }
   }
 
@@ -263,7 +373,13 @@
     justify-content: center;
     width: 24px;
     height: 24px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: rgba(255, 255, 255, 0.7);
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
   }
 
   .itemText {
@@ -289,8 +405,11 @@
   background: rgba(11, 20, 55, 0.98);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  min-height: 200px;
+  min-height: 120px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   .demoMode {
     display: flex;
@@ -300,6 +419,7 @@
     margin-bottom: 16px;
     font-size: 14px;
     overflow: hidden;
+    width: 100%;
 
     span {
       font-size: $font-size-sm;
@@ -308,26 +428,28 @@
       width: 180px;
       overflow: hidden;
       text-overflow: ellipsis;
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
   }
 
   .upgradeBox {
     background: rgba(37, 99, 255, 0.1);
     border: 1px solid rgba(37, 99, 255, 0.15);
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 16px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 12px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    width: 100%;
 
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(37, 99, 255, 0.15);
       border-color: rgba(37, 99, 255, 0.25);
+      background: rgba(37, 99, 255, 0.15);
     }
 
     .avatar {
@@ -337,7 +459,7 @@
       background: linear-gradient(135deg, #2563ff, #1e40af);
       border: 1px solid rgba(37, 99, 255, 0.25);
       box-shadow: 0 4px 12px rgba(37, 99, 255, 0.2);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       margin-bottom: 8px;
     }
 
@@ -346,28 +468,25 @@
       font-weight: 500;
       color: white;
       margin: 0;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       white-space: nowrap;
       width: 180px;
       overflow: hidden;
       text-overflow: ellipsis;
+      text-align: center;
     }
 
     button {
-      background: linear-gradient(135deg, #2563ff, #1e40af);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 16px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       width: 100%;
+      padding: 10px 16px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #2563ff, #1e40af);
       border: 1px solid rgba(37, 99, 255, 0.25);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      color: white;
+      font-weight: 500;
+      font-size: 14px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
 
       &:hover {
         transform: translateY(-2px);
@@ -383,30 +502,47 @@
 
 .logoutWrapper {
   margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(37, 99, 255, 0.1);
+  width: 100%;
+  padding: 0 16px;
 }
 
 .logoutButton {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  padding: 16px 18px;
   background: rgba(251, 113, 133, 0.1);
-  border: 1px solid rgba(251, 113, 133, 0.2);
-  border-radius: 12px;
+  border: 1px solid rgba(251, 113, 133, 0.15);
+  border-radius: 14px;
   color: #fb7185;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 14px;
   font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  gap: 16px;
+  min-height: 54px;
+  margin: 2px 0;
 
-  svg {
-    min-width: 20px;
+  .iconContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #fb7185;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &:hover {
@@ -414,17 +550,14 @@
     color: #f43f5e;
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(251, 113, 133, 0.15);
+    border-color: rgba(251, 113, 133, 0.25);
+
+    .iconContainer {
+      color: #f43f5e;
+    }
   }
 
   &:active {
-    transform: translateY(0);
-  }
-
-  span {
-    white-space: nowrap;
-    width: 180px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(0.98);
   }
 }

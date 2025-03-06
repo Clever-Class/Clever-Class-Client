@@ -31,7 +31,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
       route: '/dashboard/ai-chatbot',
     },
     { name: 'Tasks', icon: RiTaskLine, route: '/dashboard/tasks' },
-    { name: 'Calendar', icon: RiCalendarLine, route: '/dashboard/calendar' },
     { name: 'Team', icon: RiTeamLine, route: '/dashboard/team' },
     { name: 'Settings', icon: RiSettingsLine, route: '/dashboard/settings' },
   ];

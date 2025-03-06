@@ -46,12 +46,12 @@
   z-index: 2;
   margin-left: 280px;
   min-height: 100vh;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: auto;
   will-change: margin-left;
 
   &.sidebarCollapsed {
-    margin-left: 90px;
+    margin-left: 100px;
   }
 
   @media (max-width: 1024px) {
