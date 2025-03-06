@@ -4,15 +4,38 @@
 .sidebar {
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, #1a1f37 0%, #111827 100%);
+  background: rgba(11, 20, 55, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: #fff;
   height: 100vh;
-  transition: width 0.3s ease;
-  width: 240px;
-  position: relative;
+  width: 280px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-right: 1px solid rgba(37, 99, 255, 0.15);
+  box-shadow: 20px 0 40px rgba(0, 0, 0, 0.4);
+  z-index: 100;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: width;
+  // overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at 0% 0%,
+      rgba(37, 99, 255, 0.15),
+      transparent 50%
+    );
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
   &.collapsed {
-    width: 90px;
+    width: fit-content;
 
     .brandName,
     .itemText,
@@ -21,85 +44,173 @@
     .upgradeBox button {
       opacity: 0;
       visibility: hidden;
+      transform: translateX(-10px) scale(0.9);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 0;
     }
 
     .menuItem {
       padding: $spacing-md 0;
       justify-content: center;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 90px;
+
+      .iconContainer {
+        transform: scale(1.1);
+      }
+
+      &:hover {
+        background: rgba(37, 99, 255, 0.15);
+        transform: translateY(-2px) scale(1.05);
+      }
     }
 
     .collapseButton {
       transform: rotate(180deg);
+      right: -13px;
     }
 
     .sidebarFooter {
       align-items: center;
+      padding: 20px 10px;
+
+      .upgradeBox {
+        padding: 12px;
+        width: 70px;
+        height: 70px;
+        justify-content: center;
+
+        .avatar {
+          width: 32px;
+          height: 32px;
+          margin: 0;
+        }
+      }
     }
 
-    .logoutButton span {
-      display: none;
+    .sidebarHeader {
+      padding: 24px 12px;
+      justify-content: center;
+
+      .logoContainer {
+        justify-content: center;
+
+        .logo {
+          transform: scale(1.1);
+          margin: 0;
+        }
+      }
     }
   }
 }
 
 .sidebarHeader {
-  padding: 20px;
+  padding: 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(37, 99, 255, 0.1);
+  background: rgba(11, 20, 55, 0.98);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 88px;
+  // overflow: hidden;
+  position: relative;
 
   .logoContainer {
     display: flex;
     align-items: center;
     gap: 12px;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    width: 100%;
 
     .logo {
-      width: 50px;
-      height: 50px;
-      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/2023_Facebook_icon.svg/768px-2023_Facebook_icon.svg.png');
+      width: 40px;
+      height: 40px;
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(37, 99, 255, 0.2);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-right: 12px;
     }
 
     .brandName {
       font-size: 18px;
       font-weight: 600;
       color: white;
+      background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.7));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: left center;
+      white-space: nowrap;
+      width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 
   .collapseButton {
-    background: transparent;
-    border: none;
-    color: #64748b;
+    position: absolute;
+    right: -14px;
+    top: 28px;
+    width: 28px;
+    height: 28px;
+    background: rgba(11, 20, 55, 0.98);
+    border: 1px solid rgba(37, 99, 255, 0.2);
+    color: #fff;
     cursor: pointer;
-    padding: 8px;
-    border-radius: 6px;
-    transition: all 0.2s;
+    border-radius: 10px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
+    z-index: 101;
+    will-change: transform;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
+      background: rgba(37, 99, 255, 0.2);
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 4px 4px 20px rgba(37, 99, 255, 0.2);
+    }
+
+    &:active {
+      transform: scale(0.95);
     }
   }
 }
 
 .sidebarContent {
   flex: 1;
-  padding: 20px 12px;
+  padding: 20px 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  overflow: -moz-scrollbars-none;
-  -ms-overflow-style: none;
+  overflow-y: auto;
 
   &::-webkit-scrollbar {
-    width: 0 !important;
-    display: none;
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(37, 99, 255, 0.3);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba(37, 99, 255, 0.5);
+    }
   }
 }
 
@@ -107,23 +218,43 @@
   display: flex;
   align-items: center;
   padding: 12px 16px;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.2s;
-  color: #94a3b8;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  color: rgba(255, 255, 255, 0.7);
   gap: 12px;
   position: relative;
+  border: 1px solid transparent;
+  will-change: transform;
   overflow: hidden;
-  margin: 0px 4px;
+  min-height: 48px;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(37, 99, 255, 0.1);
     color: white;
+    border: 1px solid rgba(37, 99, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37, 99, 255, 0.15);
   }
 
   &.active {
-    background: #3b82f6;
+    background: rgba(37, 99, 255, 0.15);
     color: white;
+    border: 1px solid rgba(37, 99, 255, 0.25);
+    box-shadow: 0 4px 12px rgba(37, 99, 255, 0.15);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background: #2563ff;
+      border-radius: 0 4px 4px 0;
+      box-shadow: 0 0 12px rgba(37, 99, 255, 0.5);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
   }
 
   .iconContainer {
@@ -132,49 +263,82 @@
     justify-content: center;
     width: 24px;
     height: 24px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .itemText {
     font-size: 14px;
     font-weight: 500;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: left center;
+    white-space: nowrap;
+    width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &:active {
+    transform: scale(0.98);
   }
 }
 
 .sidebarFooter {
   padding: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(37, 99, 255, 0.1);
   margin-top: auto;
-  transition: all $transition-duration ease-in-out;
+  background: rgba(11, 20, 55, 0.98);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  min-height: 200px;
+  overflow: hidden;
 
   .demoMode {
     display: flex;
     align-items: center;
     gap: 12px;
-    color: #94a3b8;
+    color: rgba(255, 255, 255, 0.7);
     margin-bottom: 16px;
     font-size: 14px;
+    overflow: hidden;
 
     span {
       font-size: $font-size-sm;
-      transition: opacity $transition-duration ease-in-out,
-        visibility $transition-duration ease-in-out;
+      transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+      white-space: nowrap;
+      width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
   }
 
   .upgradeBox {
-    background: rgba(59, 130, 246, 0.1);
-    border-radius: 8px;
+    background: rgba(37, 99, 255, 0.1);
+    border: 1px solid rgba(37, 99, 255, 0.15);
+    border-radius: 12px;
     padding: 16px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 12px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37, 99, 255, 0.15);
+      border-color: rgba(37, 99, 255, 0.25);
+    }
 
     .avatar {
       width: 40px;
       height: 40px;
-      border-radius: 50%;
-      background: #3b82f6;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #2563ff, #1e40af);
+      border: 1px solid rgba(37, 99, 255, 0.25);
+      box-shadow: 0 4px 12px rgba(37, 99, 255, 0.2);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-bottom: 8px;
     }
 
     p {
@@ -182,33 +346,45 @@
       font-weight: 500;
       color: white;
       margin: 0;
-      transition: opacity $transition-duration ease-in-out,
-        visibility $transition-duration ease-in-out;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      white-space: nowrap;
+      width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     button {
-      background: #3b82f6;
+      background: linear-gradient(135deg, #2563ff, #1e40af);
       color: white;
       border: none;
-      border-radius: 6px;
-      padding: 8px 16px;
+      border-radius: 8px;
+      padding: 10px 16px;
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       width: 100%;
+      border: 1px solid rgba(37, 99, 255, 0.25);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
       &:hover {
-        background: #2563eb;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(37, 99, 255, 0.2);
+      }
+
+      &:active {
+        transform: translateY(0);
       }
     }
   }
 }
 
 .logoutWrapper {
-  margin-top: auto;
+  margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(37, 99, 255, 0.1);
 }
 
 .logoutButton {
@@ -217,26 +393,38 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  background: transparent;
-  border: none;
-  border-radius: 8px;
+  background: rgba(251, 113, 133, 0.1);
+  border: 1px solid rgba(251, 113, 133, 0.2);
+  border-radius: 12px;
   color: #fb7185;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 14px;
   font-weight: 500;
-  margin: 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   svg {
     min-width: 20px;
   }
 
   &:hover {
-    background: rgba(251, 113, 133, 0.1);
+    background: rgba(251, 113, 133, 0.15);
     color: #f43f5e;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(251, 113, 133, 0.15);
   }
 
   &:active {
-    transform: scale(0.98);
+    transform: translateY(0);
+  }
+
+  span {
+    white-space: nowrap;
+    width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }

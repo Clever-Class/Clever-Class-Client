@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import moment from 'moment';
+import { HiMenuAlt2, HiX } from 'react-icons/hi';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Components
 import { Sidebar } from '~components/Sidebar/Sidebar';
@@ -45,6 +47,21 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const [showPopup, setShowPopup] = useState(false);
   const [isResuming, setIsResuming] = useState(false);
   const [isUpdatingCard, setIsUpdatingCard] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 1024;
+      setIsMobile(mobile);
+      if (mobile) setIsSidebarOpen(false);
+      else setIsSidebarOpen(true);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Fetch user data when component mounts and every 5 minutes
   useEffect(() => {
@@ -60,12 +77,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       }
     };
 
-    // Fetch immediately
     fetchData();
-
-    // Then fetch every 5 minutes
     const interval = setInterval(fetchData, 5 * 60 * 1000);
-
     return () => clearInterval(interval);
   }, [dispatch, navigate]);
 
@@ -90,13 +103,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     }
   }, [user, subscription?.status]);
 
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
+  const handleClosePopup = () => setShowPopup(false);
 
   const handleUpdateCard = () => {
     setIsUpdatingCard(true);
-    // Add a small delay before redirect to show loading state
     setTimeout(() => {
       window.location.href = subscription?.updatePaymentMethodUrl || '';
     }, 500);
@@ -108,7 +118,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       const response = await api.ccServer.post('/subscription/resume-canceled');
       if (response.data.success) {
         toast.success('Subscription resumed successfully');
-        dispatch(fetchUserData()); // Refresh user data
+        dispatch(fetchUserData());
       } else {
         toast.error(response.data.message || 'Failed to resume subscription');
       }
@@ -127,18 +137,74 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   return (
     <div className={styles.dashboard}>
-      <Sidebar />
-      {showPopup && user && (
-        <Payment
-          userId={user.id}
-          priceId={packageId}
-          countryCode={user?.country}
-          email={user?.email}
-          onClose={handleClosePopup}
+      {/* Desktop Sidebar */}
+      {!isMobile && (
+        <Sidebar
+          isCollapsed={!isSidebarOpen}
+          onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
         />
       )}
-      <div className={styles.mainContent}>
+
+      {/* Mobile Sidebar with Animation */}
+      {isMobile && (
+        <AnimatePresence mode="wait">
+          {isSidebarOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.5 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5, ease: 'easeInOut' }}
+                className={styles.overlay}
+                onClick={() => setIsSidebarOpen(false)}
+              />
+              <motion.div
+                initial={{ x: -280, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -280, opacity: 0 }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 300,
+                  damping: 30,
+                  mass: 1,
+                }}
+              >
+                <Sidebar
+                  isCollapsed={false}
+                  onToggle={() => setIsSidebarOpen(false)}
+                />
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+      )}
+
+      <div
+        className={`${styles.mainContent} ${
+          !isSidebarOpen ? styles.sidebarCollapsed : ''
+        }`}
+      >
+        {isMobile && (
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className={styles.menuButton}
+            aria-label="Toggle menu"
+          >
+            {isSidebarOpen ? <HiX size={24} /> : <HiMenuAlt2 size={24} />}
+          </button>
+        )}
+
         <main className={styles.content}>
+          {showPopup && user && (
+            <Payment
+              userId={user.id}
+              priceId={packageId}
+              countryCode={user?.country}
+              email={user?.email}
+              onClose={handleClosePopup}
+            />
+          )}
+
           {subscription?.status === 'past_due' && (
             <WarningBanner
               message={pastDueMessage}
@@ -149,6 +215,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               disabled={isUpdatingCard}
             />
           )}
+
           {subscription?.status === 'canceled' && (
             <WarningBanner
               message={cancelledMessage(subscription?.billingPeriod?.ends_at)}
@@ -158,6 +225,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               disabled={isResuming}
             />
           )}
+
           <div
             className={`${styles.container} ${
               showBanner ? styles.withBanner : ''

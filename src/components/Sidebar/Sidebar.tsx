@@ -14,8 +14,12 @@ import classNames from 'classnames';
 import { BotMessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-export const Sidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+interface SidebarProps {
+  isCollapsed: boolean;
+  onToggle: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
   const [activeItem, setActiveItem] = useState('Dashboard');
   const navigate = useNavigate();
 
@@ -32,10 +36,6 @@ export const Sidebar = () => {
     { name: 'Settings', icon: RiSettingsLine, route: '/dashboard/settings' },
   ];
 
-  const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-
   const handleItemClick = (itemName: string, route: string) => {
     setActiveItem(itemName);
     navigate(route);
@@ -47,10 +47,7 @@ export const Sidebar = () => {
         [styles.collapsed]: isCollapsed,
       })}
     >
-      <SidebarHeader
-        isCollapsed={isCollapsed}
-        toggleCollapse={toggleCollapse}
-      />
+      <SidebarHeader isCollapsed={isCollapsed} toggleCollapse={onToggle} />
       <SidebarContent
         onItemClick={handleItemClick}
         menuItems={menuItems}
