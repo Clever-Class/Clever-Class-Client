@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import moment from 'moment';
 import { HiMenuAlt2, HiX } from 'react-icons/hi';
-import { motion, AnimatePresence } from 'framer-motion';
 
 // Components
 import { Sidebar } from '~components/Sidebar/Sidebar';
@@ -142,41 +141,18 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         <Sidebar
           isCollapsed={!isSidebarOpen}
           onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+          isMobile={false}
         />
       )}
 
-      {/* Mobile Sidebar with Animation */}
+      {/* Mobile Sidebar */}
       {isMobile && (
-        <AnimatePresence mode="wait">
-          {isSidebarOpen && (
-            <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.5 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, ease: 'easeInOut' }}
-                className={styles.overlay}
-                onClick={() => setIsSidebarOpen(false)}
-              />
-              <motion.div
-                initial={{ x: -280, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -280, opacity: 0 }}
-                transition={{
-                  type: 'spring',
-                  stiffness: 300,
-                  damping: 30,
-                  mass: 1,
-                }}
-              >
-                <Sidebar
-                  isCollapsed={false}
-                  onToggle={() => setIsSidebarOpen(false)}
-                />
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
+        <Sidebar
+          isCollapsed={false}
+          onToggle={() => setIsSidebarOpen(false)}
+          isMobile={true}
+          isVisible={isSidebarOpen}
+        />
       )}
 
       <div
@@ -184,7 +160,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           !isSidebarOpen ? styles.sidebarCollapsed : ''
         }`}
       >
-        {isMobile && (
+        {!isSidebarOpen && (
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             className={styles.menuButton}

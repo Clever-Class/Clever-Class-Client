@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   RiDashboardLine,
   RiTaskLine,
@@ -12,16 +12,23 @@ import { SidebarContent } from './SidebarContent/SidebarContent';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import classNames from 'classnames';
 import { BotMessageSquare } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
   isCollapsed: boolean;
   onToggle: () => void;
+  isMobile?: boolean;
+  isVisible?: boolean;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
-  const [activeItem, setActiveItem] = useState('Dashboard');
+export const Sidebar: React.FC<SidebarProps> = ({
+  isCollapsed,
+  onToggle,
+  isMobile = false,
+  isVisible = true,
+}) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const menuItems = [
     { name: 'Dashboard', icon: RiDashboardLine, route: '/dashboard' },
@@ -35,25 +42,47 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
     { name: 'Settings', icon: RiSettingsLine, route: '/dashboard/settings' },
   ];
 
+  // Find active menu item based on current route
+  const activeItem =
+    menuItems.find((item) => {
+      if (item.route === '/dashboard') {
+        return location.pathname === '/dashboard';
+      }
+      return location.pathname.startsWith(item.route);
+    })?.name || 'Dashboard';
+
   const handleItemClick = (itemName: string, route: string) => {
-    setActiveItem(itemName);
     navigate(route);
+    if (isMobile) {
+      onToggle();
+    }
   };
 
   return (
-    <aside
-      className={classNames(styles.sidebar, {
-        [styles.collapsed]: isCollapsed,
-      })}
-    >
-      <SidebarHeader isCollapsed={isCollapsed} toggleCollapse={onToggle} />
-      <SidebarContent
-        onItemClick={handleItemClick}
-        menuItems={menuItems}
-        activeItem={activeItem}
-        isCollapsed={isCollapsed}
-      />
-      {!isCollapsed && <SidebarFooter />}
-    </aside>
+    <>
+      {isMobile && (
+        <div
+          className={classNames(styles.overlay, {
+            [styles.visible]: isVisible,
+          })}
+          onClick={onToggle}
+        />
+      )}
+      <aside
+        className={classNames(styles.sidebar, {
+          [styles.collapsed]: isCollapsed,
+          [styles.visible]: isVisible,
+        })}
+      >
+        <SidebarHeader isCollapsed={isCollapsed} toggleCollapse={onToggle} />
+        <SidebarContent
+          onItemClick={handleItemClick}
+          menuItems={menuItems}
+          activeItem={activeItem}
+          isCollapsed={isCollapsed}
+        />
+        {!isCollapsed && <SidebarFooter />}
+      </aside>
+    </>
   );
 };
