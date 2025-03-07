@@ -1,6 +1,7 @@
 import { Edit2 } from 'lucide-react';
-import './PersonalInfo.scss';
+import { motion } from 'framer-motion';
 import { User } from '~types';
+import styles from './PersonalInfo.module.scss';
 
 interface PersonalInfoProps {
   user: User | null;
@@ -19,56 +20,79 @@ export const PersonalInfo = ({ user }: PersonalInfoProps) => {
   const [firstName, ...lastNameParts] = user.name.split(' ');
   const lastName = lastNameParts.join(' ');
 
+  const fadeInUp = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] },
+  };
+
   return (
-    <div className="personal-info">
-      <div className="personal-info__header">
-        <h3 className="personal-info__title">Personal Information</h3>
-        <button className="personal-info__edit">
-          <Edit2 size={16} />
+    <div className={styles.personalInfo}>
+      <div className={styles.header}>
+        <h3 className={styles.title}>Personal Information</h3>
+        <motion.button
+          className={styles.editButton}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Edit2 />
           <span>Edit</span>
-        </button>
+        </motion.button>
       </div>
 
-      <div className="personal-info__grid">
-        <div className="personal-info__field">
+      <motion.div
+        className={styles.grid}
+        variants={{
+          animate: {
+            transition: {
+              staggerChildren: 0.1,
+            },
+          },
+        }}
+        initial="initial"
+        animate="animate"
+      >
+        <motion.div {...fadeInUp} className={styles.field}>
           <label>First Name</label>
-          <div>{firstName}</div>
-        </div>
+          <div className={styles.value}>{firstName}</div>
+        </motion.div>
 
-        <div className="personal-info__field">
+        <motion.div {...fadeInUp} className={styles.field}>
           <label>Last Name</label>
-          <div>{lastName}</div>
-        </div>
+          <div className={styles.value}>{lastName}</div>
+        </motion.div>
 
-        <div className="personal-info__field">
-          <label>Email address</label>
-          <div>{user.email}</div>
-        </div>
+        <motion.div {...fadeInUp} className={styles.field}>
+          <label>Email Address</label>
+          <div className={styles.value}>{user.email}</div>
+        </motion.div>
 
-        <div className="personal-info__field country-field">
+        <motion.div
+          {...fadeInUp}
+          className={`${styles.field} ${styles.countryField}`}
+        >
           <label>Country</label>
-          <span className="country-field__flag">
+          <div className={styles.flag}>
             <img
               src={`https://flagcdn.com/24x18/${user.country.toLowerCase()}.png`}
               alt={user.country}
               width={24}
               height={18}
-              className="user-info__flag"
             />
             <span>{user.country.toUpperCase()}</span>
-          </span>
-        </div>
+          </div>
+        </motion.div>
 
         {/* <div className="personal-info__field">
           <label>Trial Credits</label>
           <div>{user.trialCredits}</div>
         </div> */}
 
-        <div className="personal-info__field">
+        <motion.div {...fadeInUp} className={styles.field}>
           <label>Joined</label>
-          <div>{joinedDate}</div>
-        </div>
-      </div>
+          <div className={styles.value}>{joinedDate}</div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };
