@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Crown, Gift } from 'lucide-react';
-import { Subscription, SubscriptionStatus } from '~store/types';
+import { Subscription } from '~store/types';
+import { SubscriptionStatus } from '~store/types/subscriptionTypes';
 import { capitalizeFirstLetter } from '~/lib/utils';
 import moment from 'moment';
 import { useState } from 'react';

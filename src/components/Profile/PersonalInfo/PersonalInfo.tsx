@@ -30,14 +30,14 @@ export const PersonalInfo = ({ user }: PersonalInfoProps) => {
     <div className={styles.personalInfo}>
       <div className={styles.header}>
         <h3 className={styles.title}>Personal Information</h3>
-        <motion.button
+        {/* <motion.button
           className={styles.editButton}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
           <Edit2 />
           <span>Edit</span>
-        </motion.button>
+        </motion.button> */}
       </div>
 
       <motion.div

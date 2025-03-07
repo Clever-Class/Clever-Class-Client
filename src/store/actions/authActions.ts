@@ -1,4 +1,4 @@
-import { User } from 'firebase/auth';
+import { User as FirebaseUser } from 'firebase/auth';
 import Cookies from 'js-cookie';
 import { api } from '~api';
 import {
@@ -12,9 +12,13 @@ import {
   SignupUserData,
   LOGOUT,
   UPDATE_USER_DATA,
+  UPDATE_PROFILE_REQUEST,
+  UPDATE_PROFILE_SUCCESS,
+  UPDATE_PROFILE_FAILURE,
 } from '~constants';
 import { AppDispatch } from '~store';
 import { Dispatch } from 'redux';
+import { UpdateProfileData, UpdateProfileResponse, User } from '~types';
 
 export const signupUserAction =
   (userEntryData: SignupUserData) => async (dispatch: AppDispatch) => {
@@ -77,7 +81,8 @@ export const loginUserAction =
   };
 
 export const signupWithGoogleAction =
-  (googleUser: User, selectedPackageId: string) =>
+  (googleUser: FirebaseUser, selectedPackageId: string) =>
+  (googleUser: any, selectedPackageId: string) =>
   async (dispatch: AppDispatch) => {
     try {
       dispatch({ type: SIGNUP_REQUEST });
@@ -145,5 +150,36 @@ export const logout = () => {
   return (dispatch: Dispatch) => {
     Cookies.remove('userToken');
     dispatch({ type: LOGOUT });
+  };
+};
+
+export const updateProfile = (formData: FormData) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const response = await api.ccServer.patch('/user/profile/me', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.data.success) {
+        dispatch({
+          type: UPDATE_PROFILE_SUCCESS,
+          payload: {
+            user: response.data.user,
+            message: response.data.message,
+          },
+        });
+        return response.data;
+      } else {
+        throw new Error(response.data.message || 'Failed to update profile');
+      }
+    } catch (error: any) {
+      dispatch({
+        type: UPDATE_PROFILE_FAILURE,
+        payload: error.response?.data?.message || error.message,
+      });
+      throw error.response?.data?.message || error.message;
+    }
   };
 };
