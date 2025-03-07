@@ -1,17 +1,7 @@
 import { SubscriptionStatus, PaymentStatus } from './types/subscriptionTypes';
+import { User as UserType } from '~/types/user/user.types';
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  country?: string;
-  createdAt: string;
-  trialCredits?: number;
-  firstName?: string;
-  lastName?: string;
-  subscription?: Subscription;
-}
+export type { User } from '~/types/user/user.types';
 
 export interface Subscription {
   isPremiumActive: boolean;

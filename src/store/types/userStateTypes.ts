@@ -1,4 +1,4 @@
-import { User } from '~/types';
+import { User } from '~/types/user/user.types';
 import { Subscription } from '~/store/types';
 
 export interface UserState {
@@ -8,4 +8,5 @@ export interface UserState {
   error: string | null;
   user: User | null;
   subscription: Subscription | null;
+  selectedPackageId: string | null;
 }

@@ -4,15 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import moment from 'moment';
 import { HiMenuAlt2, HiX } from 'react-icons/hi';
+import { Menu } from 'lucide-react';
 
 // Components
 import { Sidebar } from '~components/Sidebar/Sidebar';
 import { Payment } from '~components/Payment';
 import { WarningBanner } from '~components/common/WarningBanner';
+import { History } from '../../History/History';
 
 // Store and Types
-import { RootStateType } from '~store/types';
 import { AppDispatch } from '~store';
+import { RootStateType } from '~store/types/rootStateTypes';
+import { User } from '~/types/user/user.types';
 import { fetchUserData } from '~store/actions/authActions';
 import { api } from '~api';
 
@@ -46,15 +49,14 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const [showPopup, setShowPopup] = useState(false);
   const [isResuming, setIsResuming] = useState(false);
   const [isUpdatingCard, setIsUpdatingCard] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 1024);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      const mobile = window.innerWidth <= 1024;
-      setIsMobile(mobile);
-      setIsSidebarOpen(!mobile);
+      setIsSidebarCollapsed(window.innerWidth <= 1024);
+      setIsSidebarVisible(!(window.innerWidth <= 1024));
     };
 
     window.addEventListener('resize', handleResize);
@@ -133,49 +135,49 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const showBanner =
     subscription?.status === 'past_due' || subscription?.status === 'canceled';
 
+  const toggleSidebar = () => {
+    if (window.innerWidth <= 1024) {
+      // For mobile: only toggle visibility
+      setIsSidebarVisible(!isSidebarVisible);
+    } else {
+      // For desktop: only toggle collapse state
+      setIsSidebarCollapsed(!isSidebarCollapsed);
+    }
+  };
+
   return (
     <div className={styles.dashboard}>
-      {/* Desktop Sidebar */}
-      {!isMobile && (
-        <Sidebar
-          isCollapsed={!isSidebarOpen}
-          onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-          isMobile={false}
-        />
-      )}
-
-      {/* Mobile Sidebar */}
-      {isMobile && (
-        <Sidebar
-          isCollapsed={false}
-          onToggle={() => setIsSidebarOpen(false)}
-          isMobile={true}
-          isVisible={isSidebarOpen}
-        />
-      )}
+      <Sidebar
+        isCollapsed={isSidebarCollapsed}
+        isVisible={isSidebarVisible}
+        onToggle={toggleSidebar}
+        isMobile={window.innerWidth <= 1024}
+      />
 
       <div
         className={`${styles.mainContent} ${
-          !isSidebarOpen ? styles.sidebarCollapsed : ''
+          isSidebarCollapsed ? styles.sidebarCollapsed : ''
         }`}
       >
-        {!isSidebarOpen && (
-          <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className={styles.menuButton}
-            aria-label="Toggle menu"
-          >
-            {isSidebarOpen ? <HiX size={24} /> : <HiMenuAlt2 size={24} />}
-          </button>
-        )}
+        <button
+          className={`${styles.menuButton} ${
+            isSidebarVisible ? styles.active : ''
+          }`}
+          onClick={toggleSidebar}
+          aria-label="Toggle sidebar"
+        >
+          <Menu />
+        </button>
+
+        <History />
 
         <main className={styles.content}>
           {showPopup && user && (
             <Payment
               userId={user.id}
               priceId={packageId}
-              countryCode={user?.country}
-              email={user?.email}
+              countryCode={user.country || 'US'}
+              email={user.email}
               onClose={handleClosePopup}
             />
           )}
@@ -210,6 +212,13 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           </div>
         </main>
       </div>
+
+      <div
+        className={`${styles.overlay} ${
+          isSidebarVisible ? styles.visible : ''
+        }`}
+        onClick={() => setIsSidebarVisible(false)}
+      />
     </div>
   );
 };

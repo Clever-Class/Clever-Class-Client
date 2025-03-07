@@ -70,7 +70,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       )}
       <aside
         className={classNames(styles.sidebar, {
-          [styles.collapsed]: isCollapsed,
+          [styles.collapsed]: isCollapsed && !isMobile,
           [styles.visible]: isVisible,
         })}
       >
@@ -81,7 +81,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           activeItem={activeItem}
           isCollapsed={isCollapsed}
         />
-        {!isCollapsed && <SidebarFooter />}
+        {(!isCollapsed || isMobile) && <SidebarFooter />}
       </aside>
     </>
   );
