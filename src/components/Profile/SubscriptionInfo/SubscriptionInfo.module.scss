@@ -3,6 +3,11 @@
 .subscriptionInfo {
   width: 100%;
   position: relative;
+  padding: 0 1rem;
+
+  @media (min-width: 768px) {
+    padding: 0;
+  }
 
   .title {
     font-size: clamp(18px, 3vw, 22px);
@@ -220,6 +225,9 @@
 // Responsive styles
 @media (max-width: 767px) {
   .subscriptionInfo {
+    padding: 0 0.75rem;
+    margin-top: 88px; // Height of mobile sidebar header
+
     .grid {
       grid-template-columns: 1fr;
     }

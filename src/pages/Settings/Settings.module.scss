@@ -21,71 +21,63 @@
 
 .settingsPage {
   width: 100%;
-  max-width: min(100%, 1200px);
-  margin: 0 auto;
-  padding: clamp(1.5rem, 4vw, 3rem);
-  min-height: calc(100vh - 80px);
-  position: relative;
-  color: $white;
+  min-height: 100vh;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 767px) {
+    padding: 0;
+    padding-top: 2.5rem;
+  }
 }
 
 .settingsHeader {
-  margin-bottom: clamp(2rem, 5vw, 3rem);
-  position: relative;
+  margin-bottom: 1.5rem;
 
-  .title {
-    font-size: clamp(24px, 5vw, 36px);
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.02em;
-    background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.8));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .subtitle {
-    font-size: clamp(14px, 2vw, 16px);
-    color: rgba(255, 255, 255, 0.7);
-    line-height: 1.5;
-    letter-spacing: -0.01em;
+  @media (max-width: 767px) {
+    padding: 1rem 0.75rem;
+    margin-bottom: 1rem;
   }
 }
 
+.title {
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.8));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: clamp(14px, 2vw, 16px);
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: -0.01em;
+}
+
 .settingsContent {
-  position: relative;
-  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .settingsGrid {
   display: flex;
   flex-direction: column;
-  gap: clamp(1rem, 3vw, 2rem);
+  gap: 1.5rem;
 
-  @media (min-width: 1024px) {
-    .settingsCard:first-child {
-      grid-column: 1 / -1;
-    }
+  @media (max-width: 767px) {
+    gap: 1rem;
   }
 }
 
 .settingsCard {
-  background: rgba(255, 255, 255, 0.015);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: clamp(16px, 3vw, 24px);
-  padding: clamp(1.5rem, 4vw, 2rem);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
+  width: 100%;
+  background: transparent;
+  border-radius: 16px;
   overflow: hidden;
-
-  &:hover {
-    transform: translateY(-4px);
-    background: rgba(255, 255, 255, 0.03);
-    border-color: rgba(37, 99, 255, 0.15);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  }
 
   &.fullWidth {
     grid-column: 1 / -1;
@@ -98,24 +90,28 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 300px;
-  text-align: center;
+  min-height: 200px;
   gap: 1rem;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: clamp(14px, 2vw, 16px);
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  padding: 2rem;
 
-  .loadingSpinner {
-    width: clamp(32px, 5vw, 48px);
-    height: clamp(32px, 5vw, 48px);
-    animation: spin 1s linear infinite;
-    opacity: 0.7;
+  @media (max-width: 767px) {
+    padding: 1.5rem 0.75rem;
   }
+}
+
+.loadingSpinner {
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 // Responsive styles
 @media (max-width: 480px) {
   .settingsPage {
-    padding: 1rem;
+    // padding: 1rem;
   }
 
   .settingsCard {
