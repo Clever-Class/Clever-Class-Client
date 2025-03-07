@@ -46,7 +46,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const [showPopup, setShowPopup] = useState(false);
   const [isResuming, setIsResuming] = useState(false);
   const [isUpdatingCard, setIsUpdatingCard] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 1024);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
 
   // Handle window resize
@@ -54,8 +54,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     const handleResize = () => {
       const mobile = window.innerWidth <= 1024;
       setIsMobile(mobile);
-      if (mobile) setIsSidebarOpen(false);
-      else setIsSidebarOpen(true);
+      setIsSidebarOpen(!mobile);
     };
 
     window.addEventListener('resize', handleResize);

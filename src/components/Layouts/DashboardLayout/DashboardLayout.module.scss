@@ -208,42 +208,56 @@
 
 .menuButton {
   position: fixed;
-  top: 1rem;
-  left: 1rem;
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(37, 99, 255, 0.15);
-  border-radius: 12px;
+  top: 1.25rem;
+  left: 1.25rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
   padding: 0.75rem;
-  color: white;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(37, 99, 255, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  display: none;
   pointer-events: auto;
   visibility: hidden;
   opacity: 0;
   z-index: 1001;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+  box-shadow: 0 4px 8px -1px rgba(0, 0, 0, 0.08),
+    0 2px 4px -1px rgba(0, 0, 0, 0.04),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.12);
 
   @media (max-width: 1024px) {
     &:not(.sidebarCollapsed) {
       display: flex;
-      align-items: center;
-      justify-content: center;
       visibility: visible;
       opacity: 1;
     }
   }
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(37, 99, 255, 0.2);
-    background: rgba(37, 99, 255, 0.1);
+    background: rgba(255, 255, 255, 0.18);
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px -1px rgba(0, 0, 0, 0.1),
+      0 4px 8px -1px rgba(0, 0, 0, 0.06),
+      inset 0 0 0 0.5px rgba(255, 255, 255, 0.2);
   }
 
   &:active {
-    transform: translateY(0);
+    transform: scale(0.95);
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2;
   }
 }
 
