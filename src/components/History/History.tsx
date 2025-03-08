@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { History as HistoryIcon, Clock } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { History as HistoryIcon, Clock, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from './History.module.scss';
 
 interface HistoryItem {
@@ -12,12 +12,14 @@ interface HistoryItem {
 export const History = () => {
   const [isOpen, setIsOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         panelRef.current &&
-        !panelRef.current.contains(event.target as Node)
+        !panelRef.current.contains(event.target as Node) &&
+        !buttonRef.current?.contains(event.target as Node)
       ) {
         setIsOpen(false);
       }
@@ -47,52 +49,83 @@ export const History = () => {
     // Add more history items as needed
   ];
 
-  const itemVariants = {
-    hidden: { opacity: 0, x: 20, y: 20 },
-    visible: (i: number) => ({
-      opacity: 1,
-      x: 0,
-      y: 0,
-      transition: {
-        type: 'spring',
-        stiffness: 300,
-        damping: 24,
-        mass: 0.9,
-        delay: i * 0.1,
-      },
-    }),
-  };
-
   return (
     <>
       <button
+        ref={buttonRef}
         className={`${styles.historyButton} ${isOpen ? styles.active : ''}`}
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle history"
       >
-        <HistoryIcon />
+        <motion.div
+          initial={false}
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={isOpen ? 'close' : 'history'}
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.6 }}
+              transition={{ duration: 0.15 }}
+            >
+              {isOpen ? <X /> : <HistoryIcon />}
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
       </button>
 
-      {isOpen && (
-        <>
-          <div className={styles.overlay} />
-          <div ref={panelRef} className={styles.historyPanel}>
-            <div className={styles.historyList}>
-              {historyItems.map((item, index) => (
-                <div key={item.id} className={styles.historyItem}>
-                  <div className={styles.historyIcon}>
-                    <Clock />
-                  </div>
-                  <div className={styles.historyContent}>
-                    <div className={styles.historyTitle}>{item.title}</div>
-                    <div className={styles.historyTime}>{item.timestamp}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <motion.div
+              className={styles.overlay}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            />
+            <motion.div
+              ref={panelRef}
+              className={styles.historyPanel}
+              initial={{ opacity: 0, scale: 0.95, x: 20 }}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              exit={{ opacity: 0, scale: 0.95, x: 20 }}
+              transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+            >
+              <div className={styles.historyList}>
+                {historyItems.map((item, index) => (
+                  <motion.div
+                    key={item.id}
+                    className={styles.historyItem}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{
+                      duration: 0.2,
+                      delay: index * 0.05,
+                      ease: [0.4, 0, 0.2, 1],
+                    }}
+                  >
+                    <div className={styles.historyIcon}>
+                      <Clock />
+                    </div>
+                    <div className={styles.historyContent}>
+                      <div className={styles.historyTitle}>{item.title}</div>
+                      <div className={styles.historyTime}>{item.timestamp}</div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };

@@ -1,10 +1,15 @@
 import { useEffect } from 'react';
-import { PersonalInfo, SubscriptionInfo, UserInfo } from '~components/Profile';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '~store';
-import { fetchUserData } from '~store/actions';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
+
+// Components
+import { PersonalInfo, SubscriptionInfo, UserInfo } from '~components/Profile';
+
+// Store and Types
+import { RootState, AppDispatch } from '~store';
+import { fetchUserData } from '~store/actions';
+
 import styles from './Settings.module.scss';
 
 export const Settings = () => {
@@ -87,7 +92,7 @@ export const Settings = () => {
           >
             <SubscriptionInfo
               subscription={subscription}
-              trialCredits={user.trialCredits}
+              trialCredits={user?.trialCredits || 0}
               onSubscriptionUpdate={() => {
                 dispatch(fetchUserData());
               }}

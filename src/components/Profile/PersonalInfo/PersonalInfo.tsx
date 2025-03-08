@@ -1,6 +1,6 @@
 import { Edit2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { User } from '~types';
+import { User } from '~store/types';
 import styles from './PersonalInfo.module.scss';
 
 interface PersonalInfoProps {
@@ -10,15 +10,18 @@ interface PersonalInfoProps {
 export const PersonalInfo = ({ user }: PersonalInfoProps) => {
   if (!user) return null;
 
-  const joinedDate = new Date(user.createdAt).toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  });
+  const joinedDate = user.createdAt
+    ? new Date(user.createdAt).toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      })
+    : 'Not available';
 
-  // Split name into first and last name
-  const [firstName, ...lastNameParts] = user.name.split(' ');
-  const lastName = lastNameParts.join(' ');
+  // Split name into first and last name if name exists
+  const [firstName = 'Not specified', ...lastNameParts] =
+    user.name?.split(' ') || [];
+  const lastName = lastNameParts.join(' ') || 'Not specified';
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
@@ -73,13 +76,16 @@ export const PersonalInfo = ({ user }: PersonalInfoProps) => {
         >
           <label>Country</label>
           <div className={styles.flag}>
-            <img
-              src={`https://flagcdn.com/24x18/${user.country.toLowerCase()}.png`}
-              alt={user.country}
-              width={24}
-              height={18}
-            />
-            <span>{user.country.toUpperCase()}</span>
+            {user.country && (
+              <>
+                <img
+                  src={`https://flagcdn.com/24x18/${user.country.toLowerCase()}.png`}
+                  alt={`${user.country} flag`}
+                />
+                <span>{user.country.toUpperCase()}</span>
+              </>
+            )}
+            {!user.country && <span>Not specified</span>}
           </div>
         </motion.div>
 

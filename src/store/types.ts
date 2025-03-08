@@ -1,38 +1,27 @@
-import { SubscriptionStatus, PaymentStatus } from './types/subscriptionTypes';
-import { User as UserType } from '~/types/user/user.types';
+import { UserState } from '~/types/user.types';
 
-export type { User } from '~/types/user/user.types';
+// Re-export user types for consistency
+export type { User, UserState, SubscriptionState } from '~/types/user.types';
+export type { Subscription } from '~/types/subscription.types';
+export { SubscriptionStatus, PaymentStatus } from '~/types/subscription.types';
 
-export interface Subscription {
-  isPremiumActive: boolean;
-  paymentStatus: PaymentStatus;
-  updatePaymentMethodUrl: string;
-  cancelSubscriptionUrl: string;
-  status: SubscriptionStatus;
-  subscriptionId: string;
-  billingPeriod: {
-    starts_at: string;
-    ends_at: string;
-  };
-}
-
-export interface UserState {
-  userToken: string | null;
-  message: string | null;
+export interface AuthState {
+  isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
-  user: User | null;
-  subscription: Subscription | null;
 }
 
 export interface RegisterState {
   loading: boolean;
   error: string | null;
   success: boolean;
+  selectedPackage?: string | null;
+  message: string | null;
 }
 
 export interface RootState {
   user: UserState;
+  auth: AuthState;
   register: RegisterState;
 }
 
@@ -41,5 +30,3 @@ export interface EditProfileData {
   lastName: string;
   avatar?: File;
 }
-
-// ... existing types ...
