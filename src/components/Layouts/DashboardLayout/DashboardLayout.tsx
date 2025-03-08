@@ -10,7 +10,6 @@ import { Menu } from 'lucide-react';
 import { Sidebar } from '~components/Sidebar/Sidebar';
 import { Payment } from '~components/Payment';
 import { WarningBanner } from '~components/common/WarningBanner';
-import { History } from '../../History/History';
 
 // Store and Types
 import { AppDispatch } from '~store';
@@ -168,8 +167,6 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         >
           <Menu />
         </button>
-
-        <History />
 
         <main className={styles.content}>
           {showPopup && user && (

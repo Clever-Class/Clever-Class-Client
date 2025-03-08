@@ -8,9 +8,11 @@ import {
   HiGlobeAlt,
   HiBeaker,
   HiPaperAirplane,
+  HiClock,
 } from 'react-icons/hi2';
 import { motion } from 'framer-motion';
 import styles from './Chatbot.module.scss';
+import { History } from '~/components/History/History';
 
 export function Chatbot() {
   const [message, setMessage] = useState('');
@@ -29,6 +31,7 @@ export function Chatbot() {
   };
 
   const subjects = [
+    { icon: <HiClock />, label: 'History' },
     { icon: <HiSquares2X2 />, label: 'Math Tutor' },
     { icon: <HiBeaker />, label: 'Physics Guide' },
     { icon: <HiBookOpen />, label: 'Lit Analysis' },
@@ -38,6 +41,7 @@ export function Chatbot() {
 
   return (
     <div className={styles.chatContainer}>
+      <History />
       <motion.div
         className={styles.chatArea}
         initial={{ opacity: 0, y: 20 }}

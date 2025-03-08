@@ -39,12 +39,20 @@
   }
 }
 
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 999;
+}
+
 .historyPanel {
   position: fixed;
   top: 5rem;
   right: 1.25rem;
   width: 320px;
   max-height: calc(100vh - 8rem);
+  background: rgba(11, 20, 55, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: 16px;
@@ -58,6 +66,7 @@
   padding: 1rem;
   overflow-y: auto;
   max-height: calc(100vh - 10rem);
+  background: rgba(11, 20, 55, 0.98);
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -83,7 +92,7 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: rgba(37, 99, 255, 0.05);
+  background: rgba(17, 24, 39, 0.95);
   border: 1px solid rgba(37, 99, 255, 0.1);
   border-radius: 12px;
   margin-bottom: 0.75rem;
