@@ -23,7 +23,7 @@ export function Chatbot() {
     setMessage('');
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
@@ -52,13 +52,13 @@ export function Chatbot() {
           <h1>What can I help with?</h1>
 
           <div className={styles.inputContainer}>
-            <input
-              type="text"
+            <textarea
               className={styles.messageInput}
               placeholder="Message Your Clever AI Tutor"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
+              rows={4} // Adjust the number of rows as needed
             />
             <div className={styles.inputActions}>
               <button aria-label="Voice input">
