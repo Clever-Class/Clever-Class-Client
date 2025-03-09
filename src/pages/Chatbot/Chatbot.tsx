@@ -82,9 +82,18 @@ export function Chatbot() {
               <motion.button
                 key={subject.label}
                 className={styles.subjectButton}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + index * 0.1 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{
+                  duration: 0.4,
+                  delay: 0.1 + index * 0.05,
+                  ease: [0.4, 0, 0.2, 1],
+                }}
+                whileHover={{
+                  scale: 1.02,
+                  transition: { duration: 0.2 },
+                }}
+                whileTap={{ scale: 0.98 }}
               >
                 {subject.icon}
                 {subject.label}
