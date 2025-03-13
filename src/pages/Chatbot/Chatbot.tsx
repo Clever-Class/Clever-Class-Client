@@ -28,6 +28,7 @@ import {
   Conversation,
 } from '~/services/chatService';
 import toast from 'react-hot-toast';
+import { FormattedMessage } from '~/components/FormattedMessage/FormattedMessage';
 
 interface Message {
   id: string;
@@ -832,7 +833,7 @@ export function Chatbot() {
                       }}
                     >
                       <div className={styles.messageContent}>
-                        {msg.content}
+                        <FormattedMessage content={msg.content} />
                         {msg.image && (
                           <div
                             className={styles.messageImage}
