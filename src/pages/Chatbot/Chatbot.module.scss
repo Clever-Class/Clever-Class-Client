@@ -96,128 +96,156 @@
 }
 
 .chatInputWrapper {
-  flex-shrink: 0; /* Prevent from shrinking */
+  flex-shrink: 0;
   position: relative;
   width: 100%;
   margin: 0;
-  z-index: 5; /* Ensure it's above other elements */
+  z-index: 5;
+  padding: 0.25rem 0.5rem 0.5rem;
 }
 
 .inputContainer {
-  width: 100%;
-  max-width: 800px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(37, 99, 255, 0.2);
-  border-radius: 18px; /* Reduced from 24px */
-  padding: 0.75rem; /* Slightly reduced from 0.875rem */
-  display: flex;
-  flex-direction: column; /* Keep column layout by default for welcome screen */
-  gap: 0.3rem; /* Reduced from 0.5rem */
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin: 0;
   position: relative;
-  z-index: 10;
-  will-change: transform, opacity;
+  width: 100%;
+  background: rgba(59, 130, 246, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 8px 12px;
 
-  // Use parent selector to ensure specificity
-  .chatScreen & {
-    margin: 0;
-    max-width: none;
+  &.dragging {
+    border-color: #2563ff;
+    background: rgba(59, 130, 246, 0.2);
+    box-shadow: 0 4px 20px rgba(37, 99, 255, 0.15);
+  }
+
+  .imagePreview {
+    position: relative;
     width: 100%;
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
-    border-radius: 16px 16px; /* Reduced from 18px */
-    flex-direction: row; /* Changed to row for chat mode */
-    align-items: center; /* Center items vertically */
-    gap: 0.75rem; /* Increased gap for row layout */
-    padding: 0.625rem 0.75rem; /* Reduced padding for more compact appearance */
-  }
+    padding: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 18px; /* Reduced from 24px */
-    padding: 1.5px;
-    background: linear-gradient(
-      135deg,
-      rgba(37, 99, 255, 0.5),
-      rgba(37, 99, 255, 0.1) 50%,
-      rgba(37, 99, 255, 0.2)
-    );
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    opacity: 0.7;
-
-    // Use parent selector to ensure specificity
-    .chatScreen & {
-      border-radius: 18px 18px; /* Reduced from 24px */
-    }
-  }
-
-  @media (max-width: 768px) {
-    padding: 0.875rem; /* Consistent smaller padding */
-    border-radius: 16px; /* Reduced from 20px */
-
-    &::before {
-      border-radius: 16px; /* Reduced from 20px */
+    img {
+      max-width: 200px;
+      max-height: 200px;
+      border-radius: 8px;
+      object-fit: contain;
     }
 
-    // Use parent selector to ensure specificity
-    .chatScreen & {
-      padding: 0.625rem 0.75rem; /* Slightly adjusted for inline layout */
-      border-radius: 16px 16px 0 0; /* Reduced from 20px */
+    .removeImageBtn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
 
-      &::before {
-        border-radius: 16px 16px 0 0; /* Reduced from 20px */
+      &:hover {
+        background: rgba(0, 0, 0, 0.7);
       }
     }
   }
 
-  @media (max-width: 480px) {
-    padding: 0.75rem; /* Reduced from 1rem */
-    border-radius: 16px; /* Reduced from 18px */
+  .messageInput {
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    line-height: 1.5;
+    resize: none;
+    outline: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.95);
 
-    &::before {
-      border-radius: 16px; /* Reduced from 18px */
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.4);
     }
 
-    // Use parent selector to ensure specificity
-    .chatScreen & {
-      padding: 0.5rem 0.625rem; /* Further reduced padding for inline layout */
-      border-radius: 16px 16px; /* Reduced from 18px */
-      gap: 0.4rem; /* Reduced gap on small screens */
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
 
-      &::before {
-        border-radius: 16px 16px; /* Reduced from 18px */
+  .inputActions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    margin-top: 4px;
+
+    &.inChat {
+      padding: 4px 8px;
+      border-top: none;
+    }
+
+    button {
+      background: rgba(37, 99, 255, 0.1);
+      border: 1px solid rgba(37, 99, 255, 0.2);
+      padding: 6px;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+
+      &:hover {
+        background: rgba(37, 99, 255, 0.15);
+        color: rgba(255, 255, 255, 0.9);
+        transform: translateY(-1px);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    .sendButton {
+      margin-left: auto;
+      background: rgba(37, 99, 255, 0.9);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      width: auto;
+      height: 32px;
+      border: none;
+
+      &:hover {
+        background: rgba(37, 99, 255, 1);
+        transform: translateY(-1px);
+      }
+
+      &:disabled {
+        background: rgba(255, 255, 255, 0.1);
+        cursor: not-allowed;
       }
     }
   }
 
-  &:focus-within {
-    background: rgba(255, 255, 255, 0.07);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); /* Reduced shadow */
-    transform: translateY(-1px); /* Reduced from -2px */
-    border-color: rgba(37, 99, 255, 0.3);
-
-    &::before {
-      opacity: 1;
-      background: rgba(37, 99, 255, 0.3);
-    }
+  .fileInput {
+    display: none;
   }
-}
-
-// File input styles (hidden)
-.fileInput {
-  display: none;
 }
 
 // Image preview styles
@@ -476,7 +504,6 @@
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
   width: 100%;
-  max-width: 800px;
   animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   margin: 0 auto;
 
@@ -681,13 +708,14 @@
     bottom: 4px; /* Reduced */
     font-size: 0.625rem; /* Smaller */
     padding: 0 0.5rem; /* Less horizontal padding */
+    margin-top: 8px;
   }
 
   @media (max-width: 480px) {
     bottom: 3px; /* Reduced */
     font-size: 0.5625rem; /* Even smaller */
     padding: 0 0.25rem; /* Minimal padding */
-    margin-top: 2px; /* Minimal margin */
+    margin-top: 8px; /* Minimal margin */
   }
 }
 

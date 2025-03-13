@@ -4,7 +4,7 @@
  * This example shows how to:
  * 1. Select an image from the user's device
  * 2. Compress it (similar to what the Chatbot component does)
- * 3. Send it to the API along with a text prompt
+ * 3. Send it to the API along with a text prompt (will use GPT-4-vision-preview)
  * 4. Display the AI's response
  */
 

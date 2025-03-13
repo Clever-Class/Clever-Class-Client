@@ -106,96 +106,107 @@ const InputContainer = memo(
     isLoading?: boolean;
     onImageAttach?: (imageData: string | null) => void;
   }) => {
-    // Only animate on first mount using a constant key
     const animationKey = inChat ? 'chat-input' : 'welcome-input';
     const [attachedImage, setAttachedImage] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [isDragging, setIsDragging] = useState(false);
 
-    // Function to auto-resize textarea
-    const adjustTextareaHeight = useCallback(() => {
-      const textarea = inputRef.current;
-      if (!textarea) return;
-
-      // Reset height to auto to get the correct scrollHeight
-      textarea.style.height = 'auto';
-
-      // Different calculations based on if we're in chat mode or welcome screen
-      if (inChat) {
-        // For chat mode (single row layout): use smaller line height and fewer max rows
-        const lineHeight = 18;
-        const currentRows = Math.min(
-          Math.max(1, Math.ceil(textarea.scrollHeight / lineHeight)),
-          6,
-        );
-        textarea.style.height = `${currentRows * lineHeight}px`;
-      } else {
-        // For welcome screen (stacked layout): use taller line height and more max rows
-        const lineHeight = 19;
-        const currentRows = Math.min(
-          Math.max(2, Math.ceil(textarea.scrollHeight / lineHeight)),
-          4,
-        );
-        textarea.style.height = `${currentRows * lineHeight}px`;
+    // Function to handle image processing
+    const processImage = async (imageData: string) => {
+      try {
+        const loadingToast = toast.loading('Optimizing image...');
+        const compressedImage = await compressImage(imageData, 800, 0.7);
+        toast.dismiss(loadingToast);
+        setAttachedImage(compressedImage);
+        if (onImageAttach) {
+          onImageAttach(compressedImage);
+        }
+      } catch (error) {
+        toast.error('Failed to process image');
+        console.error('Image processing error:', error);
       }
-    }, [inputRef, inChat]);
-
-    // Adjust height when message changes
-    useEffect(() => {
-      adjustTextareaHeight();
-    }, [message, adjustTextareaHeight]);
-
-    // Handle input changes
-    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setMessage(e.target.value);
     };
 
-    // Handle image upload
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        // Check file size (limit to 5MB)
+    // Handle drag and drop events
+    const handleDragOver = (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(true);
+    };
+
+    const handleDragLeave = (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+    };
+
+    const handleDrop = async (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
         if (file.size > 5 * 1024 * 1024) {
           toast.error('Image size should be less than 5MB');
           return;
         }
 
-        // Check file type
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const imageData = event.target?.result as string;
+          processImage(imageData);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        toast.error('Please drop an image file');
+      }
+    };
+
+    // Handle paste event
+    const handlePaste = async (e: React.ClipboardEvent) => {
+      const items = e.clipboardData.items;
+
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          e.preventDefault();
+          const file = item.getAsFile();
+          if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+              toast.error('Image size should be less than 5MB');
+              return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const imageData = event.target?.result as string;
+              processImage(imageData);
+            };
+            reader.readAsDataURL(file);
+          }
+          break;
+        }
+      }
+    };
+
+    // Handle file input change
+    const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+          toast.error('Image size should be less than 5MB');
+          return;
+        }
+
         if (!file.type.startsWith('image/')) {
           toast.error('Only image files are allowed');
           return;
         }
 
         const reader = new FileReader();
-        reader.onload = async (event) => {
+        reader.onload = (event) => {
           const imageData = event.target?.result as string;
-
-          try {
-            // Show loading toast
-            const loadingToast = toast.loading('Optimizing image...');
-
-            // Compress the image before storing it
-            const compressedImage = await compressImage(imageData, 800, 0.7);
-
-            // Dismiss loading toast
-            toast.dismiss(loadingToast);
-
-            // Set the compressed image
-            setAttachedImage(compressedImage);
-            if (onImageAttach) {
-              onImageAttach(compressedImage);
-            }
-          } catch (error) {
-            toast.error('Failed to process image');
-            console.error('Image compression error:', error);
-          }
+          processImage(imageData);
         };
         reader.readAsDataURL(file);
       }
-    };
-
-    // Handle clicking the attach button
-    const handleAttachClick = () => {
-      fileInputRef.current?.click();
     };
 
     // Handle removing attached image
@@ -211,18 +222,11 @@ const InputContainer = memo(
 
     // Handle sending message with image
     const handleSendWithImage = () => {
-      // Call the parent send message function first
       handleSendMessage();
-
-      // Then clear the image from local state - this ensures the UI is cleared immediately
       setAttachedImage(null);
-
-      // Make sure we notify the parent component about the image being cleared
       if (onImageAttach) {
         onImageAttach(null);
       }
-
-      // Reset the file input to allow selecting the same file again if needed
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -231,7 +235,9 @@ const InputContainer = memo(
     return (
       <motion.div
         key={animationKey}
-        className={styles.inputContainer}
+        className={`${styles.inputContainer} ${
+          isDragging ? styles.dragging : ''
+        }`}
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
@@ -243,6 +249,9 @@ const InputContainer = memo(
           boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)',
           transition: { duration: 0.2 },
         }}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
       >
         {/* Image preview area */}
         {attachedImage && (
@@ -263,11 +272,14 @@ const InputContainer = memo(
           ref={inputRef}
           className={styles.messageInput}
           placeholder={
-            inChat ? 'Type your message...' : 'Message Your Clever AI Tutor'
+            inChat
+              ? 'Type your message or paste an image...'
+              : 'Message Your Clever AI Tutor or paste an image...'
           }
           value={message}
-          onChange={handleInputChange}
+          onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyPress}
+          onPaste={handlePaste}
           rows={
             inChat
               ? 1
@@ -289,7 +301,7 @@ const InputContainer = memo(
             aria-label="Attach image"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
-            onClick={handleAttachClick}
+            onClick={() => fileInputRef.current?.click()}
           >
             <HiPhoto size={18} />
           </motion.button>
@@ -297,7 +309,7 @@ const InputContainer = memo(
             type="file"
             ref={fileInputRef}
             className={styles.fileInput}
-            onChange={handleImageUpload}
+            onChange={handleFileInputChange}
             accept="image/*"
             aria-label="Upload image"
           />

@@ -92,11 +92,7 @@
   }
 
   @media (max-width: 768px) {
-    padding: 1.5rem;
-  }
-
-  @media (max-width: 480px) {
-    padding: 1rem;
+    padding: 0;
   }
 }
 
@@ -117,7 +113,6 @@
 
   @media (max-width: 768px) {
     padding: 0;
-    padding-top: 4rem;
   }
 
   @media (max-width: 480px) {
