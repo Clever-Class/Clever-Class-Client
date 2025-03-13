@@ -16,6 +16,8 @@ import {
   HiHandThumbDown,
   HiExclamationTriangle,
   HiChatBubbleLeftRight,
+  HiXMark,
+  HiPhoto,
 } from 'react-icons/hi2';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Chatbot.module.scss';
@@ -32,7 +34,56 @@ interface Message {
   content: string;
   isUser: boolean;
   timestamp: Date;
+  image?: string;
 }
+
+// Image compression function
+const compressImage = (
+  imageDataUrl: string,
+  maxWidth = 800,
+  quality = 0.7,
+): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = imageDataUrl;
+
+    img.onload = () => {
+      // Create a canvas element
+      const canvas = document.createElement('canvas');
+
+      // Calculate new dimensions while maintaining aspect ratio
+      let width = img.width;
+      let height = img.height;
+
+      if (width > maxWidth) {
+        const ratio = maxWidth / width;
+        width = maxWidth;
+        height = height * ratio;
+      }
+
+      // Set canvas dimensions
+      canvas.width = width;
+      canvas.height = height;
+
+      // Draw the image on the canvas
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        reject(new Error('Could not get canvas context'));
+        return;
+      }
+
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Convert canvas to compressed data URL
+      const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+      resolve(compressedDataUrl);
+    };
+
+    img.onerror = () => {
+      reject(new Error('Failed to load image'));
+    };
+  });
+};
 
 // Memoized input container to prevent re-renders and animations
 const InputContainer = memo(
@@ -44,6 +95,7 @@ const InputContainer = memo(
     handleSendMessage,
     inputRef,
     isLoading,
+    onImageAttach,
   }: {
     inChat: boolean;
     message: string;
@@ -52,9 +104,12 @@ const InputContainer = memo(
     handleSendMessage: () => void;
     inputRef: React.RefObject<HTMLTextAreaElement>;
     isLoading?: boolean;
+    onImageAttach?: (imageData: string | null) => void;
   }) => {
     // Only animate on first mount using a constant key
     const animationKey = inChat ? 'chat-input' : 'welcome-input';
+    const [attachedImage, setAttachedImage] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Function to auto-resize textarea
     const adjustTextareaHeight = useCallback(() => {
@@ -94,6 +149,85 @@ const InputContainer = memo(
       setMessage(e.target.value);
     };
 
+    // Handle image upload
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        // Check file size (limit to 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          toast.error('Image size should be less than 5MB');
+          return;
+        }
+
+        // Check file type
+        if (!file.type.startsWith('image/')) {
+          toast.error('Only image files are allowed');
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+          const imageData = event.target?.result as string;
+
+          try {
+            // Show loading toast
+            const loadingToast = toast.loading('Optimizing image...');
+
+            // Compress the image before storing it
+            const compressedImage = await compressImage(imageData, 800, 0.7);
+
+            // Dismiss loading toast
+            toast.dismiss(loadingToast);
+
+            // Set the compressed image
+            setAttachedImage(compressedImage);
+            if (onImageAttach) {
+              onImageAttach(compressedImage);
+            }
+          } catch (error) {
+            toast.error('Failed to process image');
+            console.error('Image compression error:', error);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
+    // Handle clicking the attach button
+    const handleAttachClick = () => {
+      fileInputRef.current?.click();
+    };
+
+    // Handle removing attached image
+    const handleRemoveImage = () => {
+      setAttachedImage(null);
+      if (onImageAttach) {
+        onImageAttach(null);
+      }
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    };
+
+    // Handle sending message with image
+    const handleSendWithImage = () => {
+      // Call the parent send message function first
+      handleSendMessage();
+
+      // Then clear the image from local state - this ensures the UI is cleared immediately
+      setAttachedImage(null);
+
+      // Make sure we notify the parent component about the image being cleared
+      if (onImageAttach) {
+        onImageAttach(null);
+      }
+
+      // Reset the file input to allow selecting the same file again if needed
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    };
+
     return (
       <motion.div
         key={animationKey}
@@ -110,6 +244,21 @@ const InputContainer = memo(
           transition: { duration: 0.2 },
         }}
       >
+        {/* Image preview area */}
+        {attachedImage && (
+          <div className={styles.imagePreview}>
+            <img src={attachedImage} alt="Attached" />
+            <motion.button
+              className={styles.removeImageBtn}
+              onClick={handleRemoveImage}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <HiXMark size={16} />
+            </motion.button>
+          </div>
+        )}
+
         <textarea
           ref={inputRef}
           className={styles.messageInput}
@@ -137,19 +286,28 @@ const InputContainer = memo(
             <HiMicrophone size={18} />
           </motion.button>
           <motion.button
-            aria-label="Attach file"
+            aria-label="Attach image"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
+            onClick={handleAttachClick}
           >
-            <HiPaperClip size={18} />
+            <HiPhoto size={18} />
           </motion.button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            className={styles.fileInput}
+            onChange={handleImageUpload}
+            accept="image/*"
+            aria-label="Upload image"
+          />
           <motion.button
             className={styles.sendButton}
-            onClick={handleSendMessage}
+            onClick={attachedImage ? handleSendWithImage : handleSendMessage}
             aria-label="Send message"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
-            disabled={isLoading || !message.trim()}
+            disabled={isLoading || (!message.trim() && !attachedImage)}
           >
             {inChat ? (
               <HiPaperAirplane size={16} />
@@ -179,6 +337,8 @@ export function Chatbot() {
   >(null);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [attachedImage, setAttachedImage] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -213,6 +373,9 @@ export function Chatbot() {
     try {
       setIsLoading(true);
       setError(null);
+      // Clear any attached image when loading a conversation
+      setAttachedImage(null);
+
       const messagesData = await chatService.getConversationMessages(
         conversationId,
       );
@@ -223,6 +386,7 @@ export function Chatbot() {
         content: msg.content,
         isUser: msg.role === 'user',
         timestamp: new Date(msg.createdAt),
+        image: msg.image,
       }));
 
       setMessages(formattedMessages);
@@ -252,27 +416,34 @@ export function Chatbot() {
   }, [messages]);
 
   const handleSendMessage = useCallback(async () => {
-    if (!message.trim() || isLoading) return;
+    if ((!message.trim() && !attachedImage) || isLoading) return;
 
     const newMessage: Message = {
       id: Date.now().toString(),
       content: message.trim(),
       isUser: true,
       timestamp: new Date(),
+      image: attachedImage || undefined,
     };
 
+    // Store image temporarily so we can use it in the API call
+    const imageToSend = attachedImage;
+
+    // Clear the UI state immediately
     setMessages((prev) => [...prev, newMessage]);
     const sentMessage = message.trim();
     setMessage('');
+    setAttachedImage(null);
     setIsWelcomeScreen(false);
     setIsLoading(true);
     setError(null);
 
     try {
-      // Call the chatbot API
+      // Call the chatbot API with the stored image data
       const response = await chatService.chatWithAI(
         sentMessage,
         currentConversationId || undefined,
+        imageToSend,
       );
 
       // If this is a new conversation, update the current conversation ID
@@ -309,7 +480,7 @@ export function Chatbot() {
     } finally {
       setIsLoading(false);
     }
-  }, [message, currentConversationId, isLoading]);
+  }, [message, currentConversationId, isLoading, attachedImage]);
 
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -370,9 +541,11 @@ export function Chatbot() {
     setError(null);
 
     try {
+      // Pass the image from the last user message if it exists
       const response = await chatService.chatWithAI(
         lastUserMessage.content,
         currentConversationId || undefined,
+        lastUserMessage.image, // Include the image if present
       );
 
       const aiResponse: Message = {
@@ -400,6 +573,10 @@ export function Chatbot() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleImageAttach = (imageData: string | null) => {
+    setAttachedImage(imageData);
   };
 
   const MessageActions = ({
@@ -447,6 +624,16 @@ export function Chatbot() {
       )}
     </div>
   );
+
+  // Function to handle image click for enlarging
+  const handleImageClick = (imageSrc: string) => {
+    setSelectedImage(imageSrc);
+  };
+
+  // Function to close the enlarged image view
+  const handleCloseImageView = () => {
+    setSelectedImage(null);
+  };
 
   return (
     <div
@@ -509,6 +696,7 @@ export function Chatbot() {
                 handleSendMessage={handleSendMessage}
                 inputRef={inputRef}
                 isLoading={isLoading}
+                onImageAttach={handleImageAttach}
               />
 
               <div className={styles.subjectButtons}>
@@ -631,7 +819,17 @@ export function Chatbot() {
                         ease: [0.4, 0, 0.2, 1],
                       }}
                     >
-                      <div className={styles.messageContent}>{msg.content}</div>
+                      <div className={styles.messageContent}>
+                        {msg.content}
+                        {msg.image && (
+                          <div
+                            className={styles.messageImage}
+                            onClick={() => handleImageClick(msg.image!)}
+                          >
+                            <img src={msg.image} alt="Attached" />
+                          </div>
+                        )}
+                      </div>
                       <MessageActions isUser={msg.isUser} messageId={msg.id} />
                     </motion.div>
                   );
@@ -665,6 +863,7 @@ export function Chatbot() {
                   handleSendMessage={handleSendMessage}
                   inputRef={inputRef}
                   isLoading={isLoading}
+                  onImageAttach={handleImageAttach}
                 />
 
                 <motion.p
@@ -684,6 +883,46 @@ export function Chatbot() {
           )}
         </AnimatePresence>
       </motion.div>
+
+      {/* Image viewer modal */}
+      {selectedImage && (
+        <div
+          className={styles.imageViewerOverlay}
+          onClick={handleCloseImageView}
+        >
+          <div className={styles.imageViewer}>
+            <img src={selectedImage} alt="Enlarged view" />
+            <button
+              className={styles.closeButton}
+              onClick={handleCloseImageView}
+              aria-label="Close image view"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M18 6L6 18"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M6 6L18 18"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

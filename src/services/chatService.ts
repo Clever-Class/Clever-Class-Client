@@ -10,6 +10,7 @@ export interface ChatMessage {
   content: string;
   createdAt: string;
   updatedAt: string;
+  image?: string; // Optional image data as base64 string
 }
 
 export interface Conversation {
@@ -23,20 +24,27 @@ export interface Conversation {
 // API calls
 export const chatService = {
   // Chat with AI
-  chatWithAI: async (message: string, conversationId?: string) => {
+  chatWithAI: async (
+    message: string,
+    conversationId?: string,
+    imageData?: string | null,
+  ) => {
     const token = Cookies.get('userToken');
 
     if (!token) throw new Error('User not authenticated');
 
-    const response = await api.ccServer.post(
-      `/chatbot/chat`,
-      { message, conversationId },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    const payload: any = { message, conversationId };
+
+    // Add image data if provided
+    if (imageData) {
+      payload.image = imageData;
+    }
+
+    const response = await api.ccServer.post(`/chatbot/chat`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
     return response.data;
   },
 
