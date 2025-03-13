@@ -2,7 +2,7 @@
 .chatContainer {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100vh; /* Use viewport height for full height */
   width: 100%;
   position: relative;
   overflow: hidden;
@@ -30,12 +30,12 @@
   flex: 1;
   display: flex;
   justify-content: center;
-
   flex-direction: column;
   padding: 2rem 3rem;
   position: relative;
   z-index: 1;
-  height: 100%;
+  height: 100%; /* Keep full height */
+  overflow: hidden; /* Prevent overflow */
 
   @media (max-width: 768px) {
     padding: 1.5rem 1.5rem;
@@ -47,6 +47,9 @@
 
   &.inChatMode {
     padding: 0;
+    height: 100%; /* Ensure full height in chat mode */
+    display: flex; /* Ensure flexbox is applied */
+    align-items: stretch; /* Stretch children to fill height */
   }
 }
 
@@ -93,10 +96,11 @@
 }
 
 .chatInputWrapper {
+  flex-shrink: 0; /* Prevent from shrinking */
   position: relative;
   width: 100%;
   margin: 0;
-  padding-bottom: 36px; /* Add space for disclaimer */
+  z-index: 5; /* Ensure it's above other elements */
 }
 
 .inputContainer {
@@ -104,14 +108,14 @@
   max-width: 800px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(37, 99, 255, 0.2);
-  border-radius: 24px;
-  padding: 1.25rem;
+  border-radius: 18px; /* Reduced from 24px */
+  padding: 0.75rem; /* Slightly reduced from 0.875rem */
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  flex-direction: column; /* Keep column layout by default for welcome screen */
+  gap: 0.3rem; /* Reduced from 0.5rem */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   margin: 0;
   position: relative;
@@ -126,14 +130,18 @@
     border-left: none;
     border-right: none;
     border-bottom: none;
-    border-radius: 24px 24px; /* Top corners rounded, bottom flush with edge */
+    border-radius: 16px 16px; /* Reduced from 18px */
+    flex-direction: row; /* Changed to row for chat mode */
+    align-items: center; /* Center items vertically */
+    gap: 0.75rem; /* Increased gap for row layout */
+    padding: 0.625rem 0.75rem; /* Reduced padding for more compact appearance */
   }
 
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: 24px;
+    border-radius: 18px; /* Reduced from 24px */
     padding: 1.5px;
     background: linear-gradient(
       135deg,
@@ -151,51 +159,53 @@
 
     // Use parent selector to ensure specificity
     .chatScreen & {
-      border-radius: 24px 24px; /* Matching the container */
+      border-radius: 18px 18px; /* Reduced from 24px */
     }
   }
 
   @media (max-width: 768px) {
-    padding: 1.125rem;
-    border-radius: 20px;
+    padding: 0.875rem; /* Consistent smaller padding */
+    border-radius: 16px; /* Reduced from 20px */
 
     &::before {
-      border-radius: 20px;
+      border-radius: 16px; /* Reduced from 20px */
     }
 
     // Use parent selector to ensure specificity
     .chatScreen & {
-      padding: 1rem;
-      border-radius: 20px 20px 0 0; /* Top corners rounded, bottom flush with edge */
+      padding: 0.625rem 0.75rem; /* Slightly adjusted for inline layout */
+      border-radius: 16px 16px 0 0; /* Reduced from 20px */
 
       &::before {
-        border-radius: 20px 20px 0 0;
+        border-radius: 16px 16px 0 0; /* Reduced from 20px */
       }
     }
   }
 
   @media (max-width: 480px) {
-    padding: 1rem;
-    border-radius: 18px;
+    padding: 0.75rem; /* Reduced from 1rem */
+    border-radius: 16px; /* Reduced from 18px */
 
     &::before {
-      border-radius: 18px;
+      border-radius: 16px; /* Reduced from 18px */
     }
 
     // Use parent selector to ensure specificity
     .chatScreen & {
-      border-radius: 18px 18px; /* Top corners rounded, bottom flush with edge */
+      padding: 0.5rem 0.625rem; /* Further reduced padding for inline layout */
+      border-radius: 16px 16px; /* Reduced from 18px */
+      gap: 0.4rem; /* Reduced gap on small screens */
 
       &::before {
-        border-radius: 18px 18px;
+        border-radius: 16px 16px; /* Reduced from 18px */
       }
     }
   }
 
   &:focus-within {
     background: rgba(255, 255, 255, 0.07);
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); /* Reduced shadow */
+    transform: translateY(-1px); /* Reduced from -2px */
     border-color: rgba(37, 99, 255, 0.3);
 
     &::before {
@@ -210,18 +220,24 @@
   background: transparent;
   border: none;
   color: rgba(255, 255, 255, 0.95);
-  font-size: 1rem;
+  font-size: 0.95rem; /* Reduced from 1rem */
   line-height: 1.5;
   font-family: inherit;
   resize: none;
-  min-height: 48px; /* 2 rows at 24px line height */
-  max-height: 120px; /* 5 rows at 24px line height */
+  min-height: 38px; /* Default for welcome screen */
+  max-height: 90px; /* Default for welcome screen */
   transition: all 0.2s ease;
   padding: 0;
   overflow-y: auto;
   display: block;
   width: 100%;
   box-sizing: border-box;
+
+  .chatScreen & {
+    min-height: 36px; /* Smaller height in chat mode */
+    max-height: 135px; /* Increased by 50% from 90px to allow for more lines */
+    padding: 0.25rem 0; /* Added small vertical padding in chat mode */
+  }
 
   &::placeholder {
     color: rgba(255, 255, 255, 0.4);
@@ -232,7 +248,7 @@
   }
 
   &::-webkit-scrollbar {
-    width: 4px;
+    width: 3px; /* Reduced from 4px */
   }
 
   &::-webkit-scrollbar-track {
@@ -250,38 +266,60 @@
   }
 
   @media (max-width: 480px) {
-    font-size: 0.9375rem;
-    min-height: 48px;
+    .chatScreen & {
+      font-size: 0.9rem; /* Slightly smaller font on mobile */
+      min-height: 32px; /* Smaller height on mobile */
+    }
   }
 }
 
 .inputActions {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding-top: 0.5rem;
+  gap: 0.5rem; /* Kept from previous adjustment */
   justify-content: flex-end;
 
   &.inChat {
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    flex-shrink: 0; /* Prevent from shrinking when text area expands */
+    border-left: 1px solid rgba(255, 255, 255, 0.06); /* Added left border for chat mode */
+    padding-left: 0.5rem; /* Added padding on the left for the border */
+
+    @media (max-width: 480px) {
+      padding-left: 0.375rem; /* Smaller padding on mobile */
+      border-left-color: rgba(
+        255,
+        255,
+        255,
+        0.03
+      ); /* Lighter border on mobile */
+      gap: 0.375rem; /* Smaller gap between buttons on mobile */
+    }
   }
 
   button {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
+    width: 28px; /* Kept from previous adjustment */
+    height: 28px; /* Kept from previous adjustment */
+    border-radius: 8px; /* Kept from previous adjustment */
     background: rgba(37, 99, 255, 0.08);
     border: 1px solid rgba(37, 99, 255, 0.15);
     color: rgba(255, 255, 255, 0.9);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
+    @media (max-width: 480px) {
+      .chatScreen & {
+        width: 26px; /* Smaller buttons on mobile in chat mode */
+        height: 26px; /* Smaller buttons on mobile in chat mode */
+        border-radius: 6px; /* Smaller radius on mobile in chat mode */
+      }
+    }
+
     &:hover {
       background: rgba(37, 99, 255, 0.12);
-      transform: translateY(-2px);
+      transform: translateY(-1px);
       border-color: rgba(37, 99, 255, 0.25);
     }
 
@@ -291,19 +329,19 @@
 
     &.sendButton {
       width: auto;
-      padding: 0 1.25rem;
+      padding: 0 0.75rem; /* Kept from previous adjustment */
       background: rgba(37, 99, 255, 0.9);
       border: none;
       font-weight: 600;
-      gap: 0.5rem;
+      gap: 0.3rem; /* Kept from previous adjustment */
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(37, 99, 255, 0.3);
+      box-shadow: 0 3px 6px rgba(37, 99, 255, 0.2); /* Kept from previous adjustment */
 
       span {
         display: inline-block;
-        font-size: 0.9375rem;
+        font-size: 0.8125rem; /* Kept from previous adjustment */
         @media (max-width: 480px) {
           display: none;
         }
@@ -311,7 +349,13 @@
 
       &:hover {
         background: rgba(59, 130, 246, 1);
-        box-shadow: 0 6px 16px rgba(37, 99, 255, 0.35);
+        box-shadow: 0 3px 8px rgba(37, 99, 255, 0.25); /* Kept from previous adjustment */
+      }
+
+      @media (max-width: 480px) {
+        .chatScreen & {
+          padding: 0 0.5rem; /* Smaller padding on mobile */
+        }
       }
     }
 
@@ -519,27 +563,26 @@
 }
 
 .chatDisclaimer {
-  position: absolute;
-  bottom: 0px;
-  left: 0;
-  right: 0;
-  font-size: 0.75rem;
+  font-size: 0.6875rem; /* Reduced size */
   color: rgba(255, 255, 255, 0.5);
   text-align: center;
-  margin: 0 auto;
-  line-height: 1.5;
+  line-height: 1.3; /* Reduced line height */
   z-index: 5;
   width: 100%;
   padding: 0 1rem;
+  margin-top: 4px; /* Reduced from 8px */
 
   @media (max-width: 768px) {
-    bottom: 8px;
-    font-size: 0.6875rem;
+    bottom: 4px; /* Reduced */
+    font-size: 0.625rem; /* Smaller */
+    padding: 0 0.5rem; /* Less horizontal padding */
   }
 
   @media (max-width: 480px) {
-    bottom: 6px;
-    font-size: 0.625rem;
+    bottom: 3px; /* Reduced */
+    font-size: 0.5625rem; /* Even smaller */
+    padding: 0 0.25rem; /* Minimal padding */
+    margin-top: 2px; /* Minimal margin */
   }
 }
 
@@ -577,30 +620,93 @@
 .chatScreen {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100%; /* Use parent's full height */
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
   padding: 0;
   position: relative;
   overflow: hidden;
-  justify-content: space-between;
+}
+
+.chatTitle {
+  flex-shrink: 0; /* Prevent from shrinking */
+  padding: 0.5rem 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  text-align: center;
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(37, 99, 255, 0.2);
+  letter-spacing: -0.01em;
+  position: relative;
+  z-index: 5;
+  margin-bottom: 0;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 12px 12px;
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  svg {
+    color: #2563ff;
+    filter: drop-shadow(0 0 5px rgba(37, 99, 255, 0.3));
+  }
+
+  span {
+    position: relative;
+    top: 1px;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 0 0 12px 12px;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(37, 99, 255, 0.5),
+      rgba(37, 99, 255, 0.1) 50%,
+      rgba(37, 99, 255, 0.2)
+    );
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    padding: 0.625rem 0.75rem;
+  }
 }
 
 .messagesContainer {
-  flex: 1;
+  flex: 1; /* Grow to fill available space */
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.75rem; /* Slightly reduced gap */
   overflow-y: auto;
-  padding: 0 1.5rem;
-  margin-bottom: 0;
-  min-height: 200px;
-  height: 100%;
-  max-height: calc(100vh - 170px);
-  padding-bottom: 1rem;
-  padding-top: 1rem;
+  padding: 0.5rem 1.5rem 1rem; /* Add more padding at bottom */
+  margin: 0;
+  min-height: 0; /* Allow container to shrink if needed */
 
+  /* Add container for messages that may be empty */
+  &:empty::before {
+    content: '';
+    flex: 1; /* Take up space even when empty */
+    display: block;
+  }
+
+  /* Restore scrollbar styling */
   &::-webkit-scrollbar {
     width: 5px;
   }
@@ -620,12 +726,11 @@
   }
 
   @media (max-width: 768px) {
-    padding: 1rem 0.5rem;
-    max-height: calc(100vh - 150px);
+    padding: 0.5rem 1rem 0.75rem;
   }
 
   @media (max-width: 480px) {
-    max-height: calc(100vh - 140px);
+    padding: 0.25rem 0.5rem 0.5rem;
   }
 }
 
@@ -651,6 +756,11 @@
   gap: 0.375rem;
   max-width: 85%;
   animation: fadeIn 0.3s ease-out;
+  margin-bottom: 0.25rem; /* Add small bottom margin */
+
+  &:last-child {
+    margin-bottom: 0.5rem; /* Add extra space after the last message */
+  }
 
   &.userMessage {
     align-self: flex-end;

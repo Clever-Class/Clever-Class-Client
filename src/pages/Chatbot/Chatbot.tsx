@@ -15,6 +15,7 @@ import {
   HiHandThumbUp,
   HiHandThumbDown,
   HiExclamationTriangle,
+  HiChatBubbleLeftRight,
 } from 'react-icons/hi2';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Chatbot.module.scss';
@@ -63,16 +64,25 @@ const InputContainer = memo(
       // Reset height to auto to get the correct scrollHeight
       textarea.style.height = 'auto';
 
-      // Calculate rows based on line height (approximately 24px per line)
-      const lineHeight = 24;
-      const currentRows = Math.min(
-        Math.max(2, Math.ceil(textarea.scrollHeight / lineHeight)),
-        5,
-      );
-
-      // Set height based on rows needed, capped at 5 rows
-      textarea.style.height = `${currentRows * lineHeight}px`;
-    }, [inputRef]);
+      // Different calculations based on if we're in chat mode or welcome screen
+      if (inChat) {
+        // For chat mode (single row layout): use smaller line height and fewer max rows
+        const lineHeight = 18;
+        const currentRows = Math.min(
+          Math.max(1, Math.ceil(textarea.scrollHeight / lineHeight)),
+          6,
+        );
+        textarea.style.height = `${currentRows * lineHeight}px`;
+      } else {
+        // For welcome screen (stacked layout): use taller line height and more max rows
+        const lineHeight = 19;
+        const currentRows = Math.min(
+          Math.max(2, Math.ceil(textarea.scrollHeight / lineHeight)),
+          4,
+        );
+        textarea.style.height = `${currentRows * lineHeight}px`;
+      }
+    }, [inputRef, inChat]);
 
     // Adjust height when message changes
     useEffect(() => {
@@ -88,26 +98,32 @@ const InputContainer = memo(
       <motion.div
         key={animationKey}
         className={styles.inputContainer}
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
-          duration: 0.4,
-          delay: inChat ? 0.3 : 0.2,
+          duration: 0.3,
+          delay: inChat ? 0.2 : 0.15,
           ease: [0.4, 0, 0.2, 1],
         }}
         whileHover={{
-          boxShadow: '0 12px 36px rgba(0, 0, 0, 0.25)',
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)',
           transition: { duration: 0.2 },
         }}
       >
         <textarea
           ref={inputRef}
           className={styles.messageInput}
-          placeholder="Message Your Clever AI Tutor"
+          placeholder={
+            inChat ? 'Type your message...' : 'Message Your Clever AI Tutor'
+          }
           value={message}
           onChange={handleInputChange}
           onKeyDown={handleKeyPress}
-          rows={Math.min(Math.max(2, Math.ceil(message.split('\n').length)), 5)}
+          rows={
+            inChat
+              ? 1
+              : Math.min(Math.max(2, Math.ceil(message.split('\n').length)), 4)
+          }
           disabled={isLoading}
         />
         <div
@@ -118,14 +134,14 @@ const InputContainer = memo(
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
-            <HiMicrophone size={20} />
+            <HiMicrophone size={18} />
           </motion.button>
           <motion.button
             aria-label="Attach file"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
-            <HiPaperClip size={20} />
+            <HiPaperClip size={18} />
           </motion.button>
           <motion.button
             className={styles.sendButton}
@@ -136,11 +152,11 @@ const InputContainer = memo(
             disabled={isLoading || !message.trim()}
           >
             {inChat ? (
-              <HiPaperAirplane size={18} />
+              <HiPaperAirplane size={16} />
             ) : (
               <>
                 <span>Send</span>
-                <HiPaperAirplane size={18} />
+                <HiPaperAirplane size={16} />
               </>
             )}
           </motion.button>
@@ -546,6 +562,26 @@ export function Chatbot() {
                 ease: [0.4, 0, 0.2, 1],
               }}
             >
+              {/* Chat Title - moved outside of messages container */}
+              {currentConversationId && (
+                <motion.div
+                  className={styles.chatTitle}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.3,
+                    ease: [0.4, 0, 0.2, 1],
+                  }}
+                >
+                  <HiChatBubbleLeftRight size={18} />
+                  <span>
+                    {conversations.find(
+                      (conv) => conv._id === currentConversationId,
+                    )?.title || 'Conversation'}
+                  </span>
+                </motion.div>
+              )}
+
               <motion.div
                 className={styles.messagesContainer}
                 initial={{ opacity: 0 }}
