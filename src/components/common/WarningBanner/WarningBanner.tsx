@@ -5,6 +5,7 @@ interface WarningBannerProps {
   message: string;
   buttonText: string;
   onButtonClick: () => void;
+  onClose?: () => void;
   noButton?: boolean;
   disabled?: boolean;
 }
@@ -13,13 +14,18 @@ export const WarningBanner: React.FC<WarningBannerProps> = ({
   message,
   buttonText,
   onButtonClick,
-  noButton,
+  onClose,
+  noButton = false,
   disabled = false,
 }) => {
+  const handleClose = () => {
+    onClose?.();
+  };
+
   return (
     <div className={styles.warningBanner}>
       <div className={styles.bannerContent}>
-        <div className={`${styles.creditsIconContainer}`}>
+        <div className={styles.creditsIconContainer}>
           <svg
             className={styles.warningIcon}
             fill="currentColor"
@@ -35,15 +41,38 @@ export const WarningBanner: React.FC<WarningBannerProps> = ({
 
         <span>{message}</span>
       </div>
-      {!noButton && (
+      <div className={styles.bannerActions}>
+        {!noButton && (
+          <button
+            onClick={onButtonClick}
+            className={styles.updateButton}
+            disabled={disabled}
+          >
+            {buttonText}
+          </button>
+        )}
         <button
-          onClick={onButtonClick}
-          className={styles.updateButton}
-          disabled={disabled}
+          onClick={handleClose}
+          className={styles.closeButton}
+          aria-label="Close banner"
         >
-          {buttonText}
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15 5L5 15M5 5L15 15"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </button>
-      )}
+      </div>
     </div>
   );
 };

@@ -37,6 +37,8 @@ const cancelledMessage = (endDate: string | undefined) =>
       : 'the end of your billing period'
   }.`;
 
+const BANNER_HIDE_DURATION = 2 * 60 * 1000; // 2 minutes in milliseconds
+
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
 }) => {
@@ -50,6 +52,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const [isUpdatingCard, setIsUpdatingCard] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const [showWarningBanner, setShowWarningBanner] = useState(true);
 
   // Handle window resize
   useEffect(() => {
@@ -60,6 +63,18 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Check if banner should be shown based on hide time
+  useEffect(() => {
+    const bannerHideTime = localStorage.getItem('warningBannerHideTime');
+    if (bannerHideTime) {
+      const hideTime = parseInt(bannerHideTime, 10);
+      const now = Date.now();
+      if (now - hideTime < BANNER_HIDE_DURATION) {
+        setShowWarningBanner(false);
+      }
+    }
   }, []);
 
   // Fetch user data when component mounts and every 5 minutes
@@ -130,16 +145,21 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     }
   };
 
+  const handleBannerClose = () => {
+    setShowWarningBanner(false);
+    localStorage.setItem('warningBannerHideTime', Date.now().toString());
+  };
+
   const packageId = user?.selectedPackageId || DEFAULT_SELECTED_PACKAGE;
   const showBanner =
-    subscription?.status === 'past_due' || subscription?.status === 'canceled';
+    (subscription?.status === 'past_due' ||
+      subscription?.status === 'canceled') &&
+    showWarningBanner;
 
   const toggleSidebar = () => {
     if (window.innerWidth <= 1024) {
-      // For mobile: only toggle visibility
       setIsSidebarVisible(!isSidebarVisible);
     } else {
-      // For desktop: only toggle collapse state
       setIsSidebarCollapsed(!isSidebarCollapsed);
     }
   };
@@ -179,32 +199,34 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             />
           )}
 
-          {subscription?.status === 'past_due' && (
-            <WarningBanner
-              message={pastDueMessage}
-              buttonText={
-                isUpdatingCard ? 'Redirecting...' : 'Update Card Details'
-              }
-              onButtonClick={handleUpdateCard}
-              disabled={isUpdatingCard}
-            />
-          )}
-
-          {subscription?.status === 'canceled' && (
-            <WarningBanner
-              message={cancelledMessage(subscription?.billingPeriod?.ends_at)}
-              buttonText={isResuming ? 'Resuming...' : "Don't Cancel"}
-              noButton={false}
-              onButtonClick={handleResumeSubscription}
-              disabled={isResuming}
-            />
-          )}
-
           <div
             className={`${styles.container} ${
               showBanner ? styles.withBanner : ''
             }`}
           >
+            {subscription?.status === 'past_due' && showWarningBanner && (
+              <WarningBanner
+                message={pastDueMessage}
+                buttonText={
+                  isUpdatingCard ? 'Redirecting...' : 'Update Card Details'
+                }
+                onButtonClick={handleUpdateCard}
+                onClose={handleBannerClose}
+                disabled={isUpdatingCard}
+              />
+            )}
+
+            {subscription?.status === 'canceled' && showWarningBanner && (
+              <WarningBanner
+                message={cancelledMessage(subscription?.billingPeriod?.ends_at)}
+                buttonText={isResuming ? 'Resuming...' : "Don't Cancel"}
+                noButton={false}
+                onButtonClick={handleResumeSubscription}
+                onClose={handleBannerClose}
+                disabled={isResuming}
+              />
+            )}
+
             {children}
           </div>
         </main>
