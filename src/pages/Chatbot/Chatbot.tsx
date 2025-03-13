@@ -14,10 +14,17 @@ import {
   HiArrowPath,
   HiHandThumbUp,
   HiHandThumbDown,
+  HiExclamationTriangle,
 } from 'react-icons/hi2';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Chatbot.module.scss';
 import { History } from '~/components/History/History';
+import {
+  chatService,
+  ChatMessage as ChatMessageType,
+  Conversation,
+} from '~/services/chatService';
+import toast from 'react-hot-toast';
 
 interface Message {
   id: string;
@@ -35,6 +42,7 @@ const InputContainer = memo(
     handleKeyPress,
     handleSendMessage,
     inputRef,
+    isLoading,
   }: {
     inChat: boolean;
     message: string;
@@ -42,6 +50,7 @@ const InputContainer = memo(
     handleKeyPress: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
     handleSendMessage: () => void;
     inputRef: React.RefObject<HTMLTextAreaElement>;
+    isLoading?: boolean;
   }) => {
     // Only animate on first mount using a constant key
     const animationKey = inChat ? 'chat-input' : 'welcome-input';
@@ -99,6 +108,7 @@ const InputContainer = memo(
           onChange={handleInputChange}
           onKeyDown={handleKeyPress}
           rows={Math.min(Math.max(2, Math.ceil(message.split('\n').length)), 5)}
+          disabled={isLoading}
         />
         <div
           className={`${styles.inputActions} ${inChat ? styles.inChat : ''}`}
@@ -123,6 +133,7 @@ const InputContainer = memo(
             aria-label="Send message"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
+            disabled={isLoading || !message.trim()}
           >
             {inChat ? (
               <HiPaperAirplane size={18} />
@@ -146,8 +157,69 @@ export function Chatbot() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isWelcomeScreen, setIsWelcomeScreen] = useState(true);
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentConversationId, setCurrentConversationId] = useState<
+    string | null
+  >(null);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Fetch conversations on component mount
+  useEffect(() => {
+    fetchConversations();
+    console.log('Fetching conversations on mount');
+  }, []);
+
+  // Fetch conversations from the API
+  const fetchConversations = async () => {
+    try {
+      console.log('Attempting to fetch conversations...');
+      setIsLoading(true);
+      const conversationsData = await chatService.getConversations();
+      console.log('Conversations fetched:', conversationsData);
+      setConversations(conversationsData);
+    } catch (err: any) {
+      console.error('Failed to fetch conversations:', err);
+      // Show error toast if the user is logged in (expected to be logged in on this page)
+      if (err.message !== 'User not authenticated') {
+        toast.error('Failed to fetch conversation history');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Load conversation messages when a conversation is selected
+  const loadConversation = async (conversationId: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const messagesData = await chatService.getConversationMessages(
+        conversationId,
+      );
+
+      // Convert API messages to our local format
+      const formattedMessages: Message[] = messagesData.map((msg) => ({
+        id: msg._id,
+        content: msg.content,
+        isUser: msg.role === 'user',
+        timestamp: new Date(msg.createdAt),
+      }));
+
+      setMessages(formattedMessages);
+      setCurrentConversationId(conversationId);
+      setIsWelcomeScreen(false);
+    } catch (err) {
+      console.error('Failed to load conversation:', err);
+      setError('Failed to load conversation. Please try again.');
+      toast.error('Failed to load conversation');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const scrollToBottom = () => {
     // Standard scrolling to bottom with regular column layout
@@ -163,8 +235,8 @@ export function Chatbot() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = useCallback(() => {
-    if (!message.trim()) return;
+  const handleSendMessage = useCallback(async () => {
+    if (!message.trim() || isLoading) return;
 
     const newMessage: Message = {
       id: Date.now().toString(),
@@ -174,20 +246,54 @@ export function Chatbot() {
     };
 
     setMessages((prev) => [...prev, newMessage]);
+    const sentMessage = message.trim();
     setMessage('');
     setIsWelcomeScreen(false);
+    setIsLoading(true);
+    setError(null);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Call the chatbot API
+      const response = await chatService.chatWithAI(
+        sentMessage,
+        currentConversationId || undefined,
+      );
+
+      // If this is a new conversation, update the current conversation ID
+      if (!currentConversationId && response.conversationId) {
+        setCurrentConversationId(response.conversationId);
+        // Refresh the conversations list
+        fetchConversations();
+      }
+
+      // Add AI response to messages
       const aiResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        content: "I'm here to help! Let me think about your question...",
+        id: Date.now().toString(),
+        content: response.response,
         isUser: false,
         timestamp: new Date(),
       };
+
       setMessages((prev) => [...prev, aiResponse]);
-    }, 1000);
-  }, [message]);
+    } catch (err) {
+      console.error('Failed to send message:', err);
+      setError('Failed to get response. Please try again.');
+
+      // Add error message
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        content:
+          'Sorry, I encountered an error while processing your request. Please try again.',
+        isUser: false,
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, errorMessage]);
+      toast.error('Failed to get AI response');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [message, currentConversationId, isLoading]);
 
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -224,17 +330,93 @@ export function Chatbot() {
     { icon: <HiAcademicCap />, label: 'Science Mentor' },
   ];
 
-  const MessageActions = ({ isUser }: { isUser: boolean }) => (
+  // Regenerate response handler
+  const handleRegenerateResponse = async () => {
+    // Find the last user message
+    const lastUserMessageIndex = [...messages]
+      .reverse()
+      .findIndex((msg) => msg.isUser);
+
+    if (lastUserMessageIndex === -1) return;
+
+    const lastUserMessage =
+      messages[messages.length - 1 - lastUserMessageIndex];
+
+    // Remove all AI messages after the last user message
+    const newMessages = messages.slice(
+      0,
+      messages.length - lastUserMessageIndex,
+    );
+    setMessages(newMessages);
+
+    // Send the last user message again
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await chatService.chatWithAI(
+        lastUserMessage.content,
+        currentConversationId || undefined,
+      );
+
+      const aiResponse: Message = {
+        id: Date.now().toString(),
+        content: response.response,
+        isUser: false,
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, aiResponse]);
+    } catch (err) {
+      console.error('Failed to regenerate message:', err);
+      setError('Failed to regenerate response. Please try again.');
+
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        content:
+          'Sorry, I encountered an error while regenerating the response. Please try again.',
+        isUser: false,
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, errorMessage]);
+      toast.error('Failed to regenerate AI response');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const MessageActions = ({
+    isUser,
+    messageId,
+  }: {
+    isUser: boolean;
+    messageId: string;
+  }) => (
     <div className={styles.messageActions}>
       {!isUser && (
         <>
-          <button aria-label="Copy message">
+          <button
+            aria-label="Copy message"
+            onClick={() => {
+              // Find the message and copy it to clipboard
+              const message = messages.find((msg) => msg.id === messageId);
+              if (message) {
+                navigator.clipboard.writeText(message.content);
+                toast.success('Message copied to clipboard');
+              }
+            }}
+          >
             <HiClipboard size={16} />
           </button>
           <button aria-label="Read aloud">
             <HiSpeakerWave size={16} />
           </button>
-          <button aria-label="Regenerate response">
+          <button
+            aria-label="Regenerate response"
+            onClick={handleRegenerateResponse}
+            disabled={isLoading}
+          >
             <HiArrowPath size={16} />
           </button>
           <div className={styles.feedback}>
@@ -256,7 +438,23 @@ export function Chatbot() {
         !isWelcomeScreen ? styles.inChatMode : ''
       }`}
     >
-      <History />
+      {/* History component - removed fixed positioning as it's handled in the component */}
+      <History
+        conversations={conversations}
+        onSelectConversation={(conversationId: string) => {
+          if (conversationId) {
+            loadConversation(conversationId);
+          } else {
+            // Handle case when conversation was deleted
+            setMessages([]);
+            setCurrentConversationId(null);
+            setIsWelcomeScreen(true);
+          }
+        }}
+        currentConversationId={currentConversationId}
+        refetchConversations={fetchConversations}
+      />
+
       <motion.div
         className={`${styles.chatArea} ${
           !isWelcomeScreen ? styles.inChatMode : ''
@@ -294,6 +492,7 @@ export function Chatbot() {
                 handleKeyPress={handleKeyPress}
                 handleSendMessage={handleSendMessage}
                 inputRef={inputRef}
+                isLoading={isLoading}
               />
 
               <div className={styles.subjectButtons}>
@@ -357,6 +556,18 @@ export function Chatbot() {
                   ease: [0.4, 0, 0.2, 1],
                 }}
               >
+                {/* Error message if applicable */}
+                {error && (
+                  <motion.div
+                    className={styles.errorMessage}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
+                    <HiExclamationTriangle size={20} />
+                    <span>{error}</span>
+                  </motion.div>
+                )}
+
                 {/* Messages displayed in chronological order */}
                 {messages.map((msg, index) => {
                   // Find the last AI message (non-user message)
@@ -385,10 +596,26 @@ export function Chatbot() {
                       }}
                     >
                       <div className={styles.messageContent}>{msg.content}</div>
-                      <MessageActions isUser={msg.isUser} />
+                      <MessageActions isUser={msg.isUser} messageId={msg.id} />
                     </motion.div>
                   );
                 })}
+
+                {/* Loading indicator */}
+                {isLoading && (
+                  <motion.div
+                    className={`${styles.message} ${styles.aiMessage} ${styles.loadingMessage}`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
+                    <div className={styles.messageContent}>
+                      <span className={styles.loadingDot}></span>
+                      <span className={styles.loadingDot}></span>
+                      <span className={styles.loadingDot}></span>
+                    </div>
+                  </motion.div>
+                )}
+
                 {/* Reference for scrolling to bottom */}
                 <div ref={messagesEndRef} />
               </motion.div>
@@ -401,6 +628,7 @@ export function Chatbot() {
                   handleKeyPress={handleKeyPress}
                   handleSendMessage={handleSendMessage}
                   inputRef={inputRef}
+                  isLoading={isLoading}
                 />
 
                 <motion.p

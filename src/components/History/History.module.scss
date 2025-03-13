@@ -1,111 +1,270 @@
 .historyButton {
   position: fixed;
-  top: 1.25rem;
-  right: 1.25rem;
+  z-index: 1000;
+  top: 1.5rem;
+  right: 1.5rem;
   width: 48px;
   height: 48px;
+  border-radius: 12px;
+  background-color: rgba(17, 25, 54, 0.85);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.95);
-  background: rgba(37, 99, 255, 0.1);
-  backdrop-filter: blur(10px) saturate(180%);
-  -webkit-backdrop-filter: blur(10px) saturate(180%);
-  border: 1px solid rgba(37, 99, 255, 0.15);
-  border-radius: 50%;
-  padding: 0.75rem;
   cursor: pointer;
-  z-index: 1002;
-  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transform-origin: center;
-  box-shadow: 0 4px 12px rgba(37, 99, 255, 0.1);
-
-  &:hover {
-    background: rgba(37, 99, 255, 0.15);
-    box-shadow: 0 8px 24px rgba(37, 99, 255, 0.2);
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
-
-  &.active {
-    background: rgba(37, 99, 255, 0.2);
-    box-shadow: 0 8px 32px rgba(37, 99, 255, 0.25);
-  }
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  border: 2px solid rgba(37, 99, 255, 0.3);
+  outline: none;
+  cursor: pointer;
 
   svg {
     width: 24px;
     height: 24px;
-    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    stroke-width: 1.5px;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    border-color: rgba(37, 99, 255, 0.6);
+  }
+
+  &.active {
+    background-color: rgba(26, 115, 232, 0.9);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 6px 25px rgba(26, 115, 232, 0.4);
   }
 }
 
 .overlay {
   position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 1001;
-  pointer-events: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  cursor: pointer;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
 }
 
 .historyPanel {
   position: fixed;
-  top: 5rem;
-  right: 1.25rem;
+  z-index: 100;
+  top: 0;
+  right: 0;
+  height: 100vh;
   width: 320px;
-  max-height: calc(100vh - 7rem);
-  background: rgba(17, 25, 54, 0.95);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(37, 99, 255, 0.15);
-  border-radius: 16px;
-  padding: 1.5rem;
+  background: linear-gradient(
+    135deg,
+    rgba(17, 25, 54, 0.97),
+    rgba(13, 19, 40, 0.97)
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: -4px 0 30px rgba(0, 0, 0, 0.3);
+  padding: 5rem 1rem 1rem;
   overflow-y: auto;
-  z-index: 1002;
-  transform-origin: top right;
-  box-shadow: 0 12px 24px -1px rgba(0, 0, 0, 0.2),
-    0 8px 16px -1px rgba(0, 0, 0, 0.1);
+  color: white;
+  border-left: 1px solid rgba(37, 99, 255, 0.15);
 
   &::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
   }
 
   &::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 3px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgba(37, 99, 255, 0.3);
-    border-radius: 3px;
+    background: rgba(37, 99, 255, 0.4);
+    border-radius: 10px;
 
     &:hover {
-      background: rgba(37, 99, 255, 0.5);
+      background: rgba(37, 99, 255, 0.6);
     }
+  }
+}
+
+.historyHeader {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  color: white;
+  background: linear-gradient(
+    90deg,
+    rgba(11, 15, 31, 0.8),
+    rgba(17, 25, 54, 0.8)
+  );
+  font-weight: 500;
+  border-bottom: 1px solid rgba(37, 99, 255, 0.2);
+  margin-bottom: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 8px;
+
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    background: linear-gradient(90deg, #ffffff, #d9e3ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
 
 .historyList {
   display: flex;
+  gap: 0.25rem;
   flex-direction: column;
-  gap: 0.75rem;
+  overflow-y: auto;
+  max-height: calc(100% - 70px);
+  animation: fadeIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .historyItem {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0.75rem;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
+  gap: 0.75rem;
+  padding: 0.75rem 0.75rem 0.75rem calc(0.75rem - 3px);
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-left: 3px solid transparent;
+  margin-bottom: 4px;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background-color: transparent;
+    transition: background-color 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
 
   &:hover {
-    background: rgba(37, 99, 255, 0.1);
+    background-color: rgba(37, 99, 255, 0.15);
+
+    &::before {
+      background-color: rgba(37, 99, 255, 0.5);
+    }
+
+    .historyActions {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  &.active {
+    background: linear-gradient(
+      90deg,
+      rgba(37, 99, 255, 0.2),
+      rgba(37, 99, 255, 0.05)
+    );
+    font-weight: 500;
+
+    &::before {
+      background-color: #1a73e8;
+    }
+  }
+}
+
+.historyIcon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 255, 0.4),
+    rgba(26, 115, 232, 0.3)
+  );
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.historyContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.historyTitle {
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.historyTime {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.historyActions {
+  display: flex;
+  opacity: 0;
+  transform: translateX(5px);
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: absolute;
+  right: 0.75rem;
+  background: rgba(17, 25, 54, 0.95);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  padding: 0.25rem;
+  border-radius: 4px;
+  border: 1px solid rgba(37, 99, 255, 0.2);
+}
+
+.deleteButton {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  &:hover {
+    background-color: rgba(255, 70, 70, 0.15);
+    color: #e53935;
     transform: translateY(-1px);
   }
 
@@ -113,39 +272,201 @@
     transform: translateY(0);
   }
 
-  .historyIcon {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(37, 99, 255, 0.15);
-    border-radius: 8px;
-    flex-shrink: 0;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
 
-    svg {
-      width: 18px;
-      height: 18px;
-      color: rgba(37, 99, 255, 1);
-    }
+.noConversations {
+  padding: 1.5rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  background-color: rgba(37, 99, 255, 0.05);
+  border-radius: 8px;
+  border: 1px dashed rgba(37, 99, 255, 0.2);
+  margin: 1rem 0;
+}
+
+@media (max-width: 768px) {
+  .historyPanel {
+    width: 280px;
+  }
+}
+
+.confirmOverlay {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 9;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border-radius: 10px;
+}
+
+.confirmDialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  background: linear-gradient(
+    135deg,
+    rgba(17, 25, 54, 0.97),
+    rgba(13, 19, 40, 0.97)
+  );
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1px solid rgba(37, 99, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.confirmIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(229, 57, 53, 0.15);
+  border-radius: 50%;
+  margin-bottom: 0.75rem;
+  color: #e53935;
+}
+
+.confirmMessage {
+  color: white;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+
+  p {
+    margin: 0 0 0.5rem;
+  }
+}
+
+.confirmTitle {
+  display: block;
+  font-size: 0.9rem;
+  color: rgba(37, 99, 255, 0.9);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0.25rem 0.5rem;
+  background-color: rgba(37, 99, 255, 0.1);
+  border-radius: 4px;
+  margin-top: 0.25rem;
+}
+
+.confirmActions {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.cancelButton,
+.confirmButton {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.cancelButton {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+
+  &:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
   }
 
-  .historyContent {
-    flex: 1;
-    min-width: 0;
-
-    .historyTitle {
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.95);
-      margin-bottom: 0.25rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .historyTime {
-      font-size: 0.875rem;
-      color: rgba(255, 255, 255, 0.5);
-    }
+  &:active:not(:disabled) {
+    transform: translateY(0);
   }
+}
+
+.confirmButton {
+  background: linear-gradient(135deg, #e53935, #c62828);
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #c62828, #b71c1c);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+.confirmationContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.globalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1999;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  pointer-events: all;
+}
+
+.globalConfirmDialog {
+  position: relative;
+  z-index: 2001;
+  width: 300px;
+  max-width: 90%;
+  background: linear-gradient(
+    135deg,
+    rgba(17, 25, 54, 0.97),
+    rgba(13, 19, 40, 0.97)
+  );
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1px solid rgba(37, 99, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  pointer-events: all;
 }
