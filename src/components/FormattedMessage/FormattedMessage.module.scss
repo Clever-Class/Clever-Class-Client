@@ -1,17 +1,56 @@
 .formattedMessage {
   font-size: 0.9375rem;
-  line-height: 1.5;
+  line-height: 1.7;
   white-space: pre-wrap;
   word-break: break-word;
 
   p {
-    margin: 0.5rem 0;
+    margin: 0.5rem 0 1rem;
     &:first-child {
       margin-top: 0;
     }
     &:last-child {
       margin-bottom: 0;
     }
+  }
+
+  ul,
+  ol {
+    margin: 0.5rem 0 1.25rem;
+    padding-left: 1.5rem;
+    list-style-position: outside;
+
+    li {
+      margin-bottom: 0.5rem;
+      padding-left: 0.25rem;
+      display: list-item;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // Explicit styles for unordered lists
+  ul {
+    list-style-type: disc; // Standard bullet point •
+  }
+
+  // Explicit styles for ordered lists
+  ol {
+    list-style-type: decimal; // Numbered list 1, 2, 3
+  }
+
+  ul + p,
+  ol + p {
+    margin-top: 1rem;
+  }
+
+  hr {
+    margin: 1.5rem 0;
+    border: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
   }
 
   :global(.katex) {
@@ -42,6 +81,26 @@
       border-radius: 2px;
     }
   }
+}
+
+// Markdown formatting styles
+.boldText {
+  font-weight: 700;
+  color: inherit;
+}
+
+.italicText {
+  font-style: italic;
+  color: inherit;
+}
+
+.inlineCode {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85em;
+  background-color: rgba(0, 0, 0, 0.15);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .blockMath {
@@ -77,7 +136,7 @@
 }
 
 .codeBlock {
-  margin: 1rem 0;
+  margin: 1rem 0 1.5rem;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   overflow: hidden;
