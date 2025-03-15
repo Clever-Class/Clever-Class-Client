@@ -10,9 +10,31 @@ interface FormattedMessageProps {
 export const FormattedMessage: React.FC<FormattedMessageProps> = ({
   content,
 }) => {
+  // Preprocess content to fix math formatting issues
+  const preprocessContent = (text: string) => {
+    // Remove excessive line breaks in math expressions to keep equations together
+    let processed = text;
+
+    // Fix common math expression formatting issues
+    const mathBlockRegex = /(\$\$[\s\S]*?\$\$)/g;
+    processed = processed.replace(mathBlockRegex, (match) => {
+      // Remove line breaks within math blocks and normalize spaces
+      return match.replace(/\n/g, ' ').replace(/\s+/g, ' ');
+    });
+
+    // Fix inline math expressions spanning multiple lines
+    const inlineMathRegex = /(\$[^$\n]+)(?:\n)([^$\n]+\$)/g;
+    processed = processed.replace(inlineMathRegex, '$1 $2');
+
+    return processed;
+  };
+
+  // Pre-process the content before rendering
+  const processedContent = preprocessContent(content);
+
   const renderContent = () => {
     // First, split content by math and code blocks
-    const segments = content.split(
+    const segments = processedContent.split(
       /(\$\$.*?\$\$|\$.*?\$|```.*?```|\\\[.*?\\\]|\\\(.*?\\\))/s,
     );
 
@@ -80,6 +102,22 @@ export const FormattedMessage: React.FC<FormattedMessageProps> = ({
     const paragraphs = text.split(/\n\s*\n/);
 
     return paragraphs.map((paragraph, paragraphIndex) => {
+      // Check if this is a header (starts with #, ##, ###, etc.)
+      const headerMatch = paragraph.trim().match(/^(#{1,6})\s+(.+)$/);
+      if (headerMatch) {
+        const level = headerMatch[1].length; // Number of # characters
+        const content = headerMatch[2];
+        const HeaderTag = `h${level}` as keyof JSX.IntrinsicElements;
+        return (
+          <HeaderTag
+            key={`header-${paragraphIndex}`}
+            className={styles[`heading${level}`]}
+          >
+            {processMarkdown(content)}
+          </HeaderTag>
+        );
+      }
+
       // Check if this is a list (starts with * or -) or ordered list (starts with 1., 2., etc.)
       if (/^(?:\s*[-*+]|\s*\d+\.)\s+/.test(paragraph.trim())) {
         return processListItems(paragraph, paragraphIndex);

@@ -6,7 +6,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 export default defineConfig({
   optimizeDeps: {
-    include: ['zod'],
+    include: ['zod', 'katex', 'react-katex'],
   },
   plugins: [react(), tsconfigPaths(), nodeResolve()],
   resolve: {
