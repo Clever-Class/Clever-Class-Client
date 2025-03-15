@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 
 import {
   FeatureHighlight,
-  FeatureHighlightSection,
   LowerCTA,
   Navbar,
   SignupPopup,
