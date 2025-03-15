@@ -20,7 +20,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
       <button
         onClick={toggleCollapse}
         className={styles.collapseButton}
-        aria-label="Toggle sidebar"
+        aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
       >
         <ChevronLeft size={20} />
       </button>

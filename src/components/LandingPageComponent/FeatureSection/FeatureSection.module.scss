@@ -1,0 +1,653 @@
+@import '../../../styles/variables';
+
+// Animation keyframes
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Scrolling animations for each row
+@keyframes scrollRow1 {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scrollRow2 {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes scrollRow3 {
+  0% {
+    transform: translateX(-25%);
+  }
+  100% {
+    transform: translateX(-75%);
+  }
+}
+
+.featureSection {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  color: $white;
+  padding: clamp(2rem, 6vw, 6rem) 0;
+
+  @include respond-to(mobile) {
+    padding: 2rem 0;
+  }
+
+  .featureSectionSideBackground {
+    position: absolute;
+    top: clamp(2rem, 4vw, 6rem);
+    right: 0;
+    width: 45%;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.85;
+    mix-blend-mode: luminosity;
+    filter: contrast(1.1) brightness(1.05);
+    transform: translateY(-5%);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+
+    @media (max-width: 1024px) {
+      display: none; // Hide on tablet and mobile
+    }
+
+    @media (min-width: 1440px) {
+      width: 40%; // Slightly smaller on very large screens
+      transform: translateY(-8%);
+    }
+  }
+
+  .heroBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, $primary-blue, $primary-blue-light);
+    z-index: -1;
+
+    .gradientOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(
+        circle at top right,
+        rgba(255, 255, 255, 0.1),
+        transparent 70%
+      );
+    }
+  }
+
+  .contentContainer {
+    width: 100%;
+    max-width: min(90%, 1200px);
+    margin: 0 auto;
+    padding: 0 clamp(1rem, 3vw, 2rem);
+
+    .topSection {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: clamp(2rem, 4vw, 3rem);
+      opacity: 0;
+
+      @include respond-to(mobile) {
+        justify-content: center;
+        margin-bottom: 1.5rem;
+      }
+
+      &.visible {
+        animation: fadeInLeft 0.8s ease forwards;
+      }
+
+      .chromeExtensionButton {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background-color: $white;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 9999px;
+        padding: clamp(0.5rem, 2vw, 0.75rem) clamp(1rem, 3vw, 1.5rem);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+        svg {
+          width: clamp(20px, 4vw, 24px);
+          height: clamp(20px, 4vw, 24px);
+        }
+
+        span {
+          font-weight: 500;
+          font-size: clamp(14px, 3.5vw, 16px);
+          color: $primary-blue;
+          white-space: nowrap;
+        }
+
+        &:hover {
+          box-shadow: 0 8px 20px rgba(37, 99, 255, 0.15);
+          transform: translateY(-3px);
+        }
+
+        &:active {
+          transform: translateY(-1px);
+        }
+      }
+    }
+
+    .heroContent {
+      max-width: min(100%, 800px);
+      margin-bottom: clamp(2rem, 6vw, 5rem);
+      opacity: 0;
+
+      @include respond-to(mobile) {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      &.visible {
+        animation: fadeInUp 0.8s ease forwards;
+        animation-delay: 0.2s;
+      }
+
+      .heroTitle {
+        font-size: clamp(24px, 5vw, 48px);
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: clamp(1rem, 3vw, 2rem);
+        letter-spacing: -0.04em;
+
+        @include respond-to(tablet) {
+          br {
+            display: none;
+          }
+        }
+      }
+
+      .heroDescription {
+        font-size: clamp(14px, 2.5vw, 18px);
+        line-height: 1.55;
+        opacity: 0.8;
+        margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+        letter-spacing: -0.02em;
+
+        @include respond-to(tablet) {
+          br {
+            display: none;
+          }
+        }
+      }
+
+      .getStartedButton {
+        background-color: $white;
+        color: $primary-blue;
+        font-weight: 600;
+        font-size: clamp(14px, 3.5vw, 16px);
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem);
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+        @include respond-to(mobile) {
+          width: 100%;
+          max-width: 300px;
+        }
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.9);
+          transform: translateY(-3px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        &:active {
+          transform: translateY(-1px);
+        }
+      }
+    }
+
+    .featureCards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
+      gap: clamp(1rem, 3vw, 2rem);
+      margin-bottom: clamp(1rem, 3vw, 2rem);
+      opacity: 0;
+
+      @include respond-to(tablet) {
+        grid-template-columns: 1fr;
+      }
+
+      &.visible {
+        animation: scaleIn 0.8s ease forwards;
+        animation-delay: 0.4s;
+      }
+
+      &:nth-child(4) {
+        &.visible {
+          animation-delay: 0.6s;
+        }
+      }
+
+      .featureCard {
+        position: relative;
+        border-radius: clamp(16px, 4vw, 32px);
+        padding: clamp(1.25rem, 3vw, 2.5rem);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: clamp(250px, 40vh, 300px);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+
+        @include respond-to(tablet) {
+          &.pinkCard {
+            min-height: 280px;
+          }
+        }
+        @include respond-to(mobile) {
+          min-height: 200px;
+          padding: 1.25rem;
+
+          &.pinkCard {
+            background-color: $primary-pink;
+            background-image: radial-gradient(
+              circle at top,
+              rgba(255, 255, 255, 0.1),
+              transparent
+            );
+            color: $white;
+            min-height: 230px; // Set minimum height for the first feature card
+          }
+        }
+
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+          font-size: clamp(18px, 3vw, 24px);
+          font-weight: 700;
+          margin-bottom: clamp(0.75rem, 2vw, 1rem);
+          line-height: 1.33;
+          letter-spacing: -0.04em;
+          position: relative;
+          z-index: 2;
+
+          @include respond-to(mobile) {
+            text-align: center;
+            font-size: 20px;
+          }
+        }
+
+        p {
+          font-size: clamp(13px, 1.5vw, 14px);
+          line-height: 1.5;
+          opacity: 0.9;
+          letter-spacing: -0.02em;
+          margin-bottom: clamp(1rem, 3vw, 1.5rem);
+          position: relative;
+          z-index: 2;
+
+          @include respond-to(mobile) {
+            text-align: center;
+          }
+        }
+
+        &.pinkCard {
+          background-color: $primary-pink;
+          background-image: radial-gradient(
+            circle at top,
+            rgba(255, 255, 255, 0.1),
+            transparent
+          );
+          color: $white;
+
+          .scrollingSubjects {
+            position: absolute;
+            bottom: 15px;
+            left: -25%; // Start from outside the visible area
+            width: 150%; // Extend beyond the container
+            height: clamp(120px, 20vh, 150px);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.5rem, 1.5vw, 0.75rem);
+            overflow: hidden;
+            padding: 0.5rem;
+            z-index: 1;
+
+            @include respond-to(mobile) {
+              height: 110px;
+              gap: 0.35rem;
+              bottom: 15px;
+              padding: 0.75rem;
+              left: -50%; // Extend further on mobile
+              width: 200%; // Wider on mobile for seamless scroll
+            }
+
+            &::before {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: linear-gradient(
+                  to right,
+                  rgba($primary-pink, 0.3) 0%,
+                  // Reduced opacity
+                  // Reduced opacity
+                  rgba($primary-pink, 0) 15%,
+                  rgba($primary-pink, 0) 85%,
+                  rgba($primary-pink, 0.3) 100% // Reduced opacity
+                ),
+                linear-gradient(
+                  to top,
+                  rgba($primary-pink, 0.3) 0%,
+                  // Reduced opacity
+                  // Reduced opacity
+                  rgba($primary-pink, 0.2) 30%,
+                  // Reduced opacity
+                  // Reduced opacity
+                  rgba($primary-pink, 0) 100%
+                );
+              z-index: 1;
+              pointer-events: none;
+
+              @include respond-to(mobile) {
+                background: linear-gradient(
+                    to right,
+                    rgba($primary-pink, 0.75) 0%,
+                    // Reduced opacity
+                    rgba($primary-pink, 0) 20%,
+                    rgba($primary-pink, 0) 80%,
+                    rgba($primary-pink, 0.75) 100% // Reduced opacity
+                  ),
+                  linear-gradient(
+                    to top,
+                    rgba($primary-pink, 0.75) 0%,
+                    // Reduced opacity
+                    rgba($primary-pink, 0.5) 40%,
+                    // Reduced opacity
+                    rgba($primary-pink, 0) 100%
+                  );
+              }
+            }
+
+            .scrollRow {
+              display: flex;
+              gap: clamp(0.5rem, 1.5vw, 0.75rem);
+              width: fit-content;
+              padding: 0 2rem; // Increased padding for smoother transition
+
+              @include respond-to(mobile) {
+                padding: 0 2.5rem; // More padding on mobile
+                gap: 0.75rem;
+              }
+
+              // Double the content for seamless loop
+              &::after {
+                content: '';
+                display: block;
+                width: 100%;
+                position: absolute;
+                left: 100%;
+                top: 0;
+                height: 100%;
+              }
+
+              &:nth-child(1) {
+                animation: scrollRow1 60s linear infinite;
+                animation-play-state: running;
+
+                &:hover {
+                  animation-play-state: paused;
+                }
+              }
+
+              &:nth-child(2) {
+                animation: scrollRow2 65s linear infinite;
+                animation-play-state: running;
+
+                &:hover {
+                  animation-play-state: paused;
+                }
+              }
+
+              &:nth-child(3) {
+                animation: scrollRow3 70s linear infinite;
+                animation-play-state: running;
+
+                &:hover {
+                  animation-play-state: paused;
+                }
+              }
+
+              @include respond-to(mobile) {
+                &:nth-child(1) {
+                  animation-duration: 50s;
+                }
+
+                &:nth-child(2) {
+                  animation-duration: 55s;
+                }
+
+                &:nth-child(3) {
+                  animation-duration: 60s;
+                }
+              }
+
+              span {
+                display: inline-flex;
+                align-items: center;
+                gap: clamp(0.35rem, 1vw, 0.5rem);
+                background-color: rgba(255, 255, 255, 0.2);
+                padding: clamp(0.35rem, 1vw, 0.5rem) clamp(0.75rem, 2vw, 1rem);
+                border-radius: 20px;
+                white-space: nowrap;
+                font-size: clamp(11px, 1.5vw, 14px);
+                transition: all 0.2s ease;
+                z-index: 2;
+
+                @include respond-to(mobile) {
+                  padding: 0.35rem 0.75rem;
+                  font-size: 11px;
+                  min-width: max-content;
+                }
+
+                svg {
+                  width: 1em;
+                  height: 1em;
+                  font-size: 1.2em;
+                  opacity: 0.9;
+                  transition: transform 0.2s ease;
+
+                  @include respond-to(mobile) {
+                    font-size: 1.1em;
+                  }
+                }
+
+                &:hover {
+                  background-color: rgba(255, 255, 255, 0.3);
+                  transform: translateY(-2px);
+
+                  svg {
+                    transform: scale(1.1);
+                    opacity: 1;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        &.whiteCard {
+          background-color: $white;
+          background-image: radial-gradient(
+            circle at top,
+            rgba(255, 255, 255, 0.1),
+            transparent
+          );
+          color: $dark-bg;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        &.blueCard {
+          background-color: $primary-blue;
+          background-image: radial-gradient(
+            circle at top,
+            rgba(255, 255, 255, 0.1),
+            transparent
+          );
+          color: $white;
+        }
+
+        &.darkCard {
+          background-color: $dark-bg;
+          color: $white;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+      }
+    }
+  }
+}
+
+// Custom styles for different screen sizes
+@include respond-to(desktop-lg) {
+  .featureSection {
+    .contentContainer {
+      max-width: 1320px;
+
+      .heroContent {
+        max-width: 900px;
+      }
+    }
+  }
+}
+
+@include respond-to(laptop) {
+  .featureSection {
+    .contentContainer {
+      .featureCards {
+        .featureCard {
+          min-height: 180px;
+        }
+      }
+    }
+  }
+}
+
+@include respond-to(tablet) {
+  .featureSection {
+    .contentContainer {
+      .heroContent {
+        .heroTitle {
+          br {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+@include respond-to(mobile) {
+  .featureSection {
+    .contentContainer {
+      .topSection {
+        justify-content: center;
+      }
+
+      .heroContent {
+        text-align: center;
+
+        .getStartedButton {
+          width: 100%;
+        }
+      }
+
+      .featureCards {
+        .featureCard {
+          padding: 1.5rem;
+
+          h2 {
+            text-align: center;
+          }
+
+          p {
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+@include respond-to(mobile-sm) {
+  .featureSection {
+    padding: 2rem 0;
+
+    .contentContainer {
+      .heroContent {
+        .heroTitle {
+          font-size: 24px;
+        }
+
+        .heroDescription {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}

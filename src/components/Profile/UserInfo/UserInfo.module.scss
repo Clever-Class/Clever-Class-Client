@@ -1,0 +1,121 @@
+@import '../../../styles/variables';
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  position: relative;
+  overflow: visible;
+
+  .content {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 1.5rem);
+    flex: 1;
+    min-width: 0;
+
+    .avatar {
+      width: clamp(64px, 15vw, 96px);
+      height: clamp(64px, 15vw, 96px);
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .details {
+      flex: 1;
+      min-width: 0;
+
+      .name {
+        font-size: clamp(18px, 3vw, 24px);
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: -0.02em;
+      }
+
+      .meta {
+        font-size: clamp(14px, 2vw, 15px);
+        color: rgba(255, 255, 255, 0.6);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        max-width: 400px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        span {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  .editButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: clamp(8px, 2vw, 10px) clamp(12px, 3vw, 16px);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: clamp(13px, 2vw, 14px);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    transform-origin: center;
+    position: relative;
+    z-index: 1;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    svg {
+      width: clamp(14px, 2vw, 16px);
+      height: clamp(14px, 2vw, 16px);
+      opacity: 0.8;
+    }
+  }
+}
+
+// Responsive styles
+@media (max-width: 480px) {
+  .userInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+
+    .content {
+      width: 100%;
+    }
+
+    .details {
+      flex: 1;
+      min-width: 0; // Important for text overflow to work
+
+      .meta {
+        max-width: 100%;
+      }
+    }
+
+    .editButton {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

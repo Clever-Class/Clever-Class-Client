@@ -1,0 +1,133 @@
+@import '../../styles/variables';
+
+// Keyframes
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.settingsPage {
+  width: 100%;
+  min-height: 100vh;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 767px) {
+    padding: 0;
+    padding-top: 2.5rem;
+  }
+}
+
+.settingsHeader {
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 767px) {
+    padding: 1rem 0.75rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.title {
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.8));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: clamp(14px, 2vw, 16px);
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: -0.01em;
+}
+
+.settingsContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.settingsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+
+  @media (max-width: 767px) {
+    gap: 1rem;
+  }
+}
+
+.settingsCard {
+  width: 100%;
+  background: transparent;
+  border-radius: 16px;
+  overflow: hidden;
+
+  &.fullWidth {
+    grid-column: 1 / -1;
+  }
+}
+
+.loadingContainer,
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  padding: 2rem;
+
+  @media (max-width: 767px) {
+    padding: 1.5rem 0.75rem;
+  }
+}
+
+.loadingSpinner {
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+// Responsive styles
+@media (max-width: 480px) {
+  .settingsPage {
+    // padding: 1rem;
+  }
+
+  .settingsCard {
+    padding: 1.25rem;
+  }
+}
+
+// Dark mode enhancements
+@media (prefers-color-scheme: dark) {
+  .settingsCard {
+    background: rgba(11, 20, 55, 0.25);
+    border-color: rgba(37, 99, 255, 0.1);
+
+    &:hover {
+      background: rgba(11, 20, 55, 0.35);
+      border-color: rgba(37, 99, 255, 0.2);
+    }
+  }
+}

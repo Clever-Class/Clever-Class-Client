@@ -1,0 +1,395 @@
+@import '../../styles/variables';
+
+.ctaSection {
+  position: relative;
+  width: 100%;
+  padding: clamp(4rem, 8vw, 8rem) 0;
+  background: linear-gradient(
+    to bottom right,
+    $primary-blue,
+    $primary-color-hover
+  );
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('../../assets/images/edu-pattern.jpg');
+    background-size: 800px auto;
+    background-repeat: repeat;
+    opacity: 0.035;
+    animation: subtleFloat 60s linear infinite;
+  }
+}
+
+.gradientOverlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.1),
+    transparent 70%
+  );
+  z-index: 1;
+}
+
+.patternBackground {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 1;
+
+  .row {
+    position: absolute;
+    display: flex;
+    gap: 4rem;
+    animation: floatLeft 120s linear infinite;
+    opacity: 0.5;
+    width: max-content;
+
+    svg {
+      width: 32px;
+      height: 32px;
+      opacity: 0.6;
+      filter: brightness(0) invert(1);
+    }
+
+    &:nth-child(1) {
+      top: 10%;
+    }
+
+    &:nth-child(2) {
+      top: 35%;
+      animation: floatRight 100s linear infinite;
+      animation-delay: -20s;
+    }
+
+    &:nth-child(3) {
+      top: 60%;
+      animation: floatLeft 80s linear infinite;
+      animation-delay: -40s;
+    }
+
+    &:nth-child(4) {
+      top: 85%;
+      animation: floatRight 90s linear infinite;
+      animation-delay: -60s;
+    }
+  }
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  max-width: min(90%, 1200px);
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+
+  @media (max-width: $tablet) {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+.content {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease forwards;
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+    color: white;
+    font-weight: 500;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    svg {
+      width: 16px;
+      height: 16px;
+      color: white;
+    }
+  }
+
+  .title {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: clamp(1rem, 3vw, 1.5rem);
+    color: white;
+    letter-spacing: -0.02em;
+
+    .highlight {
+      color: white;
+    }
+  }
+
+  .description {
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+    max-width: 600px;
+
+    @media (max-width: $tablet) {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+    animation: fadeInUp 0.8s ease forwards;
+    animation-delay: 0.2s;
+    opacity: 0;
+
+    @media (max-width: $tablet) {
+      justify-content: center;
+    }
+
+    @media (max-width: $mobile) {
+      flex-direction: column;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+  }
+
+  .primaryButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $white;
+    color: $primary-blue;
+    font-weight: 600;
+    font-size: clamp(16px, 2.5vw, 18px);
+    padding: clamp(1rem, 2.5vw, 1.25rem) clamp(2rem, 4vw, 3rem);
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      background-color: rgba(255, 255, 255, 0.95);
+    }
+
+    &:active {
+      transform: translateY(-1px);
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+      margin-left: 0.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover svg {
+      transform: translateX(4px);
+    }
+  }
+
+  .secondaryButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-weight: 600;
+    font-size: clamp(16px, 2.5vw, 18px);
+    padding: clamp(1rem, 2.5vw, 1.25rem) clamp(2rem, 4vw, 3rem);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+      margin-left: 0.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover svg {
+      transform: translateX(4px);
+    }
+  }
+}
+
+.cardPreview {
+  position: relative;
+  perspective: 1000px;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease forwards;
+  animation-delay: 0.3s;
+
+  @media (max-width: $tablet) {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transform: perspective(1000px) rotateX(6deg) scale(0.98);
+  transform-origin: center bottom;
+  transition: all 0.3s ease;
+  animation: float 6s ease-in-out infinite;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  &:hover {
+    transform: perspective(1000px) rotateX(4deg) scale(0.99);
+  }
+
+  @include respond-to(mobile) {
+    animation: none;
+    transform: none;
+  }
+
+  .cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .cardBadge {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .cardIcon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: white;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .cardContent {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+
+  .cardFooter {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .statValue {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+  }
+
+  .statLabel {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes subtleFloat {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 800px -800px;
+  }
+}
+
+@keyframes floatLeft {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes floatRight {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: perspective(1000px) rotateX(6deg) scale(0.98) translateY(0);
+  }
+  50% {
+    transform: perspective(1000px) rotateX(6deg) scale(0.98) translateY(-10px);
+  }
+}

@@ -1,17 +1,17 @@
-import { Crown, Zap } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Crown, Gift } from 'lucide-react';
 import { Subscription, SubscriptionStatus } from '~store/types';
 import { capitalizeFirstLetter } from '~/lib/utils';
 import moment from 'moment';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-
-import './SubscriptionInfo.scss';
 import { api } from '~api';
+import styles from './SubscriptionInfo.module.scss';
 
 interface SubscriptionInfoProps {
   subscription: Subscription | null;
   trialCredits: number;
-  onSubscriptionUpdate?: () => void; // Add callback to refresh subscription data
+  onSubscriptionUpdate?: () => void;
 }
 
 export const SubscriptionInfo = ({
@@ -21,14 +21,9 @@ export const SubscriptionInfo = ({
 }: SubscriptionInfoProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  if (!subscription) return null;
-
   const handleCancelSubscription = async () => {
-    // Show confirmation dialog
     if (
-      !window.confirm(
-        'Are you sure you want to cancel your subscription? You will still have access until the end of your current billing period.',
-      )
+      !window.confirm('Cancel subscription? Access continues until period end.')
     ) {
       return;
     }
@@ -39,10 +34,7 @@ export const SubscriptionInfo = ({
 
       if (response.data.success) {
         toast.success(response.data.message);
-        // Refresh subscription data if callback provided
-        if (onSubscriptionUpdate) {
-          onSubscriptionUpdate();
-        }
+        onSubscriptionUpdate?.();
       } else {
         toast.error(response.data.message || 'Failed to cancel subscription');
       }
@@ -58,88 +50,141 @@ export const SubscriptionInfo = ({
     }
   };
 
-  return (
-    <div className="subscription-info">
-      <h3 className="subscription-info__title">Subscription & Credits</h3>
+  // Calculate credit usage
+  const totalCredits = 5; // Total trial credits
+  const remainingCredits = trialCredits || 0;
+  const usedCredits = totalCredits - remainingCredits;
 
-      <div className="subscription-info__grid">
-        <div className="subscription-info__plan">
-          <div className="subscription-info__plan-header">
-            <div className="subscription-info__plan-icon-container">
-              <Crown className="subscription-info__plan-icon" />
+  // Calculate circle properties
+  const radius = 35;
+  const circumference = 2 * Math.PI * radius;
+  const progressPercentage = (usedCredits / totalCredits) * 100;
+  const dashOffset = ((100 - progressPercentage) / 100) * circumference;
+
+  return (
+    <motion.div
+      className={styles.subscriptionInfo}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      <h3 className={styles.title}>Subscription & Credits</h3>
+      <div className={styles.grid}>
+        <motion.div
+          className={styles.plan}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className={styles.planHeader}>
+            <div className={styles.iconContainer}>
+              <Crown />
             </div>
             <div>
               <h4>
-                Subscription Status:{' '}
-                {capitalizeFirstLetter(subscription.status)}
+                Status:{' '}
+                {subscription
+                  ? capitalizeFirstLetter(subscription.status)
+                  : 'Trial'}
               </h4>
-              <p>
-                Current Billing Start Date:{' '}
-                {moment(subscription.billingPeriod.starts_at)
-                  .local()
-                  .format('MMMM Do YYYY')}
-              </p>
-              <p>
-                Current Billing End Date:{' '}
-                {moment(subscription.billingPeriod.ends_at)
-                  .local()
-                  .format('MMMM Do YYYY')}
-              </p>
-              {/* Show effective from date if subscription is cancelled */}
-              {subscription.status === 'canceled' &&
-                subscription.billingPeriod?.ends_at && (
+              {subscription?.billingPeriod && (
+                <>
                   <p>
-                    Effective From:{' '}
+                    Start:{' '}
+                    {moment(subscription.billingPeriod.starts_at)
+                      .local()
+                      .format('MMM D, YYYY')}
+                  </p>
+                  <p>
+                    End:{' '}
                     {moment(subscription.billingPeriod.ends_at)
                       .local()
-                      .format('MMMM Do YYYY')}
+                      .format('MMM D, YYYY')}
                   </p>
-                )}
+                  {subscription.status === SubscriptionStatus.CANCELED && (
+                    <p>
+                      Effective:{' '}
+                      {moment(subscription.billingPeriod.ends_at)
+                        .local()
+                        .format('MMM D, YYYY')}
+                    </p>
+                  )}
+                </>
+              )}
             </div>
           </div>
-          <div className="subscription-info__plan-actions">
-            {/* Show update payment method button if subscription has an update payment method url */}
-            {subscription.updatePaymentMethodUrl && (
-              <a
+          <div className={styles.planActions}>
+            {subscription?.updatePaymentMethodUrl && (
+              <motion.a
                 href={subscription.updatePaymentMethodUrl}
-                className="subscription-info__action-link"
+                className={`${styles.actionButton} ${styles.primary}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                Update Payment Method
-              </a>
+                Update Payment
+              </motion.a>
             )}
-            {/* Show cancel subscription button if subscription is not cancelled */}
-            {subscription.status !== SubscriptionStatus.CANCELED && (
-              <button
+            {subscription?.status !== SubscriptionStatus.CANCELED && (
+              <motion.button
                 onClick={handleCancelSubscription}
-                className="subscription-info__action-link subscription-info__action-link--cancel"
+                className={`${styles.actionButton} ${styles.danger}`}
                 disabled={isLoading}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                {isLoading ? 'Canceling...' : 'Cancel Subscription'}
-              </button>
+                {isLoading ? 'Canceling...' : 'Cancel'}
+              </motion.button>
             )}
           </div>
-        </div>
+        </motion.div>
 
-        <div className="subscription-info__credits">
-          <div className="subscription-info__credits-header">
-            <div className="subscription-info__credits-icon-container">
-              <Zap className="subscription-info__credits-icon" />
+        <motion.div
+          className={styles.credits}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          <div className={styles.creditsHeader}>
+            <div className={styles.iconContainer}>
+              <Gift />
             </div>
             <div>
               <h4>Trial Credits</h4>
-              <p>{trialCredits} credits remaining</p>
+              <p>{remainingCredits} remaining</p>
             </div>
           </div>
-          <div className="subscription-info__credits-bar">
-            <div
-              className="subscription-info__credits-progress"
-              style={{ width: `${(trialCredits / 5) * 100}%` }}
-            />
+          <div className={styles.creditsContent}>
+            <div className={styles.progressRing}>
+              <svg width="90" height="90" viewBox="0 0 90 90">
+                <circle
+                  className={styles.background}
+                  cx="45"
+                  cy="45"
+                  r={radius}
+                />
+                <motion.circle
+                  className={styles.progress}
+                  cx="45"
+                  cy="45"
+                  r={radius}
+                  strokeDasharray={circumference}
+                  initial={{ strokeDashoffset: circumference }}
+                  animate={{ strokeDashoffset: dashOffset }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                />
+              </svg>
+              <div className={styles.progressText}>
+                <div className={styles.used}>{usedCredits}</div>
+                <div className={styles.label}>Used</div>
+              </div>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
+
+export default SubscriptionInfo;

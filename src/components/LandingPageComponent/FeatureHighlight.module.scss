@@ -1,0 +1,367 @@
+@import '../../styles/variables';
+
+.featureSection {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: black;
+  padding: clamp(2rem, 6vw, 6rem) 0;
+
+  @include respond-to(mobile) {
+    padding: 4rem 0;
+  }
+
+  .backgroundGradient {
+    position: absolute;
+    inset: 0;
+    opacity: 0.4;
+    background: radial-gradient(
+      circle at 50% 0%,
+      rgba(37, 99, 255, 0.44) 0%,
+      transparent 100%
+    );
+  }
+
+  .scrollingBackground {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: clamp(25%, 30%, 35%);
+    height: 200%;
+    background-image: url('https://cdn.transcript.study/landing/resultsLottie/images/img_1.png');
+    background-size: contain;
+    background-repeat: repeat-y;
+    background-position: right center;
+    opacity: 0.15;
+    animation: scrollBackground 25s linear infinite;
+    filter: brightness(1.2) contrast(1.1);
+    padding: 4rem 0;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4rem;
+      background: linear-gradient(to bottom, black, transparent);
+      z-index: 1;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4rem;
+      background: linear-gradient(to top, black, transparent);
+      z-index: 1;
+    }
+
+    @include respond-to(tablet) {
+      width: 100%;
+      background-size: contain;
+      opacity: 0.04;
+      padding: 3rem 0;
+
+      &::before,
+      &::after {
+        height: 3rem;
+      }
+    }
+
+    @include respond-to(mobile) {
+      padding: 2rem 0;
+      opacity: 0.04;
+      animation: scrollBackgroundMobile 25s linear infinite;
+
+      &::before,
+      &::after {
+        height: 2rem;
+      }
+    }
+  }
+
+  @keyframes scrollBackground {
+    0% {
+      transform: translateY(0);
+    }
+    95% {
+      opacity: 0.15;
+    }
+    100% {
+      transform: translateY(calc(-50% + 4rem));
+      opacity: 0.15;
+    }
+  }
+
+  @keyframes scrollBackgroundMobile {
+    0% {
+      transform: translateY(0);
+      opacity: 0.08;
+    }
+    100% {
+      transform: translateY(calc(-50% + 4rem));
+      opacity: 0.08;
+    }
+  }
+
+  .content {
+    position: relative;
+    width: 100%;
+    max-width: min(90%, 1200px);
+    margin: 0 auto;
+    padding: 0 clamp(1rem, 3vw, 2rem);
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: clamp(0.5rem, 1.5vw, 0.75rem) clamp(1rem, 2vw, 1.5rem);
+      border-radius: 9999px;
+      background-color: rgb(37, 99, 255);
+      color: white;
+      margin-bottom: clamp(1.5rem, 4vw, 2rem);
+
+      span {
+        font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      @include respond-to(tablet) {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      @include respond-to(mobile) {
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    .title {
+      font-size: clamp(24px, 5vw, 48px);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: clamp(1rem, 3vw, 1.5rem);
+      letter-spacing: -0.04em;
+      background: linear-gradient(to bottom, white, rgba(37, 99, 255, 0.1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+
+      @include respond-to(mobile) {
+        text-align: center;
+        font-size: 36px;
+      }
+
+      @include respond-to(tablet) {
+        br {
+          display: none;
+        }
+      }
+    }
+
+    .description {
+      font-size: clamp(14px, 2.5vw, 18px);
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: clamp(2rem, 4vw, 3rem);
+      max-width: min(100%, 42rem);
+      letter-spacing: -0.02em;
+
+      @include respond-to(mobile) {
+        text-align: center;
+        font-size: 14px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      @include respond-to(tablet) {
+        br {
+          display: none;
+        }
+      }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
+      gap: clamp(1rem, 3vw, 2rem);
+      max-width: min(100%, 50rem);
+
+      @include respond-to(tablet) {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}
+
+.featureCard {
+  position: relative;
+  border-radius: clamp(1rem, 3vw, 1.5rem);
+  padding: clamp(1.25rem, 3vw, 1.5rem);
+  border: 1px solid;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .cardContent {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(0.75rem, 2vw, 1rem);
+
+    @include respond-to(mobile) {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0.75rem;
+    }
+
+    .iconWrapper {
+      padding: clamp(0.35rem, 1vw, 0.5rem);
+      border-radius: 0.5rem;
+
+      svg {
+        width: clamp(1.25rem, 2.5vw, 1.5rem);
+        height: clamp(1.25rem, 2.5vw, 1.5rem);
+        color: white;
+      }
+
+      @include respond-to(mobile) {
+        svg {
+          width: 2.5rem;
+          height: 2.5rem;
+        }
+      }
+    }
+
+    .textContent {
+      flex: 1;
+
+      .cardTitle {
+        font-size: clamp(16px, 2.5vw, 18px);
+        font-weight: 600;
+        color: white;
+        line-height: 1.33;
+        letter-spacing: -0.02em;
+        margin-bottom: clamp(0.25rem, 1vw, 0.5rem);
+      }
+
+      .cardDescription {
+        font-size: clamp(13px, 1.5vw, 14px);
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.7);
+        letter-spacing: -0.01em;
+      }
+    }
+  }
+
+  &.blue {
+    border-color: rgba(37, 99, 255, 0.2);
+    background: radial-gradient(
+      circle at 8.33% 50%,
+      rgba(37, 99, 255, 0.1),
+      transparent
+    );
+  }
+
+  &.yellow {
+    border-color: rgba(234, 179, 8, 0.2);
+    background: radial-gradient(
+      circle at 8.33% 50%,
+      rgba(255, 210, 93, 0.1),
+      transparent
+    );
+  }
+
+  &.pink {
+    border-color: rgba(236, 72, 153, 0.2);
+    background: radial-gradient(
+      circle at 8.33% 50%,
+      rgba(255, 63, 143, 0.1),
+      transparent
+    );
+  }
+
+  &.green {
+    border-color: rgba(48, 196, 0, 0.2);
+    background: radial-gradient(
+      circle at 8.33% 50%,
+      rgba(48, 196, 0, 0.1),
+      transparent
+    );
+  }
+}
+
+// Custom styles for different screen sizes
+@include respond-to(desktop-lg) {
+  .featureSection {
+    .content {
+      max-width: 1320px;
+    }
+  }
+}
+
+@include respond-to(laptop) {
+  .featureSection {
+    .content {
+      .grid {
+        gap: 1.25rem;
+      }
+    }
+  }
+}
+
+@include respond-to(mobile-sm) {
+  .featureSection {
+    padding: 2rem 0;
+
+    .content {
+      .title {
+        font-size: 24px;
+      }
+
+      .description {
+        font-size: 14px;
+      }
+
+      .grid {
+        gap: 1rem;
+      }
+    }
+
+    .featureCard {
+      padding: 1.25rem;
+
+      .cardContent {
+        .iconWrapper {
+          padding: 0.35rem;
+
+          svg {
+            width: 1.25rem;
+            height: 1.25rem;
+          }
+        }
+
+        .textContent {
+          .cardTitle {
+            font-size: 16px;
+          }
+
+          .cardDescription {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+}

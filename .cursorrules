@@ -1,0 +1,190 @@
+# Clever Class Client - Cursor Rules
+
+You are an expert in **TypeScript, Vite.js, React, React Router DOM 6, Redux Toolkit, and AI SaaS development**. You write **highly optimized, scalable, and modular** code, following best practices for performance, maintainability, and AI-powered SaaS products.
+
+---
+
+## File Structure
+
+### Components
+
+- **Path:** `src/components`
+- **Description:** Reusable UI components
+- **Naming:** PascalCase for component directories and files
+- **Structure:**
+  - `{ComponentName}/`
+    - `index.tsx` - Main component file
+    - `{ComponentName}.module.scss` - Module SCSS styles
+    - `{ComponentName}.types.ts` - TypeScript types
+    - `{ComponentName}.utils.ts` - Helper functions
+- **Rules:**
+  - Use **module SCSS** for styling
+  - Extract **logic-heavy operations** to `utils.ts`
+  - Place shared UI elements in `common/`
+  - Place **shadcn components** in `ui/`
+  - Keep components **single-responsibility**
+
+---
+
+### Pages
+
+- **Path:** `src/pages`
+- **Description:** Page-level components representing routes
+- **Naming:** PascalCase for directories and files
+- **Structure:**
+  - Follow the same structure as components
+  - `index.tsx` - Main page component
+  - `{PageName}.module.scss` - Page-specific styles
+
+---
+
+### Store (Redux)
+
+- **Path:** `src/store`
+- **Description:** Redux store with persist configuration
+- **Rules:**
+  - Use the **slice pattern** for reducers
+  - Follow **Redux Toolkit** conventions
+  - Use **persist whitelist** for necessary slices
+
+---
+
+### Hooks
+
+- **Path:** `src/hooks`
+- **Description:** Custom React hooks
+- **Naming:** Prefix with `'use'` (e.g., `useAuth`)
+- **Rules:**
+  - Keep hooks **focused and reusable**
+  - Store authentication hooks in `auth/`
+  - Extract API logic into separate hooks
+
+---
+
+### API
+
+- **Path:** `src/api`
+- **Description:** API utility functions and services
+- **Rules:**
+  - Use **consistent error handling**
+  - Implement **type-safe request/response interfaces**
+
+---
+
+### Utils
+
+- **Path:** `src/utils`
+- **Description:** Shared utility functions
+- **Rules:**
+  - Organize utilities into **separate files**
+  - Use **named exports**
+  - Maintain **TypeScript safety**
+
+---
+
+### Assets
+
+- **Path:** `src/assets`
+- **Description:** Static assets
+- **Structure:**
+  - `assets/images/` - Images
+  - `assets/icons/` - Icons
+- **Rules:**
+  - Use **relative imports**
+  - Optimize images before adding
+
+---
+
+## Coding Rules
+
+### TypeScript
+
+- Use TypeScript **for all files**
+- Create **explicit interfaces** for props
+- Use **type inference** where possible
+- Define **proper return types**
+- Prefer **union types** over enums
+
+---
+
+### Styling
+
+- Use `.module.scss` for styles
+- Follow **BEM-like** naming
+- Use **CSS variables** for theming
+- Mobile-first **responsive design**
+
+---
+
+### Components
+
+- Use **functional components with arrow functions**
+- Implement **proper prop types**
+- Extract repeated logic into **hooks**
+- Use **TypeScript generics** when needed
+
+---
+
+### State Management
+
+- Use **typed selectors**
+- Implement **proper action creators**
+- Handle **async actions** with proper loading states
+
+---
+
+## Best Practices
+
+### Performance Optimization
+
+- Implement **code splitting**
+- Use **React.memo** for expensive renders
+- Optimize **images and assets**
+- Use proper **loading states**
+
+---
+
+### Error Handling
+
+- Implement **error boundaries**
+- Use **typed error responses**
+- Handle **async errors properly**
+- Show **user-friendly error messages**
+
+---
+
+### Forms
+
+- Use **controlled components**
+- Implement **proper form validation**
+- Handle **loading states** during submission
+
+---
+
+### Authentication
+
+- Use **authentication hooks**
+- Implement **protected routes**
+- Handle **auth state persistence**
+
+---
+
+### Routing
+
+- Use **React Router DOM 6**
+- Implement **lazy loading** for routes
+- Handle **protected routes** properly
+- Use **proper route types**
+
+---
+
+### Logging
+
+- Use a **centralized logging utility**
+- Include **component names** in log messages
+
+```ts
+import { log } from '@/logger';
+log.debug('[ComponentName] >>> message', values);
+log.error('[ComponentName] >>> error', error);
+```

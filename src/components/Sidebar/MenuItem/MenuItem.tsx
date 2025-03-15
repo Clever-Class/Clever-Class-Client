@@ -29,7 +29,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
       <div className={styles.iconContainer}>
         <Icon size={20} />
       </div>
-      {!isCollapsed && <span className={styles.itemText}>{name}</span>}
+      {<span className={styles.itemText}>{name}</span>}
     </div>
   );
 };

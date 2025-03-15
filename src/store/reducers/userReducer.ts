@@ -8,8 +8,11 @@ import {
   SIGNUP_REQUEST,
   SIGNUP_SUCCESS,
   UPDATE_USER_DATA,
+  UPDATE_PROFILE_REQUEST,
+  UPDATE_PROFILE_SUCCESS,
+  UPDATE_PROFILE_FAILURE,
 } from '~constants';
-import { UserState } from '~store/types';
+import { UserState, ProfileActionTypes } from '~types';
 
 export const initialState: UserState = {
   userToken: null,
@@ -20,11 +23,38 @@ export const initialState: UserState = {
   subscription: null,
 };
 
-export const userReducer = (state = initialState, action: any): UserState => {
+type UserActionTypes =
+  | ProfileActionTypes
+  | {
+      type: typeof FETCH_USER_REQUEST | typeof SIGNUP_REQUEST;
+    }
+  | {
+      type:
+        | typeof FETCH_USER_SUCCESS
+        | typeof SIGNUP_SUCCESS
+        | typeof LOGIN_SUCCESS
+        | typeof SET_USER
+        | typeof UPDATE_USER_DATA;
+      payload: {
+        token?: string;
+        user?: UserState['user'];
+        subscription?: UserState['subscription'];
+      };
+    }
+  | {
+      type: typeof FETCH_USER_FAILURE | typeof SIGNUP_FAILURE;
+      payload: string;
+    };
+
+export const userReducer = (
+  state = initialState,
+  action: UserActionTypes,
+): UserState => {
   switch (action.type) {
     case FETCH_USER_REQUEST:
     case SIGNUP_REQUEST:
-      return { ...state, loading: true };
+    case UPDATE_PROFILE_REQUEST:
+      return { ...state, loading: true, error: null };
 
     case FETCH_USER_SUCCESS:
     case SIGNUP_SUCCESS:
@@ -34,14 +64,30 @@ export const userReducer = (state = initialState, action: any): UserState => {
       return {
         ...state,
         loading: false,
+        error: null,
         userToken: action.payload.token || state.userToken,
         user: action.payload.user || state.user,
         subscription: action.payload.subscription || state.subscription,
       };
 
+    case UPDATE_PROFILE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        user: action.payload.user,
+        message: action.payload.message,
+      };
+
     case FETCH_USER_FAILURE:
     case SIGNUP_FAILURE:
-      return { ...state, loading: false, error: action.payload };
+    case UPDATE_PROFILE_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+        message: action.payload,
+      };
 
     default:
       return state;

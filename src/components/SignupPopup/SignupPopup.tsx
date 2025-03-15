@@ -12,24 +12,23 @@ import { z } from 'zod';
 // Icons
 import { LiaTimesSolid } from 'react-icons/lia';
 import { PiEyeThin, PiEyeSlashThin } from 'react-icons/pi';
-import { FcGoogle } from 'react-icons/fc';
 
 // Components
 import { Input } from '~/components/ui/Input/Input';
 import { Button } from '~/components/ui/Button/Button';
 import { CountrySelector } from '~/components/ui/CountrySelector/CountrySelector';
+import { OAuthSignup } from '~components/OAuthSignup';
+
+// Store and Types
+import { AppDispatch } from '~store';
+import { RootState } from '~store/types';
+import { signupUserAction } from '~store/actions';
+import { DEFAULT_SELECTED_PACKAGE } from '~constants';
 
 // Local imports
 import { SIGNUP_FORM_FIELDS } from './SignupPopup.data';
 import { FormFieldTypes } from './SignupPopup.types';
 import styles from './SignupPopup.module.scss';
-
-// Store
-import { AppDispatch } from '~store';
-import { signupUserAction } from '~store/actions';
-import { DEFAULT_SELECTED_PACKAGE } from '~constants';
-import { RootStateType } from '~store/types';
-import { OAuthSignup } from '~components/OAuthSignup';
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -58,7 +57,7 @@ export const SignupPopup: React.FC<SignupPopupProps> = ({ onClose }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const selectedPackageId = useSelector(
-    (state: RootStateType) => state.register.selectedPackage,
+    (state: RootState) => state.register.selectedPackage,
   );
 
   const {

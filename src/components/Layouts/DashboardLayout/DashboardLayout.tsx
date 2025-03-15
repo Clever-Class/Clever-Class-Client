@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import moment from 'moment';
+import { HiMenuAlt2, HiX } from 'react-icons/hi';
+import { Menu } from 'lucide-react';
 
 // Components
 import { Sidebar } from '~components/Sidebar/Sidebar';
@@ -10,8 +12,9 @@ import { Payment } from '~components/Payment';
 import { WarningBanner } from '~components/common/WarningBanner';
 
 // Store and Types
-import { RootStateType } from '~store/types';
 import { AppDispatch } from '~store';
+import { RootStateType } from '~store/types/rootStateTypes';
+import { User } from '~/types/user/user.types';
 import { fetchUserData } from '~store/actions/authActions';
 import { api } from '~api';
 
@@ -34,6 +37,8 @@ const cancelledMessage = (endDate: string | undefined) =>
       : 'the end of your billing period'
   }.`;
 
+const BANNER_HIDE_DURATION = 2 * 60 * 1000; // 2 minutes in milliseconds
+
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
 }) => {
@@ -45,6 +50,32 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const [showPopup, setShowPopup] = useState(false);
   const [isResuming, setIsResuming] = useState(false);
   const [isUpdatingCard, setIsUpdatingCard] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const [showWarningBanner, setShowWarningBanner] = useState(true);
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSidebarCollapsed(window.innerWidth <= 1024);
+      setIsSidebarVisible(!(window.innerWidth <= 1024));
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Check if banner should be shown based on hide time
+  useEffect(() => {
+    const bannerHideTime = localStorage.getItem('warningBannerHideTime');
+    if (bannerHideTime) {
+      const hideTime = parseInt(bannerHideTime, 10);
+      const now = Date.now();
+      if (now - hideTime < BANNER_HIDE_DURATION) {
+        setShowWarningBanner(false);
+      }
+    }
+  }, []);
 
   // Fetch user data when component mounts and every 5 minutes
   useEffect(() => {
@@ -60,12 +91,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       }
     };
 
-    // Fetch immediately
     fetchData();
-
-    // Then fetch every 5 minutes
     const interval = setInterval(fetchData, 5 * 60 * 1000);
-
     return () => clearInterval(interval);
   }, [dispatch, navigate]);
 
@@ -90,13 +117,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     }
   }, [user, subscription?.status]);
 
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
+  const handleClosePopup = () => setShowPopup(false);
 
   const handleUpdateCard = () => {
     setIsUpdatingCard(true);
-    // Add a small delay before redirect to show loading state
     setTimeout(() => {
       window.location.href = subscription?.updatePaymentMethodUrl || '';
     }, 500);
@@ -108,7 +132,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       const response = await api.ccServer.post('/subscription/resume-canceled');
       if (response.data.success) {
         toast.success('Subscription resumed successfully');
-        dispatch(fetchUserData()); // Refresh user data
+        dispatch(fetchUserData());
       } else {
         toast.error(response.data.message || 'Failed to resume subscription');
       }
@@ -121,52 +145,99 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     }
   };
 
+  const handleBannerClose = () => {
+    setShowWarningBanner(false);
+    localStorage.setItem('warningBannerHideTime', Date.now().toString());
+  };
+
   const packageId = user?.selectedPackageId || DEFAULT_SELECTED_PACKAGE;
   const showBanner =
-    subscription?.status === 'past_due' || subscription?.status === 'canceled';
+    (subscription?.status === 'past_due' ||
+      subscription?.status === 'canceled') &&
+    showWarningBanner;
+
+  const toggleSidebar = () => {
+    if (window.innerWidth <= 1024) {
+      setIsSidebarVisible(!isSidebarVisible);
+    } else {
+      setIsSidebarCollapsed(!isSidebarCollapsed);
+    }
+  };
 
   return (
     <div className={styles.dashboard}>
-      <Sidebar />
-      {showPopup && user && (
-        <Payment
-          userId={user.id}
-          priceId={packageId}
-          countryCode={user?.country}
-          email={user?.email}
-          onClose={handleClosePopup}
-        />
-      )}
-      <div className={styles.mainContent}>
+      <Sidebar
+        isCollapsed={isSidebarCollapsed}
+        isVisible={isSidebarVisible}
+        onToggle={toggleSidebar}
+        isMobile={window.innerWidth <= 1024}
+      />
+
+      <div
+        className={`${styles.mainContent} ${
+          isSidebarCollapsed ? styles.sidebarCollapsed : ''
+        }`}
+      >
+        <button
+          className={`${styles.menuButton} ${
+            isSidebarVisible ? styles.active : ''
+          }`}
+          onClick={toggleSidebar}
+          aria-label="Toggle sidebar"
+        >
+          <Menu />
+        </button>
+
         <main className={styles.content}>
-          {subscription?.status === 'past_due' && (
-            <WarningBanner
-              message={pastDueMessage}
-              buttonText={
-                isUpdatingCard ? 'Redirecting...' : 'Update Card Details'
-              }
-              onButtonClick={handleUpdateCard}
-              disabled={isUpdatingCard}
+          {showPopup && user && (
+            <Payment
+              userId={user.id}
+              priceId={packageId}
+              countryCode={user.country || 'US'}
+              email={user.email}
+              onClose={handleClosePopup}
             />
           )}
-          {subscription?.status === 'canceled' && (
-            <WarningBanner
-              message={cancelledMessage(subscription?.billingPeriod?.ends_at)}
-              buttonText={isResuming ? 'Resuming...' : "Don't Cancel"}
-              noButton={false}
-              onButtonClick={handleResumeSubscription}
-              disabled={isResuming}
-            />
-          )}
+
           <div
             className={`${styles.container} ${
               showBanner ? styles.withBanner : ''
             }`}
           >
+            {subscription?.status === 'past_due' && showWarningBanner && (
+              <WarningBanner
+                message={pastDueMessage}
+                buttonText={
+                  isUpdatingCard ? 'Redirecting...' : 'Update Card Details'
+                }
+                onButtonClick={handleUpdateCard}
+                onClose={handleBannerClose}
+                disabled={isUpdatingCard}
+              />
+            )}
+
+            {subscription?.status === 'canceled' && showWarningBanner && (
+              <WarningBanner
+                message={cancelledMessage(subscription?.billingPeriod?.ends_at)}
+                buttonText={isResuming ? 'Resuming...' : "Don't Cancel"}
+                noButton={false}
+                onButtonClick={handleResumeSubscription}
+                onClose={handleBannerClose}
+                disabled={isResuming}
+              />
+            )}
+
             {children}
           </div>
         </main>
       </div>
+
+      <div
+        className={`${styles.overlay} ${
+          isSidebarVisible ? styles.visible : ''
+        }`}
+        onClick={() => setIsSidebarVisible(false)}
+      />
     </div>
   );
 };

@@ -1,0 +1,242 @@
+@import '../../../styles/variables';
+
+.subscriptionInfo {
+  width: 100%;
+  position: relative;
+  padding: 0 1rem;
+
+  @media (min-width: 768px) {
+    padding: 0;
+  }
+
+  .title {
+    font-size: clamp(18px, 3vw, 22px);
+    font-weight: 600;
+    margin-bottom: clamp(0.75rem, 2vw, 1rem);
+    background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.8));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+  }
+
+  .grid {
+    display: grid;
+    gap: clamp(0.75rem, 2vw, 1rem);
+
+    @media (min-width: 768px) {
+      grid-template-columns: 3fr 2fr;
+      align-items: stretch;
+    }
+  }
+
+  .plan,
+  .credits {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: clamp(0.75rem, 2vw, 1rem);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
+    }
+  }
+
+  .planHeader,
+  .creditsHeader {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+
+    h4 {
+      font-size: clamp(16px, 2vw, 18px);
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      font-size: clamp(14px, 1.5vw, 15px);
+      color: rgba(255, 255, 255, 0.7);
+      margin: 1px 0;
+      letter-spacing: -0.01em;
+    }
+  }
+
+  .iconContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: rgba(37, 99, 255, 0.08);
+    border: 1px solid rgba(37, 99, 255, 0.12);
+    color: #2563ff;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover {
+      background: rgba(37, 99, 255, 0.12);
+      border-color: rgba(37, 99, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37, 99, 255, 0.12);
+    }
+  }
+
+  .planActions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: auto;
+
+    .actionButton {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0.625rem 1rem;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      text-decoration: none;
+      flex: 1;
+      min-width: 120px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &.primary {
+        background: rgba(37, 99, 255, 0.08);
+        border: 1px solid rgba(37, 99, 255, 0.12);
+        color: #2563ff;
+
+        &:hover {
+          background: rgba(37, 99, 255, 0.12);
+          border-color: rgba(37, 99, 255, 0.2);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(37, 99, 255, 0.12);
+        }
+      }
+
+      &.danger {
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.12);
+        color: #ef4444;
+
+        &:hover {
+          background: rgba(239, 68, 68, 0.12);
+          border-color: rgba(239, 68, 68, 0.2);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(239, 68, 68, 0.12);
+        }
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  .credits {
+    min-height: auto;
+    justify-content: space-between;
+
+    .creditsContent {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      margin: 0.5rem 0;
+    }
+  }
+
+  .progressRing {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    margin: 0.25rem 0;
+    transform: rotate(-90deg);
+
+    svg {
+      overflow: visible;
+    }
+
+    circle {
+      fill: none;
+      stroke-width: 6;
+      stroke-linecap: round;
+
+      &.background {
+        stroke: rgba(255, 255, 255, 0.06);
+      }
+
+      &.progress {
+        stroke: rgba(37, 99, 255, 0.6);
+        stroke-dasharray: 220;
+        transform-origin: center;
+        transform: rotate(0deg);
+      }
+    }
+
+    .progressText {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(90deg);
+      text-align: center;
+      background: transparent;
+
+      .used {
+        font-size: 20px;
+        font-weight: 600;
+        color: rgba(37, 99, 255, 0.9);
+        line-height: 1;
+        margin-bottom: 2px;
+      }
+
+      .label {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+    }
+  }
+}
+
+// Responsive styles
+@media (max-width: 767px) {
+  .subscriptionInfo {
+    padding: 0 0.75rem;
+    margin-top: 88px; // Height of mobile sidebar header
+
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .planActions {
+      flex-direction: column;
+
+      .actionButton {
+        width: 100%;
+      }
+    }
+  }
+}
