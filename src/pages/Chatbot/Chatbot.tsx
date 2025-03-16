@@ -28,6 +28,9 @@ export function Chatbot() {
   const [error, setError] = useState<string | null>(null);
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [currentlyPlayingId, setCurrentlyPlayingId] = useState<string | null>(
+    null,
+  );
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -64,6 +67,8 @@ export function Chatbot() {
       setError(null);
       // Clear any attached image when loading a conversation
       setAttachedImage(null);
+      // Clear any audio response
+      setCurrentlyPlayingId(null);
 
       const messagesData = await chatService.getConversationMessages(
         conversationId,
@@ -76,6 +81,7 @@ export function Chatbot() {
         isUser: msg.role === 'user',
         timestamp: new Date(msg.createdAt),
         image: msg.image,
+        audio: msg.audio,
       }));
 
       setMessages(formattedMessages);
@@ -142,7 +148,7 @@ export function Chatbot() {
         fetchConversations();
       }
 
-      // Add AI response to messages
+      // Add AI response to messages (text message won't have audio)
       const aiResponse: Message = {
         id: Date.now().toString(),
         content: response.response,
@@ -151,7 +157,7 @@ export function Chatbot() {
       };
 
       setMessages((prev) => [...prev, aiResponse]);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to send message:', err);
       setError('Failed to get response. Please try again.');
 
@@ -169,7 +175,13 @@ export function Chatbot() {
     } finally {
       setIsLoading(false);
     }
-  }, [message, currentConversationId, isLoading, attachedImage]);
+  }, [
+    message,
+    currentConversationId,
+    isLoading,
+    attachedImage,
+    fetchConversations,
+  ]);
 
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -196,6 +208,73 @@ export function Chatbot() {
       }
     }, 50);
   };
+
+  // Voice chat handler
+  const handleVoiceMessage = useCallback(
+    async (
+      transcribedText: string,
+      audioBase64: string,
+      aiResponse: string,
+    ) => {
+      try {
+        // Display user's transcribed text as message
+        const userMessage: Message = {
+          id: Date.now().toString(),
+          content: transcribedText,
+          isUser: true,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, userMessage]);
+        setIsWelcomeScreen(false);
+
+        // Add loading message
+        const loadingMessage: Message = {
+          id: Date.now().toString() + '-loading',
+          content: 'Processing your voice message...',
+          isUser: false,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, loadingMessage]);
+
+        // Generate a unique ID for the new message
+        const newMessageId = Date.now().toString() + '-ai';
+
+        // Replace loading message with the actual AI response from the API
+        setMessages((prev) => {
+          const newMessages = [...prev];
+          const loadingIndex = newMessages.findIndex(
+            (msg) =>
+              !msg.isUser && msg.content === 'Processing your voice message...',
+          );
+
+          if (loadingIndex !== -1) {
+            newMessages[loadingIndex] = {
+              id: newMessageId,
+              content: aiResponse, // Use the actual API response text
+              isUser: false,
+              timestamp: new Date(),
+              audio: audioBase64, // Include the audio data in the message
+              isNew: true, // Mark this as a new message for auto-play
+            };
+          }
+
+          return newMessages;
+        });
+
+        // Set this message as currently playing
+        setCurrentlyPlayingId(newMessageId);
+
+        // Update conversation ID if needed
+        if (!currentConversationId) {
+          fetchConversations();
+        }
+      } catch (error) {
+        console.error('Error handling voice message:', error);
+        toast.error('Error processing voice message');
+      }
+    },
+    [currentConversationId, fetchConversations],
+  );
 
   // Regenerate response handler
   const handleRegenerateResponse = async () => {
@@ -305,51 +384,32 @@ export function Chatbot() {
             <motion.div
               key="welcome"
               className={styles.welcomeScreen}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
+              transition={{
+                duration: 0.4,
+                ease: [0.4, 0, 0.2, 1],
+              }}
             >
-              <motion.h1
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.4,
-                  delay: 0.1,
-                  ease: [0.4, 0, 0.2, 1],
-                }}
-              >
-                What can I help with?
-              </motion.h1>
-
-              <InputContainer
-                inChat={false}
-                message={message}
-                setMessage={setMessage}
-                handleKeyPress={handleKeyPress}
-                handleSendMessage={handleSendMessage}
-                inputRef={inputRef}
-                isLoading={isLoading}
-                onImageAttach={handleImageAttach}
-              />
-
-              <SubjectSelector
-                selectedSubject={selectedSubject}
-                onSelectSubject={handleSubjectSelect}
-              />
-
-              <motion.p
-                className={styles.disclaimer}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{
-                  duration: 0.4,
-                  delay: 0.4,
-                  ease: [0.4, 0, 0.2, 1],
-                }}
-              >
-                Consider Verifying Important Information To Avoid Errors
-              </motion.p>
+              <h1>Welcome to CleverClass AI Tutor</h1>
+              <div className={styles.chatInputWrapper}>
+                <InputContainer
+                  inChat={false}
+                  message={message}
+                  setMessage={setMessage}
+                  handleKeyPress={handleKeyPress}
+                  handleSendMessage={handleSendMessage}
+                  inputRef={inputRef}
+                  isLoading={isLoading}
+                  onImageAttach={handleImageAttach}
+                  onVoiceMessageReceived={handleVoiceMessage}
+                />
+              </div>
+              <SubjectSelector onSelect={handleSubjectSelect} />
+              <p className={styles.disclaimer}>
+                Please verify responses. AI Tutor may make mistakes.
+              </p>
             </motion.div>
           ) : (
             <motion.div
@@ -388,7 +448,11 @@ export function Chatbot() {
                 isLoading={isLoading}
                 onRegenerateResponse={handleRegenerateResponse}
                 onImageClick={handleImageClick}
+                currentlyPlayingId={currentlyPlayingId}
+                setCurrentlyPlayingId={setCurrentlyPlayingId}
               />
+
+              <div ref={messagesEndRef} />
 
               <div className={styles.chatInputWrapper}>
                 <InputContainer
@@ -400,28 +464,25 @@ export function Chatbot() {
                   inputRef={inputRef}
                   isLoading={isLoading}
                   onImageAttach={handleImageAttach}
+                  onVoiceMessageReceived={handleVoiceMessage}
+                  currentConversationId={currentConversationId}
                 />
-
-                <motion.p
-                  className={styles.chatDisclaimer}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 0.7, y: 0 }}
-                  transition={{
-                    duration: 0.4,
-                    delay: 0.5,
-                    ease: [0.4, 0, 0.2, 1],
-                  }}
-                >
-                  Consider Verifying Important Information To Avoid Errors
-                </motion.p>
+                <p className={styles.chatDisclaimer}>
+                  Please verify responses. AI Tutor may make mistakes.
+                </p>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
 
-      {/* Image viewer modal */}
-      <ImageViewer imageSrc={selectedImage} onClose={handleCloseImageView} />
+        {/* Image viewer */}
+        {selectedImage && (
+          <ImageViewer
+            imageSrc={selectedImage}
+            onClose={handleCloseImageView}
+          />
+        )}
+      </motion.div>
     </div>
   );
 }

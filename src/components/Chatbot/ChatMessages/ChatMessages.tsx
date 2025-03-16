@@ -11,6 +11,8 @@ interface ChatMessagesProps {
   isLoading: boolean;
   onRegenerateResponse: () => void;
   onImageClick: (imageSrc: string) => void;
+  currentlyPlayingId: string | null;
+  setCurrentlyPlayingId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const ChatMessages = memo(
@@ -20,6 +22,8 @@ const ChatMessages = memo(
     isLoading,
     onRegenerateResponse,
     onImageClick,
+    currentlyPlayingId,
+    setCurrentlyPlayingId,
   }: ChatMessagesProps) => {
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -72,11 +76,20 @@ const ChatMessages = memo(
             id={msg.id}
             content={msg.content}
             isUser={msg.isUser}
-            timestamp={msg.timestamp}
             image={msg.image}
+            audio={msg.audio}
+            isNew={msg.isNew}
             isLatest={!msg.isUser && latestAiMessage?.id === msg.id}
+            isPlaying={currentlyPlayingId === msg.id}
             onRegenerateResponse={onRegenerateResponse}
             onImageClick={onImageClick}
+            onPlayStateChange={(isPlaying) => {
+              if (isPlaying) {
+                setCurrentlyPlayingId(msg.id);
+              } else if (currentlyPlayingId === msg.id) {
+                setCurrentlyPlayingId(null);
+              }
+            }}
             isLoading={isLoading}
           />
         ))}

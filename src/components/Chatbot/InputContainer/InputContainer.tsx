@@ -1,14 +1,11 @@
-import { useState, useRef, memo } from 'react';
-import {
-  HiMicrophone,
-  HiPaperAirplane,
-  HiXMark,
-  HiPhoto,
-} from 'react-icons/hi2';
+import { useState, useRef, memo, useCallback } from 'react';
+import { HiPaperAirplane, HiXMark, HiPhoto } from 'react-icons/hi2';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { compressImage } from '../utils/imageUtils';
 import styles from './InputContainer.module.scss';
+import { VoiceRecorder } from '../VoiceRecorder/VoiceRecorder';
+import { chatService } from '~/services/chatService';
 
 interface InputContainerProps {
   inChat: boolean;
@@ -19,6 +16,12 @@ interface InputContainerProps {
   inputRef: React.RefObject<HTMLTextAreaElement>;
   isLoading?: boolean;
   onImageAttach?: (imageData: string | null) => void;
+  onVoiceMessageReceived?: (
+    text: string,
+    audioBase64: string,
+    aiResponse: string,
+  ) => void;
+  currentConversationId?: string | null;
 }
 
 const InputContainer = memo(
@@ -31,11 +34,61 @@ const InputContainer = memo(
     inputRef,
     isLoading,
     onImageAttach,
+    onVoiceMessageReceived,
+    currentConversationId,
   }: InputContainerProps) => {
     const animationKey = inChat ? 'chat-input' : 'welcome-input';
     const [attachedImage, setAttachedImage] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isDragging, setIsDragging] = useState(false);
+    const [isProcessingVoice, setIsProcessingVoice] = useState(false);
+
+    // Function to handle voice recording completion
+    const handleVoiceRecordingComplete = useCallback(
+      async (audioBlob: Blob) => {
+        if (!onVoiceMessageReceived) return;
+
+        try {
+          setIsProcessingVoice(true);
+          toast.loading('Processing your voice message...', {
+            id: 'voice-processing',
+          });
+
+          // Send the audio to the server for processing
+          const response = await chatService.voiceChatWithAI(
+            audioBlob,
+            currentConversationId || undefined,
+          );
+
+          // Notify the parent component about the transcribed text, AI response text, and audio
+          onVoiceMessageReceived(
+            response.transcribedText,
+            response.audio,
+            response.response, // Pass the AI's text response
+          );
+
+          toast.dismiss('voice-processing');
+          toast.success('Voice message processed');
+        } catch (error) {
+          console.error('Failed to process voice message:', error);
+          toast.dismiss('voice-processing');
+          toast.error('Failed to process voice message');
+
+          // In case of error, still call onVoiceMessageReceived with an empty message
+          // so the UI can show an error message
+          if (onVoiceMessageReceived) {
+            onVoiceMessageReceived(
+              "I couldn't transcribe your message",
+              '', // No audio in error case
+              'Sorry, I encountered an error processing your voice message.', // Error message as AI response
+            );
+          }
+        } finally {
+          setIsProcessingVoice(false);
+        }
+      },
+      [onVoiceMessageReceived, currentConversationId],
+    );
 
     // Function to handle image processing
     const processImage = async (imageData: string) => {
@@ -199,31 +252,30 @@ const InputContainer = memo(
           className={styles.messageInput}
           placeholder={
             inChat
-              ? 'Type your message or paste an image...'
-              : 'Message Your Clever AI Tutor or paste an image...'
+              ? 'Type your message, paste an image, or use voice input...'
+              : 'Message Your Clever AI Tutor, paste an image, or use voice input...'
           }
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyPress}
           onPaste={handlePaste}
           rows={Math.min(Math.max(2, Math.ceil(message.split('\n').length)), 4)}
-          disabled={isLoading}
+          disabled={isLoading || isProcessingVoice}
         />
         <div
           className={`${styles.inputActions} ${inChat ? styles.inChat : ''}`}
         >
-          <motion.button
-            aria-label="Voice input"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <HiMicrophone size={18} />
-          </motion.button>
+          <VoiceRecorder
+            onRecordingComplete={handleVoiceRecordingComplete}
+            isLoading={isLoading || isProcessingVoice}
+          />
+
           <motion.button
             aria-label="Attach image"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => fileInputRef.current?.click()}
+            disabled={isLoading || isProcessingVoice}
           >
             <HiPhoto size={18} />
           </motion.button>
@@ -241,7 +293,11 @@ const InputContainer = memo(
             aria-label="Send message"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
-            disabled={isLoading || (!message.trim() && !attachedImage)}
+            disabled={
+              isLoading ||
+              isProcessingVoice ||
+              (!message.trim() && !attachedImage)
+            }
           >
             {inChat ? (
               <HiPaperAirplane size={16} />

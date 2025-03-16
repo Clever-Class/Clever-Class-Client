@@ -12,8 +12,9 @@ import { Subject } from '../types';
 import styles from './SubjectSelector.module.scss';
 
 interface SubjectSelectorProps {
-  selectedSubject: string | null;
-  onSelectSubject: (subject: string) => void;
+  selectedSubject?: string | null;
+  onSelectSubject?: (subject: string) => void;
+  onSelect?: (subject: string) => void;
 }
 
 const subjects: Subject[] = [
@@ -26,7 +27,16 @@ const subjects: Subject[] = [
 ];
 
 const SubjectSelector = memo(
-  ({ selectedSubject, onSelectSubject }: SubjectSelectorProps) => {
+  ({ selectedSubject, onSelectSubject, onSelect }: SubjectSelectorProps) => {
+    // Use either onSelect or onSelectSubject callback
+    const handleSubjectSelect = (subject: string) => {
+      if (onSelect) {
+        onSelect(subject);
+      } else if (onSelectSubject) {
+        onSelectSubject(subject);
+      }
+    };
+
     return (
       <div className={styles.subjectButtons}>
         {subjects.map((subject, index) => (
@@ -47,7 +57,7 @@ const SubjectSelector = memo(
               transition: { duration: 0.15 },
             }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => onSelectSubject(subject.label)}
+            onClick={() => handleSubjectSelect(subject.label)}
           >
             {subject.icon}
             {subject.label}

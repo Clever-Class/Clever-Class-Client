@@ -93,6 +93,21 @@
       font-size: 1.75rem;
     }
   }
+
+  .disclaimer {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.875rem;
+    text-align: center;
+    max-width: 600px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0 1rem;
+
+    @media (max-width: 768px) {
+      font-size: 0.8125rem;
+      max-width: 400px;
+    }
+  }
 }
 
 .chatInputWrapper {
@@ -101,7 +116,8 @@
   width: 100%;
   margin: 0;
   z-index: 5;
-  padding: 0.25rem 0.5rem 0.5rem;
+  padding: 0 0.5rem;
+  padding-top: 0.5rem;
 }
 
 .inputContainer {
@@ -680,27 +696,29 @@
 }
 
 .chatDisclaimer {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.5);
   text-align: center;
-  line-height: 1.3;
-  z-index: 5;
-  width: 100%;
+  line-height: 1.4;
+  margin: 0 0 0.75rem 0;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
   padding: 0 1rem;
-  margin-top: 4px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 
   @media (max-width: 768px) {
-    bottom: 4px;
-    font-size: 0.625rem;
-    padding: 0 0.5rem;
-    margin-top: 8px;
+    font-size: 0.7rem;
+    margin-bottom: 0.625rem;
+    padding: 0 0.75rem;
   }
 
   @media (max-width: 480px) {
-    bottom: 3px;
-    font-size: 0.5625rem;
-    padding: 0 0.25rem;
-    margin-top: 8px;
+    font-size: 0.65rem;
+    margin-bottom: 0.5rem;
+    padding: 0 0.5rem;
+    line-height: 1.3;
   }
 }
 
@@ -1147,4 +1165,12 @@
   to {
     opacity: 1;
   }
+}
+
+.hiddenAudio {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
 }

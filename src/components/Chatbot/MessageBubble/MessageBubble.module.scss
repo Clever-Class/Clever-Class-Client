@@ -172,6 +172,47 @@
   }
 }
 
+.playing {
+  color: rgba(37, 99, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 255, 0.2) !important;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 10px;
+    z-index: -1;
+    background: radial-gradient(
+      circle,
+      rgba(37, 99, 255, 0.2) 0%,
+      rgba(37, 99, 255, 0) 70%
+    );
+    animation: pulse 1.5s infinite;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+}
+
+.audioElement {
+  display: none;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
