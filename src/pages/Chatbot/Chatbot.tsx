@@ -454,7 +454,11 @@ export function Chatbot() {
 
               <div ref={messagesEndRef} />
 
-              <div className={styles.chatInputWrapper}>
+              <div
+                className={`${styles.chatInputWrapper} ${
+                  isWelcomeScreen ? '' : styles.chatOpened
+                }`}
+              >
                 <InputContainer
                   inChat={true}
                   message={message}

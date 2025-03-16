@@ -258,20 +258,16 @@
   .logoContainer {
     display: flex;
     align-items: center;
+    justify-content: center; // Center the logo within the container
     gap: 12px;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     width: 100%;
 
     .logo {
-      width: 40px;
-      height: 40px;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      border-radius: 12px;
+      width: 44px;
+      height: 44px;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(37, 99, 255, 0.2);
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       margin-right: 12px;
     }

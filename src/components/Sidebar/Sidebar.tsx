@@ -4,7 +4,6 @@ import {
   RiTaskLine,
   RiSettingsLine,
   RiTeamLine,
-  RiCalendarLine,
 } from 'react-icons/ri';
 import styles from './Sidebar.module.scss';
 import { SidebarHeader } from './SidebarHeader/SidebarHeader';

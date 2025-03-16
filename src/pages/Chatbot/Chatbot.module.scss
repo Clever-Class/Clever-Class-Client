@@ -116,8 +116,13 @@
   width: 100%;
   margin: 0;
   z-index: 5;
-  padding: 0 0.5rem;
-  padding-top: 0.5rem;
+  padding: 0;
+
+  &.chatOpened {
+    @media (max-width: 480px) {
+      padding: 0 0.5rem;
+    }
+  }
 }
 
 .inputContainer {
