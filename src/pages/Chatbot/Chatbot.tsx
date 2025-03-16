@@ -1,343 +1,19 @@
-import { useState, useRef, useEffect, memo, useCallback } from 'react';
-import {
-  HiMicrophone,
-  HiPaperClip,
-  HiSquares2X2,
-  HiAcademicCap,
-  HiBookOpen,
-  HiGlobeAlt,
-  HiBeaker,
-  HiPaperAirplane,
-  HiClock,
-  HiClipboard,
-  HiSpeakerWave,
-  HiArrowPath,
-  HiHandThumbUp,
-  HiHandThumbDown,
-  HiExclamationTriangle,
-  HiChatBubbleLeftRight,
-  HiXMark,
-  HiPhoto,
-} from 'react-icons/hi2';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { HiChatBubbleLeftRight } from 'react-icons/hi2';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Chatbot.module.scss';
 import { History } from '~/components/History/History';
-import {
-  chatService,
-  ChatMessage as ChatMessageType,
-  Conversation,
-} from '~/services/chatService';
+import { chatService, Conversation } from '~/services/chatService';
 import toast from 'react-hot-toast';
-import { FormattedMessage } from '~/components/FormattedMessage/FormattedMessage';
 
-interface Message {
-  id: string;
-  content: string;
-  isUser: boolean;
-  timestamp: Date;
-  image?: string;
-}
-
-// Image compression function
-const compressImage = (
-  imageDataUrl: string,
-  maxWidth = 800,
-  quality = 0.7,
-): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.src = imageDataUrl;
-
-    img.onload = () => {
-      // Create a canvas element
-      const canvas = document.createElement('canvas');
-
-      // Calculate new dimensions while maintaining aspect ratio
-      let width = img.width;
-      let height = img.height;
-
-      if (width > maxWidth) {
-        const ratio = maxWidth / width;
-        width = maxWidth;
-        height = height * ratio;
-      }
-
-      // Set canvas dimensions
-      canvas.width = width;
-      canvas.height = height;
-
-      // Draw the image on the canvas
-      const ctx = canvas.getContext('2d');
-      if (!ctx) {
-        reject(new Error('Could not get canvas context'));
-        return;
-      }
-
-      ctx.drawImage(img, 0, 0, width, height);
-
-      // Convert canvas to compressed data URL
-      const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-      resolve(compressedDataUrl);
-    };
-
-    img.onerror = () => {
-      reject(new Error('Failed to load image'));
-    };
-  });
-};
-
-// Memoized input container to prevent re-renders and animations
-const InputContainer = memo(
-  ({
-    inChat = false,
-    message,
-    setMessage,
-    handleKeyPress,
-    handleSendMessage,
-    inputRef,
-    isLoading,
-    onImageAttach,
-  }: {
-    inChat: boolean;
-    message: string;
-    setMessage: (value: string) => void;
-    handleKeyPress: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
-    handleSendMessage: () => void;
-    inputRef: React.RefObject<HTMLTextAreaElement>;
-    isLoading?: boolean;
-    onImageAttach?: (imageData: string | null) => void;
-  }) => {
-    const animationKey = inChat ? 'chat-input' : 'welcome-input';
-    const [attachedImage, setAttachedImage] = useState<string | null>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const [isDragging, setIsDragging] = useState(false);
-
-    // Function to handle image processing
-    const processImage = async (imageData: string) => {
-      try {
-        const loadingToast = toast.loading('Optimizing image...');
-        const compressedImage = await compressImage(imageData, 800, 0.7);
-        toast.dismiss(loadingToast);
-        setAttachedImage(compressedImage);
-        if (onImageAttach) {
-          onImageAttach(compressedImage);
-        }
-      } catch (error) {
-        toast.error('Failed to process image');
-        console.error('Image processing error:', error);
-      }
-    };
-
-    // Handle drag and drop events
-    const handleDragOver = (e: React.DragEvent) => {
-      e.preventDefault();
-      setIsDragging(true);
-    };
-
-    const handleDragLeave = (e: React.DragEvent) => {
-      e.preventDefault();
-      setIsDragging(false);
-    };
-
-    const handleDrop = async (e: React.DragEvent) => {
-      e.preventDefault();
-      setIsDragging(false);
-
-      const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) {
-        if (file.size > 5 * 1024 * 1024) {
-          toast.error('Image size should be less than 5MB');
-          return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const imageData = event.target?.result as string;
-          processImage(imageData);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        toast.error('Please drop an image file');
-      }
-    };
-
-    // Handle paste event
-    const handlePaste = async (e: React.ClipboardEvent) => {
-      const items = e.clipboardData.items;
-
-      for (const item of items) {
-        if (item.type.startsWith('image/')) {
-          e.preventDefault();
-          const file = item.getAsFile();
-          if (file) {
-            if (file.size > 5 * 1024 * 1024) {
-              toast.error('Image size should be less than 5MB');
-              return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = (event) => {
-              const imageData = event.target?.result as string;
-              processImage(imageData);
-            };
-            reader.readAsDataURL(file);
-          }
-          break;
-        }
-      }
-    };
-
-    // Handle file input change
-    const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        if (file.size > 5 * 1024 * 1024) {
-          toast.error('Image size should be less than 5MB');
-          return;
-        }
-
-        if (!file.type.startsWith('image/')) {
-          toast.error('Only image files are allowed');
-          return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const imageData = event.target?.result as string;
-          processImage(imageData);
-        };
-        reader.readAsDataURL(file);
-      }
-    };
-
-    // Handle removing attached image
-    const handleRemoveImage = () => {
-      setAttachedImage(null);
-      if (onImageAttach) {
-        onImageAttach(null);
-      }
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    };
-
-    // Handle sending message with image
-    const handleSendWithImage = () => {
-      handleSendMessage();
-      setAttachedImage(null);
-      if (onImageAttach) {
-        onImageAttach(null);
-      }
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    };
-
-    return (
-      <motion.div
-        key={animationKey}
-        className={`${styles.inputContainer} ${
-          isDragging ? styles.dragging : ''
-        }`}
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 0.3,
-          delay: inChat ? 0.2 : 0.15,
-          ease: [0.4, 0, 0.2, 1],
-        }}
-        whileHover={{
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)',
-          transition: { duration: 0.2 },
-        }}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      >
-        {/* Image preview area */}
-        {attachedImage && (
-          <div className={styles.imagePreview}>
-            <img src={attachedImage} alt="Attached" />
-            <motion.button
-              className={styles.removeImageBtn}
-              onClick={handleRemoveImage}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <HiXMark size={16} />
-            </motion.button>
-          </div>
-        )}
-
-        <textarea
-          ref={inputRef}
-          className={styles.messageInput}
-          placeholder={
-            inChat
-              ? 'Type your message or paste an image...'
-              : 'Message Your Clever AI Tutor or paste an image...'
-          }
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleKeyPress}
-          onPaste={handlePaste}
-          rows={
-            inChat
-              ? 1
-              : Math.min(Math.max(2, Math.ceil(message.split('\n').length)), 4)
-          }
-          disabled={isLoading}
-        />
-        <div
-          className={`${styles.inputActions} ${inChat ? styles.inChat : ''}`}
-        >
-          <motion.button
-            aria-label="Voice input"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <HiMicrophone size={18} />
-          </motion.button>
-          <motion.button
-            aria-label="Attach image"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <HiPhoto size={18} />
-          </motion.button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            className={styles.fileInput}
-            onChange={handleFileInputChange}
-            accept="image/*"
-            aria-label="Upload image"
-          />
-          <motion.button
-            className={styles.sendButton}
-            onClick={attachedImage ? handleSendWithImage : handleSendMessage}
-            aria-label="Send message"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-            disabled={isLoading || (!message.trim() && !attachedImage)}
-          >
-            {inChat ? (
-              <HiPaperAirplane size={16} />
-            ) : (
-              <>
-                <span>Send</span>
-                <HiPaperAirplane size={16} />
-              </>
-            )}
-          </motion.button>
-        </div>
-      </motion.div>
-    );
-  },
-);
-
-InputContainer.displayName = 'InputContainer';
+// Import our modular components and types
+import {
+  InputContainer,
+  SubjectSelector,
+  ChatMessages,
+  ImageViewer,
+  Message,
+} from '~/components/Chatbot';
 
 export function Chatbot() {
   const [message, setMessage] = useState('');
@@ -518,17 +194,8 @@ export function Chatbot() {
         const length = helpText.length;
         inputRef.current.setSelectionRange(length, length);
       }
-    }, 50); // Reduced from 100ms to 50ms for faster response
+    }, 50);
   };
-
-  const subjects = [
-    { icon: <HiClock />, label: 'History' },
-    { icon: <HiSquares2X2 />, label: 'Math Tutor' },
-    { icon: <HiBeaker />, label: 'Physics Guide' },
-    { icon: <HiBookOpen />, label: 'Lit Analysis' },
-    { icon: <HiGlobeAlt />, label: 'History Insights' },
-    { icon: <HiAcademicCap />, label: 'Science Mentor' },
-  ];
 
   // Regenerate response handler
   const handleRegenerateResponse = async () => {
@@ -592,52 +259,6 @@ export function Chatbot() {
     setAttachedImage(imageData);
   };
 
-  const MessageActions = ({
-    isUser,
-    messageId,
-  }: {
-    isUser: boolean;
-    messageId: string;
-  }) => (
-    <div className={styles.messageActions}>
-      {!isUser && (
-        <>
-          <button
-            aria-label="Copy message"
-            onClick={() => {
-              // Find the message and copy it to clipboard
-              const message = messages.find((msg) => msg.id === messageId);
-              if (message) {
-                navigator.clipboard.writeText(message.content);
-                toast.success('Message copied to clipboard');
-              }
-            }}
-          >
-            <HiClipboard size={16} />
-          </button>
-          <button aria-label="Read aloud">
-            <HiSpeakerWave size={16} />
-          </button>
-          <button
-            aria-label="Regenerate response"
-            onClick={handleRegenerateResponse}
-            disabled={isLoading}
-          >
-            <HiArrowPath size={16} />
-          </button>
-          <div className={styles.feedback}>
-            <button aria-label="Like">
-              <HiHandThumbUp size={16} />
-            </button>
-            <button aria-label="Dislike">
-              <HiHandThumbDown size={16} />
-            </button>
-          </div>
-        </>
-      )}
-    </div>
-  );
-
   // Function to handle image click for enlarging
   const handleImageClick = (imageSrc: string) => {
     setSelectedImage(imageSrc);
@@ -654,7 +275,7 @@ export function Chatbot() {
         !isWelcomeScreen ? styles.inChatMode : ''
       }`}
     >
-      {/* History component - removed fixed positioning as it's handled in the component */}
+      {/* History component */}
       <History
         conversations={conversations}
         onSelectConversation={(conversationId: string) => {
@@ -712,32 +333,10 @@ export function Chatbot() {
                 onImageAttach={handleImageAttach}
               />
 
-              <div className={styles.subjectButtons}>
-                {subjects.map((subject, index) => (
-                  <motion.button
-                    key={subject.label}
-                    className={`${styles.subjectButton} ${
-                      selectedSubject === subject.label ? styles.selected : ''
-                    }`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      duration: 0.3,
-                      delay: 0.05 + index * 0.03,
-                      ease: [0.4, 0, 0.2, 1],
-                    }}
-                    whileHover={{
-                      scale: 1.02,
-                      transition: { duration: 0.15 },
-                    }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => handleSubjectSelect(subject.label)}
-                  >
-                    {subject.icon}
-                    {subject.label}
-                  </motion.button>
-                ))}
-              </div>
+              <SubjectSelector
+                selectedSubject={selectedSubject}
+                onSelectSubject={handleSubjectSelect}
+              />
 
               <motion.p
                 className={styles.disclaimer}
@@ -783,89 +382,13 @@ export function Chatbot() {
                 </motion.div>
               )}
 
-              <motion.div
-                className={styles.messagesContainer}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{
-                  duration: 0.4,
-                  delay: 0.1,
-                  ease: [0.4, 0, 0.2, 1],
-                }}
-              >
-                {/* Error message if applicable */}
-                {error && (
-                  <motion.div
-                    className={styles.errorMessage}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                  >
-                    <HiExclamationTriangle size={20} />
-                    <span>{error}</span>
-                  </motion.div>
-                )}
-
-                {/* Messages displayed in chronological order */}
-                {messages.map((msg, index) => {
-                  // Find the last AI message (non-user message)
-                  const aiMessages = messages.filter((m) => !m.isUser);
-                  const latestAiMessage =
-                    aiMessages.length > 0
-                      ? aiMessages[aiMessages.length - 1]
-                      : null;
-                  const isLatestAiMessage =
-                    !msg.isUser &&
-                    latestAiMessage &&
-                    msg.id === latestAiMessage.id;
-
-                  return (
-                    <motion.div
-                      key={msg.id}
-                      className={`${styles.message} ${
-                        msg.isUser ? styles.userMessage : styles.aiMessage
-                      } ${isLatestAiMessage ? styles.latestAiMessage : ''}`}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{
-                        duration: 0.4,
-                        delay: 0.1 + index * 0.03,
-                        ease: [0.4, 0, 0.2, 1],
-                      }}
-                    >
-                      <div className={styles.messageContent}>
-                        <FormattedMessage content={msg.content} />
-                        {msg.image && (
-                          <div
-                            className={styles.messageImage}
-                            onClick={() => handleImageClick(msg.image!)}
-                          >
-                            <img src={msg.image} alt="Attached" />
-                          </div>
-                        )}
-                      </div>
-                      <MessageActions isUser={msg.isUser} messageId={msg.id} />
-                    </motion.div>
-                  );
-                })}
-
-                {/* Loading indicator */}
-                {isLoading && (
-                  <motion.div
-                    className={`${styles.message} ${styles.aiMessage} ${styles.loadingMessage}`}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                  >
-                    <div className={styles.messageContent}>
-                      <span className={styles.loadingDot}></span>
-                      <span className={styles.loadingDot}></span>
-                      <span className={styles.loadingDot}></span>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* Reference for scrolling to bottom */}
-                <div ref={messagesEndRef} />
-              </motion.div>
+              <ChatMessages
+                messages={messages}
+                error={error}
+                isLoading={isLoading}
+                onRegenerateResponse={handleRegenerateResponse}
+                onImageClick={handleImageClick}
+              />
 
               <div className={styles.chatInputWrapper}>
                 <InputContainer
@@ -898,44 +421,7 @@ export function Chatbot() {
       </motion.div>
 
       {/* Image viewer modal */}
-      {selectedImage && (
-        <div
-          className={styles.imageViewerOverlay}
-          onClick={handleCloseImageView}
-        >
-          <div className={styles.imageViewer}>
-            <img src={selectedImage} alt="Enlarged view" />
-            <button
-              className={styles.closeButton}
-              onClick={handleCloseImageView}
-              aria-label="Close image view"
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M18 6L6 18"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M6 6L18 18"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      )}
+      <ImageViewer imageSrc={selectedImage} onClose={handleCloseImageView} />
     </div>
   );
 }
