@@ -13,6 +13,7 @@ import { SuccessPayment } from '~pages/SuccessPayment/SuccessPayment';
 import { Settings } from '~pages/Settings/Settings';
 import { DashboardLayout } from '~components/Layouts';
 import { Chatbot } from '~pages/Chatbot/Chatbot';
+import { PricingPage } from '~pages/PricingPage';
 
 const DashboardRoutes = () => {
   return (
@@ -26,18 +27,21 @@ const DashboardRoutes = () => {
   );
 };
 
-export const Routes = () => {
+const Routes = () => {
   return (
     <ReactRouterRoutes>
-      <Route element={<PrivateRoutes />}>
-        <Route path="/dashboard/*" element={<DashboardRoutes />} />
-      </Route>
       <Route path={AppRoutes.Homepage} element={<Homepage />} />
-      <Route path={AppRoutes.Signup} element={<Signup />} />
       <Route path={AppRoutes.Login} element={<LoginPage />} />
+      <Route path={AppRoutes.Signup} element={<Signup />} />
       <Route path={AppRoutes.ForgotPassword} element={<ForgotPassword />} />
       <Route path={AppRoutes.ResetPassword} element={<ResetPassword />} />
       <Route path={AppRoutes.PaymentSuccess} element={<SuccessPayment />} />
+      <Route path={AppRoutes.Pricing} element={<PricingPage />} />
+      <Route path={AppRoutes.Dashboard + '/*'} element={<PrivateRoutes />}>
+        <Route path="*" element={<DashboardRoutes />} />
+      </Route>
     </ReactRouterRoutes>
   );
 };
+
+export default Routes;

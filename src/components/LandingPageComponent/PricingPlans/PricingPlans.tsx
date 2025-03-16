@@ -1,9 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { pricingPlansData } from '~/data';
-
 import './PricingPlans.scss';
-
-const subscriptionDuration = ['monthly', 'annually'];
 
 type PriceDuration = 'monthly' | 'annually';
 
@@ -15,7 +12,7 @@ export const PricingPlans: React.FC<PricingPlansProps> = ({
   onSignupClick,
 }) => {
   const [selectedDuration, setSelectedDuration] =
-    React.useState<PriceDuration>('monthly');
+    useState<PriceDuration>('monthly');
 
   const handleDurationClick = (duration: PriceDuration) => {
     setSelectedDuration(duration);
@@ -25,45 +22,70 @@ export const PricingPlans: React.FC<PricingPlansProps> = ({
     <div className="pricing-plans-wrapper">
       <div className="pricing-plans">
         <div className="background-pattern">
-          <h1>Pricing & Plans</h1>
+          <h1>Choose Your Right Plans</h1>
+          <p className="subtitle">
+            Select from best plans, ensuring a perfect match. Need more or less?
+            <br />
+            Customize your subscription for a seamless fit!
+          </p>
           <div className="toggle-container">
-            {subscriptionDuration.map((duration, index) => (
-              <button
-                key={index}
-                className={`duration-button ${
-                  selectedDuration === duration ? 'active' : ''
-                }`}
-                onClick={() => handleDurationClick(duration as PriceDuration)}
-              >
-                {duration.toUpperCase()}
-              </button>
-            ))}
+            <button
+              className={`duration-button ${
+                selectedDuration === 'monthly' ? 'active' : ''
+              }`}
+              onClick={() => handleDurationClick('monthly')}
+            >
+              MONTHLY
+            </button>
+            <button
+              className={`duration-button ${
+                selectedDuration === 'annually' ? 'active' : ''
+              }`}
+              onClick={() => handleDurationClick('annually')}
+            >
+              YEARLY
+            </button>
           </div>
           <div className="plans-container">
             {pricingPlansData.map((plan) => (
-              <div key={plan.id} className={`plan ${plan.id}`}>
-                <div className="plan-body">
-                  {plan.popular && (
-                    <span className="popular-tag">Most Popular</span>
-                  )}
+              <div
+                key={plan.id}
+                className={`plan ${plan.id} ${plan.popular ? 'popular' : ''}`}
+              >
+                <div className="plan-header">
                   <h2>{plan.name}</h2>
-                  <span className="plan-type">{plan.planType}</span>
+                  <p className="plan-description">{plan.planType}</p>
+                </div>
+                <div className="price-container">
                   <h3 className="price">
                     ${plan.price[selectedDuration]}
-                    <span>/ {selectedDuration.toUpperCase()}</span>
+                    <span className="price-period">per seat/month</span>
                   </h3>
-                  <p className="credits">{plan.credits}</p>
-                  <ul>
+                </div>
+                <div className="plan-body">
+                  <p className="plan-features-title">
+                    {plan.id === 'free'
+                      ? 'Lite includes:'
+                      : plan.id === 'starter'
+                      ? 'Everything in pro plus:'
+                      : 'Everything in pro plus:'}
+                  </p>
+                  <ul className="features-list">
                     {plan.features.map((feature, index) => (
-                      <li key={index}>{feature}</li>
+                      <li key={index}>
+                        <span className="feature-icon">✓</span>
+                        {feature}
+                      </li>
                     ))}
                   </ul>
                 </div>
                 <button
-                  className="sign-up"
+                  className={`sign-up-button ${
+                    plan.popular ? 'primary' : 'secondary'
+                  }`}
                   onClick={() => onSignupClick(plan.planId)}
                 >
-                  {plan.buttonLabel}
+                  Get Started
                 </button>
               </div>
             ))}

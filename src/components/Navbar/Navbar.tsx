@@ -4,6 +4,8 @@ import { RxDashboard } from 'react-icons/rx';
 import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
 import CleverClassLogo from '~assets/images/logo.png';
+import { Link } from 'react-router-dom';
+import { AppRoutes } from '~constants';
 
 import styles from './Navbar.module.scss';
 
@@ -86,7 +88,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
               <a href="#help-center">Help Center</a>
             </li>
             <li>
-              <a href="#pricing">Pricing</a>
+              <Link to={AppRoutes.Pricing}>Pricing</Link>
             </li>
           </ul>
         )}
@@ -152,7 +154,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
                 <a href="#help-center">Help Center</a>
               </li>
               <li>
-                <a href="#pricing">Pricing</a>
+                <Link to={AppRoutes.Pricing}>Pricing</Link>
               </li>
               {userToken ? (
                 <li>

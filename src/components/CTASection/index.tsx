@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { AppRoutes } from '~constants';
 import styles from './CTASection.module.scss';
 import {
   HiArrowRight,
@@ -44,10 +46,10 @@ export const CTASection: React.FC = () => {
             grades, and unlock your full academic potential with CleverClass.
           </p>
           <div className={styles.actions}>
-            <button className={styles.primaryButton}>
-              Get Started
+            <Link to={AppRoutes.Pricing} className={styles.primaryButton}>
+              View Pricing
               <HiArrowRight />
-            </button>
+            </Link>
             {/* <button className={styles.secondaryButton}>
               View Demo
               <HiArrowRight />

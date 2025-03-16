@@ -9,4 +9,5 @@ export enum AppRoutes {
   Settings = '/settings',
   PaymentSuccess = '/payment/success',
   Chatbot = '/ai-chatbot',
+  Pricing = '/pricing',
 }
