@@ -9,7 +9,7 @@ import {
   SupportedAppSection,
   TestimonialsSection,
 } from '~components/index';
-import { PricingPlans } from '~components/LandingPageComponent/PricingPlans/PricingPlans';
+import PricingPlans from '~components/LandingPageComponent/PricingPlans/PricingPlans';
 
 import StarImage from '~assets/images/star.png';
 import FAQ from '~components/LandingPageComponent/FaqSection/FaqSection';

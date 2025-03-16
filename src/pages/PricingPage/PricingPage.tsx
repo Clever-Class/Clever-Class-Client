@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Navbar, SignupPopup } from '~components/index';
-import { PricingPlans } from '~components/LandingPageComponent/PricingPlans/PricingPlans';
 
 import './PricingPage.scss';
 import Footer from '~components/Footer';
+import PricingPlans from '~components/LandingPageComponent/PricingPlans/PricingPlans';
 
 export const PricingPage = () => {
   const dispatch = useDispatch();

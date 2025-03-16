@@ -8,9 +8,7 @@ interface PricingPlansProps {
   onSignupClick: (planId: string) => void;
 }
 
-export const PricingPlans: React.FC<PricingPlansProps> = ({
-  onSignupClick,
-}) => {
+export default function PricingPlans({ onSignupClick }: PricingPlansProps) {
   const [selectedDuration, setSelectedDuration] =
     useState<PriceDuration>('monthly');
 
@@ -94,4 +92,4 @@ export const PricingPlans: React.FC<PricingPlansProps> = ({
       </div>
     </div>
   );
-};
+}
