@@ -1,7 +1,14 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import 'katex/dist/katex.min.css';
-import { InlineMath, BlockMath } from 'react-katex';
 import styles from './FormattedMessage.module.scss';
+import { Components } from 'react-markdown';
 
 interface FormattedMessageProps {
   content: string;
@@ -10,316 +17,145 @@ interface FormattedMessageProps {
 export const FormattedMessage: React.FC<FormattedMessageProps> = ({
   content,
 }) => {
-  // Preprocess content to fix math formatting issues
+  // Preprocess content to handle edge cases
   const preprocessContent = (text: string) => {
-    // Remove excessive line breaks in math expressions to keep equations together
     let processed = text;
 
-    // Fix common math expression formatting issues
-    const mathBlockRegex = /(\$\$[\s\S]*?\$\$)/g;
-    processed = processed.replace(mathBlockRegex, (match) => {
-      // Remove line breaks within math blocks and normalize spaces
-      return match.replace(/\n/g, ' ').replace(/\s+/g, ' ');
-    });
+    // Convert LaTeX-style math to markdown-compatible format
+    // Convert \[ ... \] to $$...$$
+    processed = processed.replace(/\\\[([\s\S]*?)\\\]/g, '$$$$1$$');
 
-    // Fix inline math expressions spanning multiple lines
-    const inlineMathRegex = /(\$[^$\n]+)(?:\n)([^$\n]+\$)/g;
-    processed = processed.replace(inlineMathRegex, '$1 $2');
+    // Convert \( ... \) to $...$
+    processed = processed.replace(/\\\(([\s\S]*?)\\\)/g, '$$$1$');
+
+    // Fix inline math expressions that are broken across lines
+    processed = processed.replace(/(\$[^$\n]+)(?:\n)([^$\n]+\$)/g, '$1 $2');
+
+    // Improve subscript/superscript handling
+    // Ensure proper spacing around subscripts and superscripts
+    processed = processed.replace(
+      /([a-zA-Z])(_|\^)(\{[^}]+\}|[a-zA-Z0-9])/g,
+      '$1 $2$3',
+    );
+
+    // Ensure v_0^2 or similar patterns are properly formatted
+    processed = processed.replace(/v_0\^2/g, 'v_{0}^{2}');
+    processed = processed.replace(/v\^2_0/g, 'v^{2}_{0}');
+
+    // Fix common physics subscript patterns
+    processed = processed.replace(/([a-zA-Z])_([0-9])/g, '$1_{$2}');
+    processed = processed.replace(/([a-zA-Z])\^([0-9])/g, '$1^{$2}');
+
+    // Fix headers with no space after hash
+    processed = processed.replace(/(^|\n)(#{1,6})([^\s#])/g, '$1$2 $3');
+
+    // Ensure ordered lists have proper formatting
+    processed = processed.replace(/(\n\s*)(\d+)\.(?!\s)/g, '$1$2. ');
+
+    // Fix extra spacing between headers and lists
+    processed = processed.replace(
+      /(^|\n)(#{1,6}[^\n]+)\n+(\s*[-*+]|\s*\d+\.)/g,
+      '$1$2\n$3',
+    );
+
+    // Fix spacing in ordered lists
+    processed = processed.replace(/(\n\s*)(\d+\.\s+)([^\n]+)/g, '$1$2$3');
 
     return processed;
   };
 
-  // Pre-process the content before rendering
-  const processedContent = preprocessContent(content);
+  // Define components object separately with type assertion
+  const components = {
+    h1: ({ node, ...props }: any) => (
+      <h1 className={styles.heading1} {...props} />
+    ),
+    h2: ({ node, ...props }: any) => (
+      <h2 className={styles.heading2} {...props} />
+    ),
+    h3: ({ node, ...props }: any) => (
+      <h3 className={styles.heading3} {...props} />
+    ),
+    h4: ({ node, ...props }: any) => (
+      <h4 className={styles.heading4} {...props} />
+    ),
+    h5: ({ node, ...props }: any) => (
+      <h5 className={styles.heading5} {...props} />
+    ),
+    h6: ({ node, ...props }: any) => (
+      <h6 className={styles.heading6} {...props} />
+    ),
+    code: ({ node, inline, className, children, ...props }: any) => {
+      const match = /language-(\w+)/.exec(className || '');
+      const language = match ? match[1] : '';
 
-  const renderContent = () => {
-    // First, split content by math and code blocks
-    const segments = processedContent.split(
-      /(\$\$.*?\$\$|\$.*?\$|```.*?```|\\\[.*?\\\]|\\\(.*?\\\))/s,
-    );
-
-    return segments.map((segment, index) => {
-      // Block math ($$...$$)
-      if (segment.startsWith('$$') && segment.endsWith('$$')) {
-        const math = segment.slice(2, -2).trim();
+      if (inline) {
         return (
-          <div key={index} className={styles.blockMath}>
-            <BlockMath math={math} />
-          </div>
+          <code className={styles.inlineCode} {...props}>
+            {children}
+          </code>
         );
       }
 
-      // Block math \[ ... \]
-      if (segment.startsWith('\\[') && segment.endsWith('\\]')) {
-        const math = segment.slice(2, -2).trim();
-        return (
-          <div key={index} className={styles.blockMath}>
-            <BlockMath math={math} />
-          </div>
-        );
-      }
-
-      // Inline math \( ... \)
-      if (segment.startsWith('\\(') && segment.endsWith('\\)')) {
-        const math = segment.slice(2, -2).trim();
-        return <InlineMath key={index} math={math} />;
-      }
-
-      // Inline math ($...$)
-      if (segment.startsWith('$') && segment.endsWith('$')) {
-        const math = segment.slice(1, -1).trim();
-        return <InlineMath key={index} math={math} />;
-      }
-
-      // Code blocks (```...```)
-      if (segment.startsWith('```') && segment.endsWith('```')) {
-        const code = segment.slice(3, -3).trim();
-        const [language, ...codeLines] = code.split('\n');
-        const codeContent = codeLines.join('\n');
-
-        return (
-          <div key={index} className={styles.codeBlock}>
-            {language && <div className={styles.codeLanguage}>{language}</div>}
-            <pre>
-              <code>{codeContent || language}</code>
-            </pre>
-          </div>
-        );
-      }
-
-      // Process regular text segments
       return (
-        <React.Fragment key={index}>
-          {processTextWithLists(segment)}
-        </React.Fragment>
-      );
-    });
-  };
-
-  // Process text, including lists
-  const processTextWithLists = (text: string) => {
-    // Split text into chunks based on double newlines (paragraph breaks)
-    const paragraphs = text.split(/\n\s*\n/);
-
-    return paragraphs.map((paragraph, paragraphIndex) => {
-      // Check if this is a header (starts with #, ##, ###, etc.)
-      const headerMatch = paragraph.trim().match(/^(#{1,6})\s+(.+)$/);
-      if (headerMatch) {
-        const level = headerMatch[1].length; // Number of # characters
-        const content = headerMatch[2];
-        const HeaderTag = `h${level}` as keyof JSX.IntrinsicElements;
-        return (
-          <HeaderTag
-            key={`header-${paragraphIndex}`}
-            className={styles[`heading${level}`]}
+        <div className={styles.codeBlockWrapper}>
+          {language && <div className={styles.codeLanguage}>{language}</div>}
+          <SyntaxHighlighter
+            language={language || 'text'}
+            style={vscDarkPlus as any}
+            PreTag="div"
+            className={styles.codeBlock}
+            showLineNumbers={language !== 'text' && language !== ''}
+            wrapLongLines={true}
           >
-            {processMarkdown(content)}
-          </HeaderTag>
+            {String(children).replace(/\n$/, '')}
+          </SyntaxHighlighter>
+        </div>
+      );
+    },
+    strong: ({ node, ...props }: any) => (
+      <strong className={styles.boldText} {...props} />
+    ),
+    em: ({ node, ...props }: any) => (
+      <em className={styles.italicText} {...props} />
+    ),
+    ol: ({ node, ...props }: any) => (
+      <ol className={styles.orderedList} {...props} />
+    ),
+    ul: ({ node, ...props }: any) => (
+      <ul className={styles.unorderedList} {...props} />
+    ),
+    li: ({ node, ...props }: any) => (
+      <li className={styles.listItem} {...props} />
+    ),
+    p: ({ node, ...props }: any) => (
+      <p className={styles.paragraph} {...props} />
+    ),
+    blockquote: ({ node, ...props }: any) => (
+      <blockquote className={styles.blockquote} {...props} />
+    ),
+    div: ({ node, ...props }: any) => {
+      // Check if this is a math block (katex-display class added by rehype-katex)
+      if (props.className?.includes('katex-display')) {
+        return (
+          <div
+            className={`${props.className} ${styles.mathBlock}`}
+            {...props}
+          />
         );
       }
+      return <div {...props} />;
+    },
+  } as Components;
 
-      // Check if this is a list (starts with * or -) or ordered list (starts with 1., 2., etc.)
-      if (/^(?:\s*[-*+]|\s*\d+\.)\s+/.test(paragraph.trim())) {
-        return processListItems(paragraph, paragraphIndex);
-      }
-
-      // Regular paragraph
-      return (
-        <p key={`p-${paragraphIndex}`}>
-          {paragraph.split('\n').map((line, lineIndex) => (
-            <React.Fragment key={`line-${paragraphIndex}-${lineIndex}`}>
-              {processMarkdown(line)}
-              {lineIndex < paragraph.split('\n').length - 1 && <br />}
-            </React.Fragment>
-          ))}
-        </p>
-      );
-    });
-  };
-
-  // Process list items
-  const processListItems = (paragraph: string, paragraphIndex: number) => {
-    const lines = paragraph.split('\n');
-    const isOrderedList = /^\s*\d+\.\s+/.test(lines[0]);
-
-    // Group the lines into list items (handling multi-line list items)
-    const listItems: string[] = [];
-    let currentItem = '';
-
-    lines.forEach((line) => {
-      const trimmedLine = line.trim();
-
-      // Check if this is a new list item
-      if (
-        isOrderedList
-          ? /^\d+\.\s+/.test(trimmedLine)
-          : /^[-*+]\s+/.test(trimmedLine)
-      ) {
-        if (currentItem) {
-          listItems.push(currentItem);
-        }
-        // Remove the list marker (* or 1. etc)
-        currentItem = isOrderedList
-          ? trimmedLine.replace(/^\d+\.\s+/, '')
-          : trimmedLine.replace(/^[-*+]\s+/, '');
-      } else if (trimmedLine) {
-        // This is a continuation of the previous list item
-        currentItem += ' ' + trimmedLine;
-      }
-    });
-
-    // Add the last item
-    if (currentItem) {
-      listItems.push(currentItem);
-    }
-
-    // Render the appropriate list element
-    const ListComponent = isOrderedList ? 'ol' : 'ul';
-
-    return (
-      <ListComponent key={`list-${paragraphIndex}`}>
-        {listItems.map((item, itemIndex) => (
-          <li key={`item-${paragraphIndex}-${itemIndex}`}>
-            {processMarkdown(item)}
-          </li>
-        ))}
-      </ListComponent>
-    );
-  };
-
-  // Function to process Markdown-style formatting
-  const processMarkdown = (text: string) => {
-    const formattedContent = [];
-    let lastIndex = 0;
-    let currentIndex = 0;
-
-    // Regular expression for bold (**text**)
-    const boldRegex = /\*\*(.*?)\*\*/g;
-
-    // Regular expression for italic (*text*)
-    const italicRegex = /(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)/g;
-
-    // Regular expression for inline code (`text`)
-    const inlineCodeRegex = /`([^`]+)`/g;
-
-    // Process bold text
-    let boldMatch;
-    while ((boldMatch = boldRegex.exec(text)) !== null) {
-      if (boldMatch.index > lastIndex) {
-        formattedContent.push(text.substring(lastIndex, boldMatch.index));
-      }
-
-      formattedContent.push(
-        <strong key={`bold-${currentIndex}`} className={styles.boldText}>
-          {boldMatch[1]}
-        </strong>,
-      );
-
-      lastIndex = boldMatch.index + boldMatch[0].length;
-      currentIndex++;
-    }
-
-    // If there's no bold formatting or there's remaining text after the last bold match
-    if (lastIndex === 0 || lastIndex < text.length) {
-      const remainingText = text.substring(lastIndex);
-
-      // Process italic text in the remaining content
-      const italicMatches = [...remainingText.matchAll(italicRegex)];
-
-      if (italicMatches.length > 0) {
-        let italicLastIndex = 0;
-
-        italicMatches.forEach((italicMatch, i) => {
-          if (italicMatch.index > italicLastIndex) {
-            formattedContent.push(
-              remainingText.substring(italicLastIndex, italicMatch.index),
-            );
-          }
-
-          formattedContent.push(
-            <em
-              key={`italic-${currentIndex}-${i}`}
-              className={styles.italicText}
-            >
-              {italicMatch[1]}
-            </em>,
-          );
-
-          italicLastIndex = italicMatch.index + italicMatch[0].length;
-        });
-
-        if (italicLastIndex < remainingText.length) {
-          // Process inline code in the remaining text
-          const inlineCodeText = remainingText.substring(italicLastIndex);
-          const codeMatches = [...inlineCodeText.matchAll(inlineCodeRegex)];
-
-          if (codeMatches.length > 0) {
-            let codeLastIndex = 0;
-
-            codeMatches.forEach((codeMatch, i) => {
-              if (codeMatch.index > codeLastIndex) {
-                formattedContent.push(
-                  inlineCodeText.substring(codeLastIndex, codeMatch.index),
-                );
-              }
-
-              formattedContent.push(
-                <code
-                  key={`code-${currentIndex}-${i}`}
-                  className={styles.inlineCode}
-                >
-                  {codeMatch[1]}
-                </code>,
-              );
-
-              codeLastIndex = codeMatch.index + codeMatch[0].length;
-            });
-
-            if (codeLastIndex < inlineCodeText.length) {
-              formattedContent.push(inlineCodeText.substring(codeLastIndex));
-            }
-          } else {
-            formattedContent.push(inlineCodeText);
-          }
-        }
-      } else {
-        // Process inline code if no italic formatting
-        const codeMatches = [...remainingText.matchAll(inlineCodeRegex)];
-
-        if (codeMatches.length > 0) {
-          let codeLastIndex = 0;
-
-          codeMatches.forEach((codeMatch, i) => {
-            if (codeMatch.index > codeLastIndex) {
-              formattedContent.push(
-                remainingText.substring(codeLastIndex, codeMatch.index),
-              );
-            }
-
-            formattedContent.push(
-              <code
-                key={`code-${currentIndex}-${i}`}
-                className={styles.inlineCode}
-              >
-                {codeMatch[1]}
-              </code>,
-            );
-
-            codeLastIndex = codeMatch.index + codeMatch[0].length;
-          });
-
-          if (codeLastIndex < remainingText.length) {
-            formattedContent.push(remainingText.substring(codeLastIndex));
-          }
-        } else {
-          formattedContent.push(remainingText);
-        }
-      }
-    }
-
-    // If no Markdown was found, return the original text
-    return formattedContent.length > 0 ? formattedContent : text;
-  };
-
-  return <div className={styles.formattedMessage}>{renderContent()}</div>;
+  return (
+    <div className={styles.formattedMessage}>
+      <ReactMarkdown
+        remarkPlugins={[remarkMath, remarkGfm]}
+        rehypePlugins={[rehypeKatex, rehypeRaw]}
+        components={components}
+      >
+        {preprocessContent(content)}
+      </ReactMarkdown>
+    </div>
+  );
 };

@@ -1,8 +1,32 @@
+// Start Generation Here
+.formattedMessage {
+  line-height: 1.8 !important;
+  ul,
+  ol,
+  li,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  blockquote,
+  code,
+  .codeBlock,
+  .codeBlockWrapper,
+  .codeLanguage {
+    line-height: 1.8 !important;
+  }
+}
+
 .formattedMessage {
   font-size: 0.9375rem;
-  line-height: 1.7;
-  white-space: pre-wrap;
+  line-height: 1.8;
   word-break: break-word;
+  color: rgba(240, 240, 240, 0.82);
+  padding: 0.5rem;
+  text-shadow: 0 0 0.5px #1922425b;
 
   // Headings
   h1,
@@ -11,7 +35,7 @@
   h4,
   h5,
   h6 {
-    margin: 1.5rem 0 1rem;
+    margin: 1rem 0 0.5rem;
     font-weight: 700;
     line-height: 1.3;
     color: inherit;
@@ -20,45 +44,54 @@
     &:first-child {
       margin-top: 0;
     }
+
+    & + ul,
+    & + ol,
+    & + .unorderedList,
+    & + .orderedList {
+      margin-top: 0.5rem;
+    }
   }
 
   .heading1 {
-    font-size: 2rem;
-    margin-top: 2rem;
-    margin-bottom: 1.25rem;
+    font-size: 1.75rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .heading2 {
-    font-size: 1.75rem;
-    margin-top: 1.75rem;
-    margin-bottom: 1rem;
-  }
-
-  .heading3 {
     font-size: 1.5rem;
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
     margin-bottom: 0.75rem;
   }
 
-  .heading4 {
+  .heading3 {
     font-size: 1.25rem;
-    margin-top: 1.25rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .heading4 {
+    font-size: 1.125rem;
+    margin-top: 1rem;
   }
 
   .heading5 {
-    font-size: 1.125rem;
+    font-size: 1rem;
   }
 
   .heading6 {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.8);
   }
 
-  p {
-    margin: 0.5rem 0 1rem;
+  p,
+  .paragraph {
+    margin: 0.6rem 0 0.9rem;
+    line-height: 1.7;
     &:first-child {
       margin-top: 0;
     }
@@ -68,15 +101,19 @@
   }
 
   ul,
-  ol {
-    margin: 0.5rem 0 1.25rem;
+  ol,
+  .unorderedList,
+  .orderedList {
+    margin: 0.5rem 0 1rem;
     padding-left: 1.5rem;
     list-style-position: outside;
 
-    li {
+    li,
+    .listItem {
       margin-bottom: 0.5rem;
       padding-left: 0.25rem;
       display: list-item;
+      line-height: 1.4;
 
       &:last-child {
         margin-bottom: 0;
@@ -85,53 +122,173 @@
   }
 
   // Explicit styles for unordered lists
-  ul {
+  ul,
+  .unorderedList {
     list-style-type: disc; // Standard bullet point •
   }
 
   // Explicit styles for ordered lists
-  ol {
+  ol,
+  .orderedList {
     list-style-type: decimal; // Numbered list 1, 2, 3
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0.5rem;
+
+    li,
+    .listItem {
+      display: list-item;
+      padding-left: 0;
+      text-indent: 0;
+      vertical-align: top;
+    }
+
+    // Override browser default styles
+    &::before {
+      display: none;
+    }
+  }
+
+  // Fix for list items
+  .listItem {
+    display: list-item;
   }
 
   ul + p,
-  ol + p {
-    margin-top: 1rem;
+  ol + p,
+  .unorderedList + .paragraph,
+  .orderedList + .paragraph {
+    margin-top: 0.75rem;
   }
 
   hr {
     margin: 1.5rem 0;
     border: 0;
     height: 1px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.2);
   }
 
+  * + * {
+    margin-top: 0.3rem;
+  }
+
+  // Override spacing for headers followed by text
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .heading1,
+  .heading2,
+  .heading3,
+  .heading4,
+  .heading5,
+  .heading6 {
+    & + p,
+    & + .paragraph {
+      margin-top: 0.4rem;
+    }
+  }
+
+  // Spacing between list items
+  li,
+  .listItem {
+    & + li,
+    & + .listItem {
+      margin-top: 0.3rem;
+    }
+  }
+
+  // Blockquote styles similar to ChatGPT
+  blockquote,
+  .blockquote {
+    border-left: 4px solid rgba(255, 255, 255, 0.3);
+    padding: 0.5rem 0 0.5rem 1rem;
+    margin: 1rem 0;
+    color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 0 4px 4px 0;
+  }
+
+  // KaTeX math rendering styles
   :global(.katex) {
-    font-size: 1.05em;
-    color: rgba(255, 255, 255, 0.95);
+    font-size: 1.25em;
+    color: rgba(255, 255, 255, 0.92);
   }
 
   :global(.katex-html) {
     white-space: normal;
   }
 
+  :global(.katex .msupsub) {
+    font-size: 120%;
+  }
+
+  :global(.katex .mord.mtight) {
+    font-size: 0.85em;
+  }
+
+  :global(.katex .msubsup > .vlist-t:nth-of-type(2) .vlist-r .vlist) {
+    transform: scale(1.15);
+  }
+
+  :global(.katex .mord.mathnormal) {
+    &:global(.v) {
+      + :global(.mtight) {
+        font-size: 100%;
+      }
+    }
+  }
+
+  .mathBlock,
   :global(.katex-display) {
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 0.25rem 0;
-    margin: 0.75rem 0 1rem;
+    padding: 1.25rem;
+    margin: 1.25rem 0;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    border-left: 4px solid #5c85d6;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    font-size: 1.15em;
 
     &::-webkit-scrollbar {
-      height: 4px;
+      height: 6px;
     }
 
     &::-webkit-scrollbar-track {
       background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+    }
+
+    :global(.katex) {
+      font-size: 1.4em;
+    }
+
+    :global(.katex .msubsup) {
+      font-size: 1em;
+    }
+
+    :global(.katex .msupsub .msup) {
+      font-size: 0.9em;
+    }
+
+    :global(.katex .msubsup) {
+      margin-left: 0.05em;
+      margin-right: 0.05em;
+    }
+
+    :global(.katex .mop) {
+      + :global(.msupsub) {
+        transform: scale(1.1);
+        margin-left: 0.1em;
+      }
     }
   }
 }
@@ -139,7 +296,7 @@
 // Markdown formatting styles
 .boldText {
   font-weight: 700;
-  color: inherit;
+  color: #fff;
 }
 
 .italicText {
@@ -149,83 +306,62 @@
 
 .inlineCode {
   font-family: 'Fira Code', monospace;
-  font-size: 0.85em;
-  background-color: rgba(0, 0, 0, 0.15);
+  font-size: 0.9em;
+  background-color: rgba(0, 0, 0, 0.2);
   padding: 0.15em 0.4em;
   border-radius: 4px;
-  color: rgba(255, 255, 255, 0.9);
+  color: #e6e6e6;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.blockMath {
-  margin: 1.5rem 0;
-  overflow-x: auto;
-  padding: 1.25rem;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.1);
-  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
-
-  &::-webkit-scrollbar {
-    height: 4px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 2px;
-  }
-
-  :global(.katex-display) {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.95);
-    font-size: 1.15em;
-  }
-
-  :global(.katex) {
-    text-align: center;
-    font-size: 1.15em;
-    color: rgba(255, 255, 255, 0.95);
-  }
-}
-
-.codeBlock {
-  margin: 1rem 0 1.5rem;
-  background: rgba(0, 0, 0, 0.2);
+// Code block container styles
+.codeBlockWrapper {
+  margin: 1rem 0;
+  background-color: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-left: 4px solid #6b9e3d;
 
   .codeLanguage {
-    padding: 0.5rem 1rem;
+    padding: 0.4rem 1rem;
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.6);
-    background: rgba(0, 0, 0, 0.2);
+    color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(0, 0, 0, 0.25);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'Fira Code', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
-  pre {
-    margin: 0;
-    padding: 1rem;
-    overflow-x: auto;
+  // Style for the SyntaxHighlighter component
+  :global(pre) {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
 
     code {
       font-family: 'Fira Code', monospace;
-      font-size: 0.875rem;
+      font-size: 0.9rem;
       line-height: 1.5;
     }
   }
+}
 
-  &::-webkit-scrollbar {
-    height: 4px;
-  }
+// Style for the SyntaxHighlighter component
+.codeBlock {
+  margin: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 1rem !important;
 
-  &::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 2px;
+  // Line number styling
+  :global(.linenumber) {
+    min-width: 2.5em !important;
+    padding-right: 1em !important;
+    text-align: right !important;
+    color: rgba(255, 255, 255, 0.3) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+    margin-right: 0.5em !important;
   }
 }
