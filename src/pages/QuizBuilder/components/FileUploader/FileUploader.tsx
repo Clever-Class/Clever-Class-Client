@@ -153,7 +153,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({ onFileUpload }) => {
             whileTap={{ scale: 0.97 }}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.2 }}
           >
             Browse Files
           </motion.button>

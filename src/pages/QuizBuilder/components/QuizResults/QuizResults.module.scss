@@ -59,6 +59,7 @@
 
 .progressRingCircleValue {
   transition: stroke-dashoffset 1.5s ease;
+  stroke: $primary-color;
 }
 
 .scoreDetails {

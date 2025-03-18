@@ -166,8 +166,8 @@ export const QuizBuilder = () => {
 
   return (
     <div className={styles.quizContainer}>
+      {' '}
       <h1 className={styles.title}>AI Quiz Builder</h1>
-
       <div className={styles.tabsContainer}>
         <div
           className={`${styles.tabItem} ${
@@ -204,7 +204,6 @@ export const QuizBuilder = () => {
           Results
         </div>
       </div>
-
       <div className={styles.quizArea}>{renderContent()}</div>
     </div>
   );
