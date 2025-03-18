@@ -61,6 +61,16 @@ export const FormattedMessage: React.FC<FormattedMessageProps> = ({
     // Fix spacing in ordered lists
     processed = processed.replace(/(\n\s*)(\d+\.\s+)([^\n]+)/g, '$1$2$3');
 
+    // Add proper spacing around emojis to prevent them from being cut off
+    processed = processed.replace(/([^\s])([\u{1F300}-\u{1F9FF}])/gu, '$1 $2');
+    processed = processed.replace(/([\u{1F300}-\u{1F9FF}])([^\s])/gu, '$1 $2');
+
+    // Ensure emojis in headers are properly spaced
+    processed = processed.replace(
+      /(^|\n)(#{1,6}\s*)([\u{1F300}-\u{1F9FF}])/gu,
+      '$1$2$3 ',
+    );
+
     return processed;
   };
 

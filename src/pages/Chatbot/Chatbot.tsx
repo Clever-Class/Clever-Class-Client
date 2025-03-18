@@ -261,8 +261,13 @@ export function Chatbot() {
           return newMessages;
         });
 
-        // Set this message as currently playing
-        setCurrentlyPlayingId(newMessageId);
+        // Clear any currently playing audio before setting the new one
+        setCurrentlyPlayingId(null);
+
+        // Set a small delay before setting the new message as playing to allow the audio element to initialize
+        setTimeout(() => {
+          setCurrentlyPlayingId(newMessageId);
+        }, 100);
 
         // Update conversation ID if needed
         if (!currentConversationId) {

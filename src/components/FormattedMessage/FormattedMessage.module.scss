@@ -40,6 +40,9 @@
     line-height: 1.3;
     color: inherit;
     letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 
     &:first-child {
       margin-top: 0;
@@ -50,6 +53,10 @@
     & + .unorderedList,
     & + .orderedList {
       margin-top: 0.5rem;
+    }
+
+    .emoji {
+      margin-right: 0.25rem;
     }
   }
 
@@ -92,6 +99,7 @@
   .paragraph {
     margin: 0.6rem 0 0.9rem;
     line-height: 1.7;
+
     &:first-child {
       margin-top: 0;
     }
@@ -112,7 +120,6 @@
     .listItem {
       margin-bottom: 0.5rem;
       padding-left: 0.25rem;
-      display: list-item;
       line-height: 1.4;
 
       &:last-child {
@@ -212,17 +219,51 @@
   }
 
   // KaTeX math rendering styles
-  :global(.katex) {
-    font-size: 1.25em;
-    color: rgba(255, 255, 255, 0.92);
+  :global(.katex-display) {
+    margin: 2rem 0;
+    padding: 1rem 0;
+    overflow-x: auto;
+    text-align: center;
+
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+    }
+
+    // Make display equations bigger and consistent
+    :global(.katex) {
+      font-size: 1.5em !important;
+      line-height: 1.2 !important;
+    }
   }
 
   :global(.katex-html) {
     white-space: normal;
   }
 
+  // Improve equation spacing and alignment
+  :global(.katex-display > .katex) {
+    text-align: center;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 3rem;
+  }
+
+  // Style inline math
+  :global(.katex-inline) {
+    padding: 0 0.2rem;
+    font-size: 1.1em;
+  }
+
+  // Improve subscript and superscript sizing
   :global(.katex .msupsub) {
-    font-size: 120%;
+    font-size: 125%;
   }
 
   :global(.katex .mord.mtight) {
@@ -230,65 +271,37 @@
   }
 
   :global(.katex .msubsup > .vlist-t:nth-of-type(2) .vlist-r .vlist) {
-    transform: scale(1.15);
+    transform: scale(1.2);
   }
 
   :global(.katex .mord.mathnormal) {
     &:global(.v) {
       + :global(.mtight) {
         font-size: 100%;
+        font-family: 'KaTeX_Main' !important;
       }
     }
   }
 
-  .mathBlock,
-  :global(.katex-display) {
+  // Add styles for equation containers
+  .equation-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+    padding: 1rem 0;
     overflow-x: auto;
-    overflow-y: hidden;
-    padding: 1.25rem;
-    margin: 1.25rem 0;
-    background-color: rgba(0, 0, 0, 0.25);
-    border-radius: 8px;
-    border-left: 4px solid #5c85d6;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    font-size: 1.15em;
+  }
 
-    &::-webkit-scrollbar {
-      height: 6px;
-    }
+  // Add a subtle highlight effect for equations
 
-    &::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 3px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 3px;
-    }
-
-    :global(.katex) {
-      font-size: 1.4em;
-    }
-
-    :global(.katex .msubsup) {
-      font-size: 1em;
-    }
-
-    :global(.katex .msupsub .msup) {
-      font-size: 0.9em;
-    }
-
-    :global(.katex .msubsup) {
-      margin-left: 0.05em;
-      margin-right: 0.05em;
-    }
-
-    :global(.katex .mop) {
-      + :global(.msupsub) {
-        transform: scale(1.1);
-        margin-left: 0.1em;
-      }
+  // Ensure emojis are properly sized and aligned
+  :global {
+    .emoji {
+      font-size: 1.2em;
+      vertical-align: middle;
+      line-height: 1;
+      display: inline-block;
     }
   }
 }
