@@ -14,6 +14,7 @@ import { Settings } from '~pages/Settings/Settings';
 import { DashboardLayout } from '~components/Layouts';
 import { Chatbot } from '~pages/Chatbot/Chatbot';
 import { PricingPage } from '~pages/PricingPage';
+import { QuizBuilder } from '~pages/QuizBuilder';
 
 const DashboardRoutes = () => {
   return (
@@ -22,6 +23,7 @@ const DashboardRoutes = () => {
         <Route index element={<Dashboard />} />
         <Route path={AppRoutes.Settings} element={<Settings />} />
         <Route path={AppRoutes.Chatbot} element={<Chatbot />} />
+        <Route path={AppRoutes.QuizBuilder} element={<QuizBuilder />} />
       </ReactRouterRoutes>
     </DashboardLayout>
   );

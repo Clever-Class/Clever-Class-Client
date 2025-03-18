@@ -10,7 +10,7 @@ import { SidebarHeader } from './SidebarHeader/SidebarHeader';
 import { SidebarContent } from './SidebarContent/SidebarContent';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import classNames from 'classnames';
-import { BotMessageSquare } from 'lucide-react';
+import { BotMessageSquare, Dices } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
@@ -35,6 +35,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       name: 'AI Chatbot',
       icon: BotMessageSquare,
       route: '/dashboard/ai-chatbot',
+    },
+    {
+      name: 'Quiz Builder',
+      icon: Dices,
+      route: '/dashboard/quiz-builder',
     },
     { name: 'Tasks', icon: RiTaskLine, route: '/dashboard/tasks' },
     { name: 'Team', icon: RiTeamLine, route: '/dashboard/team' },
