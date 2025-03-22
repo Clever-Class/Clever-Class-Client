@@ -12,13 +12,11 @@ import {
   SignupUserData,
   LOGOUT,
   UPDATE_USER_DATA,
-  UPDATE_PROFILE_REQUEST,
   UPDATE_PROFILE_SUCCESS,
   UPDATE_PROFILE_FAILURE,
 } from '~constants';
 import { AppDispatch } from '~store';
 import { Dispatch } from 'redux';
-import { UpdateProfileData, UpdateProfileResponse, User } from '~types';
 
 export const signupUserAction =
   (userEntryData: SignupUserData) => async (dispatch: AppDispatch) => {

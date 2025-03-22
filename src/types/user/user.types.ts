@@ -26,6 +26,7 @@ export interface User {
   name: string;
   trialCredits: number;
   createdAt: string;
+  avatar: string;
   subscription: Subscription;
   selectedPackageId: string | null;
 }
