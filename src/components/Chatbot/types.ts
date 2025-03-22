@@ -13,6 +13,7 @@ export interface Message {
   image?: string;
   audio?: string; // Base64 encoded audio data
   isNew?: boolean; // Flag to indicate if this is a new message for auto-play
+  isStreaming?: boolean; // Flag to indicate if the message is currently streaming
 }
 
 /**

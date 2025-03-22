@@ -6,6 +6,7 @@ import { QuizTest } from './components/QuizTest';
 import { QuizResults } from './components/QuizResults';
 import { QuizQuestion } from './types';
 import { api } from '~api';
+import toast from 'react-hot-toast';
 
 export const QuizBuilder = () => {
   const [activeTab, setActiveTab] = useState('upload');
@@ -43,8 +44,11 @@ export const QuizBuilder = () => {
       setTimeRemaining(timeLimit * 60); // Convert to seconds
       setTestActive(true);
       setActiveTab('test');
-    } catch (error) {
-      console.error('Error generating quiz:', error);
+    } catch (error: any) {
+      // handle different error types
+      const errorMessage =
+        error.response?.data.message || 'Failed to generate quiz';
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

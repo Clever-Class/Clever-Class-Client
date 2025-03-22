@@ -95,7 +95,7 @@ const ChatMessages = memo(
         ))}
 
         {/* Loading indicator */}
-        {isLoading && (
+        {false && (
           <motion.div
             className={`${styles.message} ${styles.aiMessage} ${styles.loadingMessage}`}
             initial={{ opacity: 0, y: 10 }}

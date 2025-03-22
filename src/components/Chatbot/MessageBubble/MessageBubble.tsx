@@ -21,6 +21,7 @@ interface MessageBubbleProps extends Omit<Message, 'timestamp'> {
   onPlayStateChange?: (isPlaying: boolean) => void; // Callback when play state changes
   isLoading: boolean;
   isNew?: boolean; // Flag to indicate if this message is new (just arrived)
+  isStreaming?: boolean;
 }
 
 const MessageBubble = memo(
@@ -37,6 +38,7 @@ const MessageBubble = memo(
     onPlayStateChange,
     isLoading,
     isNew = false,
+    isStreaming = false,
   }: MessageBubbleProps) => {
     const [internalIsPlaying, setInternalIsPlaying] = useState(false);
     const [hasAutoPlayed, setHasAutoPlayed] = useState(false);
@@ -202,7 +204,10 @@ const MessageBubble = memo(
         }}
       >
         <div className={styles.messageContent}>
-          <FormattedMessage content={content} />
+          <FormattedMessage
+            content={content}
+            className={isStreaming ? styles.streaming : ''}
+          />
           {image && (
             <div
               className={styles.messageImage}

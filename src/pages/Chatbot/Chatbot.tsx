@@ -14,8 +14,11 @@ import {
   ImageViewer,
   Message,
 } from '~/components/Chatbot';
+import { api } from '~api';
 
 export function Chatbot() {
+  console.log('Chatbot component rendered');
+
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isWelcomeScreen, setIsWelcomeScreen] = useState(true);
@@ -42,23 +45,17 @@ export function Chatbot() {
   }, []);
 
   // Fetch conversations from the API
-  const fetchConversations = async () => {
+  const fetchConversations = useCallback(async () => {
     try {
-      console.log('Attempting to fetch conversations...');
-      setIsLoading(true);
+      console.log('Fetching conversations...');
       const conversationsData = await chatService.getConversations();
-      console.log('Conversations fetched:', conversationsData);
       setConversations(conversationsData);
     } catch (err: any) {
-      console.error('Failed to fetch conversations:', err);
-      // Show error toast if the user is logged in (expected to be logged in on this page)
       if (err.message !== 'User not authenticated') {
         toast.error('Failed to fetch conversation history');
       }
-    } finally {
-      setIsLoading(false);
     }
-  };
+  }, []);
 
   // Load conversation messages when a conversation is selected
   const loadConversation = async (conversationId: string) => {
@@ -133,55 +130,106 @@ export function Chatbot() {
     setIsLoading(true);
     setError(null);
 
+    let shouldUpdateConversations = false;
+
     try {
-      // Call the chatbot API with the stored image data
-      const response = await chatService.chatWithAI(
-        sentMessage,
-        currentConversationId || undefined,
-        imageToSend,
-      );
-
-      // If this is a new conversation, update the current conversation ID
-      if (!currentConversationId && response.conversationId) {
-        setCurrentConversationId(response.conversationId);
-        // Refresh the conversations list
-        fetchConversations();
-      }
-
-      // Add AI response to messages (text message won't have audio)
-      const aiResponse: Message = {
-        id: Date.now().toString(),
-        content: response.response,
+      // Create a temporary message for the AI's response
+      const tempAiMessage: Message = {
+        id: Date.now().toString() + '-ai',
+        content: '',
         isUser: false,
         timestamp: new Date(),
+        isStreaming: true,
       };
+      setMessages((prev) => [...prev, tempAiMessage]);
 
-      setMessages((prev) => [...prev, aiResponse]);
+      // Make the API call with streaming using axios
+      const response = await api.ccServer.post(
+        '/chatbot/chat',
+        {
+          message: sentMessage,
+          conversationId: currentConversationId,
+          image: imageToSend,
+        },
+        {
+          responseType: 'text',
+          headers: {
+            Accept: 'text/event-stream',
+            'Cache-Control': 'no-cache',
+          },
+          onDownloadProgress: (progressEvent: any) => {
+            const rawText = progressEvent.event.target.responseText;
+            const chunks = rawText
+              .split('\n\n')
+              .filter((chunk: string) => chunk.trim());
+
+            for (const chunk of chunks) {
+              console.log(chunk.length, 'chunk');
+              if (!chunk.startsWith('data: ')) continue;
+
+              const data = chunk.replace('data: ', '').trim();
+              if (data === '[DONE]') {
+                setMessages((prev) => {
+                  const newMessages = [...prev];
+                  const lastMessage = newMessages[newMessages.length - 1];
+                  if (!lastMessage.isUser) {
+                    lastMessage.isStreaming = false;
+                  }
+                  return [...newMessages];
+                });
+
+                if (shouldUpdateConversations) {
+                  fetchConversations();
+                }
+                return;
+              }
+
+              try {
+                const parsed = JSON.parse(data);
+                if (parsed.content) {
+                  setMessages((prev) => {
+                    const newMessages = [...prev];
+                    const lastMessage = newMessages[newMessages.length - 1];
+                    if (!lastMessage.isUser) {
+                      // Simply set the content to the accumulated text from server
+                      lastMessage.content = parsed.content;
+                      lastMessage.isStreaming = true;
+                    }
+                    return [...newMessages];
+                  });
+
+                  if (parsed.conversationId && !currentConversationId) {
+                    setCurrentConversationId(parsed.conversationId);
+                    shouldUpdateConversations = true;
+                  }
+                }
+              } catch (e) {
+                if (!data.includes('[DONE]')) {
+                  console.error('Error parsing SSE data:', e);
+                }
+              }
+            }
+          },
+        },
+      );
     } catch (err: any) {
       console.error('Failed to send message:', err);
       setError('Failed to get response. Please try again.');
-
-      // Add error message
-      const errorMessage: Message = {
-        id: Date.now().toString(),
-        content:
-          'Sorry, I encountered an error while processing your request. Please try again.',
-        isUser: false,
-        timestamp: new Date(),
-      };
-
-      setMessages((prev) => [...prev, errorMessage]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString(),
+          content:
+            'Sorry, I encountered an error while processing your request. Please try again.',
+          isUser: false,
+          timestamp: new Date(),
+        },
+      ]);
       toast.error('Failed to get AI response');
     } finally {
       setIsLoading(false);
     }
-  }, [
-    message,
-    currentConversationId,
-    isLoading,
-    attachedImage,
-    fetchConversations,
-  ]);
+  }, [message, currentConversationId, isLoading, attachedImage]);
 
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

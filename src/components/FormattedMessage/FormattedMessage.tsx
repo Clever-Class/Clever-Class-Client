@@ -12,10 +12,12 @@ import { Components } from 'react-markdown';
 
 interface FormattedMessageProps {
   content: string;
+  className?: string;
 }
 
 export const FormattedMessage: React.FC<FormattedMessageProps> = ({
   content,
+  className = '',
 }) => {
   // Preprocess content to handle edge cases
   const preprocessContent = (text: string) => {
@@ -158,7 +160,7 @@ export const FormattedMessage: React.FC<FormattedMessageProps> = ({
   } as Components;
 
   return (
-    <div className={styles.formattedMessage}>
+    <div className={`${styles.formattedMessage} ${className}`}>
       <ReactMarkdown
         remarkPlugins={[remarkMath, remarkGfm]}
         rehypePlugins={[rehypeKatex, rehypeRaw]}
