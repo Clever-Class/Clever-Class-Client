@@ -2,6 +2,7 @@ import React from 'react';
 import { CheckCircle, XCircle, BarChart2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import styles from './QuizResults.module.scss';
+import { QuestionResult, QuizAnswer } from '../../types';
 
 // Define interfaces locally
 interface QuizQuestion {
@@ -14,19 +15,34 @@ interface QuizQuestion {
 
 interface QuizResultsProps {
   questions: QuizQuestion[];
-  userAnswers: Record<number, number>;
+  userAnswers: QuizAnswer[];
+  userAnswerMap?: Record<number, number>;
   score: number;
   onRetake: () => void;
+  detailedResults?: Record<number, boolean>;
+  questionResults?: QuestionResult[];
 }
 
 export const QuizResults: React.FC<QuizResultsProps> = ({
   questions,
   userAnswers,
+  userAnswerMap,
   score,
   onRetake,
+  detailedResults,
+  questionResults,
 }) => {
+  // Create an answer map if not provided
+  const answerMap: Record<number, number> = userAnswerMap || {};
+  if (!userAnswerMap && userAnswers) {
+    userAnswers.forEach((answer) => {
+      answerMap[answer.questionId] = answer.answerIndex;
+    });
+  }
+
   const percentage = Math.round(score * 100);
   const correctCount = Math.round(score * questions.length);
+  const answeredCount = userAnswers.length;
 
   // Get feedback based on score
   const getFeedback = () => {
@@ -119,8 +135,8 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
 
         <motion.div className={styles.scoreDetails} variants={itemVariants}>
           <div className={styles.scoreText}>
-            You answered {Object.keys(userAnswers).length} out of{' '}
-            {questions.length} questions and got {correctCount} correct.
+            You answered {answeredCount} out of {questions.length} questions and
+            got {correctCount} correct.
           </div>
           <div className={styles.feedbackText}>{getFeedback()}</div>
         </motion.div>
@@ -142,14 +158,12 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
           </div>
           <div className={styles.statItem}>
             <div className={styles.statValue}>
-              {questions.length - correctCount}
+              {answeredCount - correctCount}
             </div>
             <div className={styles.statLabel}>Incorrect Answers</div>
           </div>
           <div className={styles.statItem}>
-            <div className={styles.statValue}>
-              {Object.keys(userAnswers).length}
-            </div>
+            <div className={styles.statValue}>{answeredCount}</div>
             <div className={styles.statLabel}>Questions Attempted</div>
           </div>
         </div>
@@ -160,66 +174,130 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
       </motion.h2>
 
       <div className={styles.questionReviewList}>
-        {questions.map((question, qIndex) => {
-          const userAnswer = userAnswers[qIndex];
-          const isCorrect = userAnswer === question.correctAnswerIndex;
+        {(questionResults || questions).map((item, qIndex) => {
+          if (questionResults) {
+            const result = item as QuestionResult;
 
-          return (
-            <motion.div
-              key={question.id}
-              className={`${styles.reviewCard} ${
-                isCorrect ? styles.correct : styles.incorrect
-              }`}
-              variants={itemVariants}
-            >
-              <div className={styles.questionHeader}>
-                {isCorrect ? (
-                  <CheckCircle
-                    className={`${styles.statusIcon} ${styles.correct}`}
-                  />
-                ) : (
-                  <XCircle
-                    className={`${styles.statusIcon} ${styles.incorrect}`}
-                  />
-                )}
-                <h3 className={styles.questionText}>
-                  {qIndex + 1}. {question.question}
-                </h3>
-              </div>
+            return (
+              <motion.div
+                key={result.questionId}
+                className={`${styles.reviewCard} ${
+                  result.isCorrect ? styles.correct : styles.incorrect
+                }`}
+                variants={itemVariants}
+              >
+                <div className={styles.questionHeader}>
+                  {result.isCorrect ? (
+                    <CheckCircle
+                      className={`${styles.statusIcon} ${styles.correct}`}
+                    />
+                  ) : (
+                    <XCircle
+                      className={`${styles.statusIcon} ${styles.incorrect}`}
+                    />
+                  )}
+                  <h3 className={styles.questionText}>
+                    {qIndex + 1}. {result.question}
+                  </h3>
+                </div>
 
-              <div className={styles.optionsList}>
-                {question.options.map((option, oIndex) => {
-                  const isSelected = userAnswer === oIndex;
-                  const isCorrectAnswer =
-                    oIndex === question.correctAnswerIndex;
+                <div className={styles.optionsList}>
+                  {result.options.map((option, oIndex) => {
+                    const isSelected = result.userAnswerIndex === oIndex;
+                    const isCorrectAnswer =
+                      oIndex === result.correctAnswerIndex;
 
-                  return (
-                    <div
-                      key={oIndex}
-                      className={`${styles.optionItem} ${
-                        isSelected ? styles.selected : ''
-                      } ${isCorrectAnswer ? styles.correct : ''}`}
-                    >
+                    return (
                       <div
-                        className={`${styles.optionMarker} ${
+                        key={oIndex}
+                        className={`${styles.optionItem} ${
                           isSelected ? styles.selected : ''
                         } ${isCorrectAnswer ? styles.correct : ''}`}
                       >
-                        {String.fromCharCode(65 + oIndex)}
+                        <div
+                          className={`${styles.optionMarker} ${
+                            isSelected ? styles.selected : ''
+                          } ${isCorrectAnswer ? styles.correct : ''}`}
+                        >
+                          {String.fromCharCode(65 + oIndex)}
+                        </div>
+                        <div className={styles.optionText}>{option}</div>
                       </div>
-                      <div className={styles.optionText}>{option}</div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {question.explanation && (
-                <div className={styles.explanationBox}>
-                  <strong>Explanation:</strong> {question.explanation}
+                    );
+                  })}
                 </div>
-              )}
-            </motion.div>
-          );
+
+                {result.explanation && (
+                  <div className={styles.explanationBox}>
+                    <strong>Explanation:</strong> {result.explanation}
+                  </div>
+                )}
+              </motion.div>
+            );
+          } else {
+            const question = item as QuizQuestion;
+            const userAnswer = answerMap[question.id];
+            const isCorrect = detailedResults
+              ? detailedResults[question.id]
+              : userAnswer === question.correctAnswerIndex;
+
+            return (
+              <motion.div
+                key={question.id}
+                className={`${styles.reviewCard} ${
+                  isCorrect ? styles.correct : styles.incorrect
+                }`}
+                variants={itemVariants}
+              >
+                <div className={styles.questionHeader}>
+                  {isCorrect ? (
+                    <CheckCircle
+                      className={`${styles.statusIcon} ${styles.correct}`}
+                    />
+                  ) : (
+                    <XCircle
+                      className={`${styles.statusIcon} ${styles.incorrect}`}
+                    />
+                  )}
+                  <h3 className={styles.questionText}>
+                    {qIndex + 1}. {question.question}
+                  </h3>
+                </div>
+
+                <div className={styles.optionsList}>
+                  {question.options.map((option, oIndex) => {
+                    const isSelected = userAnswer === oIndex;
+                    const isCorrectAnswer =
+                      oIndex === question.correctAnswerIndex;
+
+                    return (
+                      <div
+                        key={oIndex}
+                        className={`${styles.optionItem} ${
+                          isSelected ? styles.selected : ''
+                        } ${isCorrectAnswer ? styles.correct : ''}`}
+                      >
+                        <div
+                          className={`${styles.optionMarker} ${
+                            isSelected ? styles.selected : ''
+                          } ${isCorrectAnswer ? styles.correct : ''}`}
+                        >
+                          {String.fromCharCode(65 + oIndex)}
+                        </div>
+                        <div className={styles.optionText}>{option}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {question.explanation && (
+                  <div className={styles.explanationBox}>
+                    <strong>Explanation:</strong> {question.explanation}
+                  </div>
+                )}
+              </motion.div>
+            );
+          }
         })}
       </div>
 
