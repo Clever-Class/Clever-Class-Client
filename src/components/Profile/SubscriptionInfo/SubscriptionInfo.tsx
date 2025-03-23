@@ -1,11 +1,16 @@
 import { motion } from 'framer-motion';
-import { Crown, Gift } from 'lucide-react';
+import { Crown, Gift, RefreshCw } from 'lucide-react';
 import { Subscription, SubscriptionStatus } from '~store/types';
 import { capitalizeFirstLetter } from '~/lib/utils';
 import moment from 'moment';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { api } from '~api';
+import {
+  cancelSubscription,
+  pauseSubscription,
+  resumeCanceledSubscription,
+  syncPaddleSubscription,
+} from '~api';
 import styles from './SubscriptionInfo.module.scss';
 
 interface SubscriptionInfoProps {
@@ -20,6 +25,7 @@ export const SubscriptionInfo = ({
   onSubscriptionUpdate,
 }: SubscriptionInfoProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const handleCancelSubscription = async () => {
     if (
@@ -30,13 +36,13 @@ export const SubscriptionInfo = ({
 
     setIsLoading(true);
     try {
-      const response = await api.ccServer.post('/subscription/cancel');
+      const response = await cancelSubscription();
 
-      if (response.data.success) {
-        toast.success(response.data.message);
+      if (response.success) {
+        toast.success(response.message);
         onSubscriptionUpdate?.();
       } else {
-        toast.error(response.data.message || 'Failed to cancel subscription');
+        toast.error(response.message || 'Failed to cancel subscription');
       }
     } catch (error: any) {
       console.error('Error canceling subscription:', error);
@@ -47,6 +53,29 @@ export const SubscriptionInfo = ({
       );
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSyncSubscription = async () => {
+    setIsSyncing(true);
+    try {
+      const response = await syncPaddleSubscription();
+
+      if (response.success) {
+        toast.success('Subscription synced successfully');
+        onSubscriptionUpdate?.();
+      } else {
+        toast.error(response.message || 'Failed to sync subscription');
+      }
+    } catch (error: any) {
+      console.error('Error syncing subscription:', error);
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          'Failed to sync subscription',
+      );
+    } finally {
+      setIsSyncing(false);
     }
   };
 
@@ -68,7 +97,19 @@ export const SubscriptionInfo = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <h3 className={styles.title}>Subscription & Credits</h3>
+      <div className={styles.titleRow}>
+        <h3 className={styles.title}>Subscription & Credits</h3>
+        {subscription && (
+          <button
+            className={styles.syncButton}
+            onClick={handleSyncSubscription}
+            disabled={isSyncing}
+          >
+            <RefreshCw className={isSyncing ? styles.rotating : ''} size={16} />
+            {isSyncing ? 'Syncing...' : 'Sync'}
+          </button>
+        )}
+      </div>
       <div className={styles.grid}>
         <motion.div
           className={styles.plan}
@@ -87,57 +128,62 @@ export const SubscriptionInfo = ({
                   ? capitalizeFirstLetter(subscription.status)
                   : 'Trial'}
               </h4>
+              {subscription?.status === SubscriptionStatus.TRIALING && (
+                <p className={styles.trial}>
+                  Trial ends:{' '}
+                  {moment(subscription.billingPeriod.ends_at).format(
+                    'MMM DD, YYYY',
+                  )}
+                </p>
+              )}
               {subscription?.billingPeriod && (
                 <>
                   <p>
-                    Start:{' '}
-                    {moment(subscription.billingPeriod.starts_at)
-                      .local()
-                      .format('MMM D, YYYY')}
+                    Current period starts:{' '}
+                    {moment(subscription.billingPeriod.starts_at).format(
+                      'MMM DD, YYYY',
+                    )}
                   </p>
                   <p>
-                    End:{' '}
-                    {moment(subscription.billingPeriod.ends_at)
-                      .local()
-                      .format('MMM D, YYYY')}
+                    Current period ends:{' '}
+                    {moment(subscription.billingPeriod.ends_at).format(
+                      'MMM DD, YYYY',
+                    )}
                   </p>
-                  {subscription.status === SubscriptionStatus.CANCELED && (
-                    <p>
-                      Effective:{' '}
-                      {moment(subscription.billingPeriod.ends_at)
-                        .local()
-                        .format('MMM D, YYYY')}
-                    </p>
-                  )}
                 </>
+              )}
+              {subscription?.status === SubscriptionStatus.CANCELED && (
+                <p className={styles.cancelMessage}>
+                  Your subscription will end on{' '}
+                  {moment(subscription.billingPeriod.ends_at).format(
+                    'MMMM DD, YYYY',
+                  )}
+                </p>
               )}
             </div>
           </div>
-          <div className={styles.planActions}>
-            {subscription?.updatePaymentMethodUrl && (
-              <motion.a
-                href={subscription.updatePaymentMethodUrl}
-                className={`${styles.actionButton} ${styles.primary}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Update Payment
-              </motion.a>
-            )}
-            {subscription?.status !== SubscriptionStatus.CANCELED && (
-              <motion.button
+
+          {subscription?.updatePaymentMethodUrl && (
+            <a
+              href={subscription.updatePaymentMethodUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.updateButton}
+            >
+              Update Payment Method
+            </a>
+          )}
+
+          {subscription?.status !== SubscriptionStatus.CANCELED &&
+            subscription?.status !== SubscriptionStatus.NOT_STARTED && (
+              <button
+                className={styles.cancelButton}
                 onClick={handleCancelSubscription}
-                className={`${styles.actionButton} ${styles.danger}`}
                 disabled={isLoading}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
-                {isLoading ? 'Canceling...' : 'Cancel'}
-              </motion.button>
+                {isLoading ? 'Processing...' : 'Cancel Subscription'}
+              </button>
             )}
-          </div>
         </motion.div>
 
         <motion.div

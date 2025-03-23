@@ -47,6 +47,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const { user, subscription } = useSelector(
     (state: RootStateType) => state.user,
   );
+
   const [showPopup, setShowPopup] = useState(false);
   const [isResuming, setIsResuming] = useState(false);
   const [isUpdatingCard, setIsUpdatingCard] = useState(false);
@@ -98,9 +99,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   useEffect(() => {
     const lastShownDate = localStorage.getItem('paymentPopupLastShown');
-    const hasPendingSubscription =
-      subscription?.status === 'pending' ||
-      subscription?.status === 'not_started';
+    const hasPendingSubscription = subscription?.status === 'not_started';
 
     const is24HoursPassed = () => {
       if (!lastShownDate) return true;
@@ -111,7 +110,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       return hoursDifference > 24;
     };
 
-    if (user && hasPendingSubscription && is24HoursPassed()) {
+    if (hasPendingSubscription && is24HoursPassed()) {
       setShowPopup(true);
       localStorage.setItem('paymentPopupLastShown', new Date().toISOString());
     }
