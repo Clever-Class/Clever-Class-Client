@@ -11,4 +11,5 @@ export enum AppRoutes {
   Chatbot = '/ai-chatbot',
   Pricing = '/pricing',
   QuizBuilder = '/quiz-builder',
+  QuickNotes = '/quick-notes',
 }

@@ -4,6 +4,7 @@ import {
   RiTaskLine,
   RiSettingsLine,
   RiTeamLine,
+  RiFileTextLine,
 } from 'react-icons/ri';
 import styles from './Sidebar.module.scss';
 import { SidebarHeader } from './SidebarHeader/SidebarHeader';
@@ -40,6 +41,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       name: 'Quiz Builder',
       icon: Dices,
       route: '/dashboard/quiz-builder',
+    },
+    {
+      name: 'Quick Notes',
+      icon: RiFileTextLine,
+      route: '/dashboard/quick-notes',
     },
     { name: 'Tasks', icon: RiTaskLine, route: '/dashboard/tasks' },
     { name: 'Team', icon: RiTeamLine, route: '/dashboard/team' },
