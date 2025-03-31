@@ -24,6 +24,7 @@ import {
   Heading1,
   Heading2,
   Heading3,
+  ChevronDown,
 } from 'lucide-react';
 
 import { noteService } from '~/services/noteService';
@@ -70,6 +71,8 @@ export const QuickNotes: React.FC = () => {
   const [saveMessage, setSaveMessage] = useState('');
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
   const titleDebounceRef = useRef<NodeJS.Timeout | null>(null);
+  const [hasMoreContent, setHasMoreContent] = useState(false);
+  const notesListRef = useRef<HTMLDivElement>(null);
 
   const editor = useEditor({
     extensions: [
@@ -146,6 +149,29 @@ export const QuickNotes: React.FC = () => {
       }
     };
   }, [saveMessage]);
+
+  // Add scroll handler
+  const handleNotesListScroll = useCallback(() => {
+    if (notesListRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = notesListRef.current;
+      const hasMore = scrollHeight - scrollTop - clientHeight > 10;
+      setHasMoreContent(hasMore);
+    }
+  }, []);
+
+  // Add scroll event listener
+  useEffect(() => {
+    const notesList = notesListRef.current;
+    if (notesList) {
+      notesList.addEventListener('scroll', handleNotesListScroll);
+      // Initial check
+      handleNotesListScroll();
+
+      return () => {
+        notesList.removeEventListener('scroll', handleNotesListScroll);
+      };
+    }
+  }, [handleNotesListScroll]);
 
   // Fetch all notes
   const fetchNotes = async () => {
@@ -316,7 +342,12 @@ export const QuickNotes: React.FC = () => {
           </button>
         </div>
 
-        <div className={styles.notesList}>
+        <div
+          ref={notesListRef}
+          className={`${styles.notesList} ${
+            hasMoreContent ? styles.hasMoreContent : ''
+          }`}
+        >
           {isLoading && notes.length === 0 ? (
             <div className={styles.loading}>Loading notes...</div>
           ) : error ? (
@@ -340,8 +371,8 @@ export const QuickNotes: React.FC = () => {
                 onClick={() => setSelectedNote(note)}
               >
                 <h3>
-                  <FileText size={16} style={{ marginRight: '8px' }} />
-                  {note.title}
+                  <FileText size={16} />
+                  <span>{note.title}</span>
                 </h3>
                 <p className={styles.noteDate}>
                   {new Date(note.updatedAt).toLocaleDateString('en-US', {
