@@ -69,6 +69,7 @@ export const QuickNotes: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const titleDebounceRef = useRef<NodeJS.Timeout | null>(null);
 
   const editor = useEditor({
     extensions: [
@@ -106,9 +107,9 @@ export const QuickNotes: React.FC = () => {
 
   // Debounced save function for auto-saving
   const debouncedSave = useCallback(
-    debounce((content: string) => {
+    debounce((content: string, noteTitle?: string) => {
       if (selectedNote) {
-        saveNote(content);
+        saveNote(content, noteTitle);
       }
     }, 1500),
     [selectedNote],
@@ -166,14 +167,14 @@ export const QuickNotes: React.FC = () => {
   };
 
   // Save the current note
-  const saveNote = async (content: string) => {
+  const saveNote = async (content: string, noteTitle?: string) => {
     try {
       setIsSaving(true);
 
       if (selectedNote) {
         // Update existing note
         const updatedNote = await noteService.updateNote(selectedNote._id, {
-          title,
+          title: noteTitle || title,
           content,
         });
 
@@ -185,11 +186,9 @@ export const QuickNotes: React.FC = () => {
         );
 
         setSelectedNote(updatedNote);
-        // setSaveMessage('Note saved successfully');
       }
     } catch (err) {
       console.error('Error saving note:', err);
-      setSaveMessage('Failed to save note');
     } finally {
       setIsSaving(false);
     }
@@ -276,11 +275,31 @@ export const QuickNotes: React.FC = () => {
     const newTitle = e.target.value;
     setTitle(newTitle);
 
-    if (selectedNote && editor) {
-      const content = editor.getHTML();
-      debouncedSave(content);
+    // Clear any existing timeout
+    if (titleDebounceRef.current) {
+      clearTimeout(titleDebounceRef.current);
     }
+
+    // Set a new timeout to save after user stops typing
+    titleDebounceRef.current = setTimeout(() => {
+      if (selectedNote && editor) {
+        const content = editor.getHTML();
+        debouncedSave(content, newTitle);
+      }
+    }, 1000);
   };
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (titleDebounceRef.current) {
+        clearTimeout(titleDebounceRef.current);
+      }
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className={styles.quickNotesContainer}>
