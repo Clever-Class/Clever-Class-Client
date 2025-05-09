@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 
 // Components
@@ -43,53 +42,26 @@ export const Settings = () => {
     );
   }
 
-  const fadeInUp = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] },
-  };
-
   return (
     <div className={styles.settingsPage}>
       <div className={styles.settingsHeader}>
-        <motion.h1
-          className={styles.title}
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-        >
-          Settings
-        </motion.h1>
+        <h1 className={styles.title}>Settings</h1>
         <p className={styles.subtitle}>
           Manage your account preferences and subscription
         </p>
       </div>
 
       <div className={styles.settingsContent}>
-        <motion.div
-          className={styles.settingsGrid}
-          variants={{
-            animate: {
-              transition: {
-                staggerChildren: 0.1,
-              },
-            },
-          }}
-          initial="initial"
-          animate="animate"
-        >
-          <motion.div {...fadeInUp} className={styles.settingsCard}>
+        <div className={styles.settingsGrid}>
+          <div className={styles.settingsCard}>
             <UserInfo user={user} />
-          </motion.div>
+          </div>
 
-          <motion.div {...fadeInUp} className={styles.settingsCard}>
+          <div className={styles.settingsCard}>
             <PersonalInfo user={user} />
-          </motion.div>
+          </div>
 
-          <motion.div
-            {...fadeInUp}
-            className={`${styles.settingsCard} ${styles.fullWidth}`}
-          >
+          <div className={`${styles.settingsCard} ${styles.fullWidth}`}>
             <SubscriptionInfo
               subscription={subscription}
               trialCredits={user?.trialCredits || 0}
@@ -97,8 +69,8 @@ export const Settings = () => {
                 dispatch(fetchUserData());
               }}
             />
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
     </div>
   );

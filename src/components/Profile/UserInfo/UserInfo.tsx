@@ -1,5 +1,4 @@
 import { Edit2 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import './UserInfo.scss';
 import { User } from '~types';
 import { Avatar, AvatarFallback, AvatarImage } from '~components/ui/avatar';

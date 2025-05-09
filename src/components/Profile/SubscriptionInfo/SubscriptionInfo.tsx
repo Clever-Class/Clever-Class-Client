@@ -1,16 +1,10 @@
-import { motion } from 'framer-motion';
-import { Crown, Gift, RefreshCw } from 'lucide-react';
+import { Crown, Gift } from 'lucide-react';
 import { Subscription, SubscriptionStatus } from '~store/types';
 import { capitalizeFirstLetter } from '~/lib/utils';
 import moment from 'moment';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import {
-  cancelSubscription,
-  pauseSubscription,
-  resumeCanceledSubscription,
-  syncPaddleSubscription,
-} from '~api';
+import { cancelSubscription, resumeCanceledSubscription } from '~api';
 import styles from './SubscriptionInfo.module.scss';
 
 interface SubscriptionInfoProps {
@@ -25,7 +19,7 @@ export const SubscriptionInfo = ({
   onSubscriptionUpdate,
 }: SubscriptionInfoProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(false);
+  const [isResuming, setIsResuming] = useState(false);
 
   const handleCancelSubscription = async () => {
     if (
@@ -56,26 +50,26 @@ export const SubscriptionInfo = ({
     }
   };
 
-  const handleSyncSubscription = async () => {
-    setIsSyncing(true);
+  const handleResumeSubscription = async () => {
+    setIsResuming(true);
     try {
-      const response = await syncPaddleSubscription();
+      const response = await resumeCanceledSubscription();
 
       if (response.success) {
-        toast.success('Subscription synced successfully');
+        toast.success('Subscription resumed successfully');
         onSubscriptionUpdate?.();
       } else {
-        toast.error(response.message || 'Failed to sync subscription');
+        toast.error(response.message || 'Failed to resume subscription');
       }
     } catch (error: any) {
-      console.error('Error syncing subscription:', error);
+      console.error('Error resuming subscription:', error);
       toast.error(
         error.response?.data?.message ||
           error.message ||
-          'Failed to sync subscription',
+          'Failed to resume subscription',
       );
     } finally {
-      setIsSyncing(false);
+      setIsResuming(false);
     }
   };
 
@@ -91,32 +85,12 @@ export const SubscriptionInfo = ({
   const dashOffset = ((100 - progressPercentage) / 100) * circumference;
 
   return (
-    <motion.div
-      className={styles.subscriptionInfo}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-    >
+    <div className={styles.subscriptionInfo}>
       <div className={styles.titleRow}>
         <h3 className={styles.title}>Subscription & Credits</h3>
-        {subscription && (
-          <button
-            className={styles.syncButton}
-            onClick={handleSyncSubscription}
-            disabled={isSyncing}
-          >
-            <RefreshCw className={isSyncing ? styles.rotating : ''} size={16} />
-            {isSyncing ? 'Syncing...' : 'Sync'}
-          </button>
-        )}
       </div>
       <div className={styles.grid}>
-        <motion.div
-          className={styles.plan}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
+        <div className={styles.plan}>
           <div className={styles.planHeader}>
             <div className={styles.iconContainer}>
               <Crown />
@@ -174,6 +148,16 @@ export const SubscriptionInfo = ({
             </a>
           )}
 
+          {subscription?.status === SubscriptionStatus.CANCELED && (
+            <button
+              className={`${styles.cancelButton} ${styles.dontCancelButton}`}
+              onClick={handleResumeSubscription}
+              disabled={isResuming}
+            >
+              {isResuming ? 'Processing...' : "Don't Cancel"}
+            </button>
+          )}
+
           {subscription?.status !== SubscriptionStatus.CANCELED &&
             subscription?.status !== SubscriptionStatus.NOT_STARTED && (
               <button
@@ -184,14 +168,9 @@ export const SubscriptionInfo = ({
                 {isLoading ? 'Processing...' : 'Cancel Subscription'}
               </button>
             )}
-        </motion.div>
+        </div>
 
-        <motion.div
-          className={styles.credits}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-        >
+        <div className={styles.credits}>
           <div className={styles.creditsHeader}>
             <div className={styles.iconContainer}>
               <Gift />
@@ -210,15 +189,13 @@ export const SubscriptionInfo = ({
                   cy="45"
                   r={radius}
                 />
-                <motion.circle
+                <circle
                   className={styles.progress}
                   cx="45"
                   cy="45"
                   r={radius}
                   strokeDasharray={circumference}
-                  initial={{ strokeDashoffset: circumference }}
-                  animate={{ strokeDashoffset: dashOffset }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
+                  strokeDashoffset={dashOffset}
                 />
               </svg>
               <div className={styles.progressText}>
@@ -227,9 +204,9 @@ export const SubscriptionInfo = ({
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
