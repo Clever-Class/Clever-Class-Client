@@ -1,12 +1,60 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { HiOutlineLightningBolt } from 'react-icons/hi';
+import { RootState } from '~/store/types';
 import styles from '../Sidebar.module.scss';
 
-export const SidebarFooter = () => (
-  <div className={styles.sidebarFooter}>
-    <div className={styles.upgradeBox}>
-      <div className={styles.avatar}></div>
-      <p>Upgrade to Pro</p>
-      <button>Upgrade</button>
+// Define types for the user data
+interface UserSubscription {
+  isPremiumActive?: boolean;
+  status?: string;
+}
+
+interface UserData {
+  subscription?: UserSubscription;
+  trialCredits?: number;
+}
+
+export const SidebarFooter: React.FC = () => {
+  const navigate = useNavigate();
+  const { user } = useSelector((state: RootState) => state.user);
+
+  // Cast user to our defined type
+  const userData = user as UserData;
+
+  // Check if user has non-active subscription status
+  const shouldShowUpgrade =
+    !userData?.subscription?.isPremiumActive &&
+    ['not_started', 'pending', 'canceled', 'paused'].includes(
+      userData?.subscription?.status || 'not_started',
+    );
+
+  // If user shouldn't see upgrade box, render nothing
+  if (!shouldShowUpgrade) {
+    return null;
+  }
+
+  // Navigate to pricing page
+  const handleUpgradeClick = () => {
+    navigate('/pricing');
+  };
+
+  return (
+    <div className={styles.sidebarFooter}>
+      <div className={styles.upgradeBox} onClick={handleUpgradeClick}>
+        <div className={styles.upgradeIcon}>
+          <HiOutlineLightningBolt size={20} />
+        </div>
+        <div className={styles.upgradeDetails}>
+          <span className={styles.upgradeTitle}>Upgrade to Pro</span>
+          <span className={styles.upgradeCredits}>
+            {userData?.trialCredits || 0} credits left
+          </span>
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
+export default SidebarFooter;

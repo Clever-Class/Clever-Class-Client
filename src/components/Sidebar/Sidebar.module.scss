@@ -66,8 +66,7 @@
     .brandName,
     .itemText,
     .demoMode span,
-    .upgradeBox p,
-    .upgradeBox button {
+    .upgradeDetails {
       opacity: 0;
       visibility: hidden;
       transform: translateX(-20px);
@@ -164,78 +163,17 @@
     }
 
     .sidebarFooter {
-      padding: 16px;
-      min-height: 100px;
+      padding: 12px;
       justify-content: center;
-
-      .upgradeBox {
-        width: 68px;
-        height: 68px;
-        padding: 12px;
-        border-radius: 16px;
-        background: rgba(37, 99, 255, 0.1);
-        border: 1px solid rgba(37, 99, 255, 0.2);
-        box-shadow: 0 8px 24px rgba(37, 99, 255, 0.15);
-        margin: 0;
-
-        .avatar {
-          width: 44px;
-          height: 44px;
-          margin: 0;
-          border-radius: 14px;
-        }
-
-        &:hover {
-          transform: translateY(-2px);
-          background: rgba(37, 99, 255, 0.15);
-          border-color: rgba(37, 99, 255, 0.3);
-          box-shadow: 0 12px 28px rgba(37, 99, 255, 0.2);
-        }
-
-        p,
-        button {
-          display: none;
-        }
-      }
-
-      .demoMode {
-        display: none;
-      }
     }
 
-    .logoutButton {
-      padding: 16px;
-      margin: 4px 12px;
+    .upgradeBox {
+      padding: 12px;
       justify-content: center;
-      border-radius: 16px;
-      width: 76%;
-      background: rgba(251, 113, 133, 0.05);
-      border: 1px solid rgba(251, 113, 133, 0.1);
-
-      span {
-        display: none;
-      }
-
-      .iconContainer {
-        transform: scale(1.1);
-        svg {
-          width: 24px;
-          height: 24px;
-        }
-      }
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(251, 113, 133, 0.2);
-        background: rgba(251, 113, 133, 0.15);
-        border-color: rgba(251, 113, 133, 0.2);
-      }
-    }
-
-    .logoutWrapper {
-      padding: 0;
-      margin: 16px 0 0 0;
-      width: 100%;
+      border-radius: 10px;
+      width: 44px;
+      height: 44px;
+      margin: 0 auto;
     }
   }
 }
@@ -425,105 +363,61 @@
 }
 
 .sidebarFooter {
-  padding: 20px;
-  border-top: 1px solid rgba(37, 99, 255, 0.1);
+  padding: 16px;
   margin-top: auto;
-  background: rgba(11, 20, 55, 0.98);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  min-height: 120px;
-  overflow: hidden;
+  border-top: 1px solid rgba(37, 99, 255, 0.15);
+}
+
+.upgradeBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(37, 99, 255, 0.1);
+  border: 1px solid rgba(37, 99, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(37, 99, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.upgradeIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(37, 99, 255, 0.2);
+  color: #5e9eff;
+  flex-shrink: 0;
+}
+
+.upgradeDetails {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  flex: 1;
+}
 
-  .demoMode {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 16px;
-    font-size: 14px;
-    overflow: hidden;
-    width: 100%;
+.upgradeTitle {
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+  margin-bottom: 2px;
+}
 
-    span {
-      font-size: $font-size-sm;
-      transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-      white-space: nowrap;
-      width: 180px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-  }
-
-  .upgradeBox {
-    background: rgba(37, 99, 255, 0.1);
-    border: 1px solid rgba(37, 99, 255, 0.15);
-    border-radius: 14px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-    width: 100%;
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(37, 99, 255, 0.15);
-      border-color: rgba(37, 99, 255, 0.25);
-      background: rgba(37, 99, 255, 0.15);
-    }
-
-    .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #2563ff, #1e40af);
-      border: 1px solid rgba(37, 99, 255, 0.25);
-      box-shadow: 0 4px 12px rgba(37, 99, 255, 0.2);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      margin-bottom: 8px;
-    }
-
-    p {
-      font-size: 14px;
-      font-weight: 500;
-      color: white;
-      margin: 0;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      white-space: nowrap;
-      width: 180px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      text-align: center;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px 16px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #2563ff, #1e40af);
-      border: 1px solid rgba(37, 99, 255, 0.25);
-      color: white;
-      font-weight: 500;
-      font-size: 14px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(37, 99, 255, 0.2);
-      }
-
-      &:active {
-        transform: translateY(0);
-      }
-    }
-  }
+.upgradeCredits {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .logoutWrapper {
