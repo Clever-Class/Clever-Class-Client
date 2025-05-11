@@ -188,6 +188,18 @@
   }
 }
 
+.errorMessage {
+  .messageContent {
+    background: rgba(220, 53, 69, 0.1) !important;
+    border: 1px solid rgba(220, 53, 69, 0.4) !important;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.1) !important;
+  }
+
+  .messageActions {
+    opacity: 1;
+  }
+}
+
 .playing {
   color: rgba(37, 99, 255, 0.9) !important;
   background: rgba(255, 255, 255, 0.15) !important;
@@ -236,4 +248,51 @@
   to {
     opacity: 1;
   }
+}
+
+.loadingDots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 8px;
+  min-height: 24px;
+  min-width: 40px;
+
+  span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.7);
+    animation: bounce 1.4s infinite ease-in-out both;
+
+    &:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    &:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+  }
+}
+
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.emptyMessage {
+  opacity: 0.3;
+  font-style: italic;
+  min-height: 1em;
+  display: inline-block;
 }

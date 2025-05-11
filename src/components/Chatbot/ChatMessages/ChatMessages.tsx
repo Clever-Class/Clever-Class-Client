@@ -91,6 +91,8 @@ const ChatMessages = memo(
               }
             }}
             isLoading={isLoading}
+            isError={msg.isError}
+            isStreaming={msg.isStreaming}
           />
         ))}
 

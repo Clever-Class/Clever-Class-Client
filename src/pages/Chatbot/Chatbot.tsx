@@ -5,6 +5,7 @@ import styles from './Chatbot.module.scss';
 import { History } from '~/components/History/History';
 import { chatService, Conversation } from '~/services/chatService';
 import toast from 'react-hot-toast';
+import { UpgradePopup } from '~/components/UpgradePopup';
 
 // Import our modular components and types
 import {
@@ -34,6 +35,7 @@ export function Chatbot() {
   const [currentlyPlayingId, setCurrentlyPlayingId] = useState<string | null>(
     null,
   );
+  const [showUpgradePopup, setShowUpgradePopup] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -213,18 +215,68 @@ export function Chatbot() {
         },
       );
     } catch (err: any) {
-      console.error('Failed to send message:', err);
-      setError('Failed to get response. Please try again.');
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now().toString(),
-          content:
-            'Sorry, I encountered an error while processing your request. Please try again.',
-          isUser: false,
-          timestamp: new Date(),
-        },
-      ]);
+      const errorMessage = 'Failed to get response. Please try again.';
+      let displayMessage =
+        'Sorry, I encountered an error while processing your request. Please try again.';
+
+      try {
+        // Safely extract error message if available
+        if (err.response && err.response.data) {
+          const rawData = err.response.data;
+          // Check if rawData is a string that can be parsed
+          if (typeof rawData === 'string') {
+            try {
+              const data = JSON.parse(rawData);
+              if (data && data.message) {
+                displayMessage = data.message;
+              }
+            } catch (parseError) {
+              // If we can't parse the response, use the raw data if it's a string
+              if (typeof rawData === 'string') {
+                displayMessage = rawData;
+              }
+            }
+          } else if (typeof rawData === 'object' && rawData.message) {
+            // If rawData is already an object with a message property
+            displayMessage = rawData.message;
+          }
+        }
+      } catch (parseErr) {
+        console.error('Error parsing error response:', parseErr);
+      }
+
+      // Set error state
+      setError(displayMessage);
+
+      // Check if this is a credit-related error and show upgrade popup
+      if (isCreditError(displayMessage)) {
+        setShowUpgradePopup(true);
+      }
+
+      // Remove any temporary AI message that might be streaming
+      setMessages((prev) => {
+        const newMessages = [...prev];
+        // Check if the last message is a streaming AI message
+        if (
+          newMessages.length > 0 &&
+          !newMessages[newMessages.length - 1].isUser &&
+          newMessages[newMessages.length - 1].isStreaming
+        ) {
+          // Remove the streaming message
+          newMessages.pop();
+        }
+        return [
+          ...newMessages,
+          {
+            id: Date.now().toString(),
+            content: displayMessage,
+            isUser: false,
+            timestamp: new Date(),
+            isError: true,
+          },
+        ];
+      });
+
       toast.error('Failed to get AI response');
     } finally {
       setIsLoading(false);
@@ -401,6 +453,39 @@ export function Chatbot() {
     setSelectedImage(null);
   };
 
+  // Check if the error message indicates a credit issue
+  const isCreditError = (message: string): boolean => {
+    // Check for the exact error message
+    if (message === 'Not enough credits. Please upgrade your subscription.') {
+      return true;
+    }
+
+    const creditErrorTerms = [
+      'not enough credits',
+      'no credits',
+      'out of credits',
+      'credit limit',
+      'upgrade subscription',
+      'please upgrade',
+    ];
+
+    const lowerMessage = message.toLowerCase();
+    return creditErrorTerms.some((term) => lowerMessage.includes(term));
+  };
+
+  // After other useEffect hooks
+  useEffect(() => {
+    // Check if the last message is a credit error message
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      if (!lastMessage.isUser && lastMessage.isError && lastMessage.content) {
+        if (isCreditError(lastMessage.content)) {
+          setShowUpgradePopup(true);
+        }
+      }
+    }
+  }, [messages]);
+
   return (
     <div
       className={`${styles.chatContainer} ${
@@ -538,6 +623,11 @@ export function Chatbot() {
             imageSrc={selectedImage}
             onClose={handleCloseImageView}
           />
+        )}
+
+        {/* Upgrade Popup */}
+        {showUpgradePopup && (
+          <UpgradePopup onClose={() => setShowUpgradePopup(false)} />
         )}
       </motion.div>
     </div>

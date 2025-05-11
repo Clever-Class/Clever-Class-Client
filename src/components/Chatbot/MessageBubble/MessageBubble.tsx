@@ -22,6 +22,7 @@ interface MessageBubbleProps extends Omit<Message, 'timestamp'> {
   isLoading: boolean;
   isNew?: boolean; // Flag to indicate if this message is new (just arrived)
   isStreaming?: boolean;
+  isError?: boolean;
 }
 
 const MessageBubble = memo(
@@ -39,6 +40,7 @@ const MessageBubble = memo(
     isLoading,
     isNew = false,
     isStreaming = false,
+    isError = false,
   }: MessageBubbleProps) => {
     const [internalIsPlaying, setInternalIsPlaying] = useState(false);
     const [hasAutoPlayed, setHasAutoPlayed] = useState(false);
@@ -194,7 +196,8 @@ const MessageBubble = memo(
       <motion.div
         className={`${styles.message} ${
           isUser ? styles.userMessage : styles.aiMessage
-        } ${isLatest && !isUser ? styles.latestAiMessage : ''}`}
+        } ${isLatest && !isUser ? styles.latestAiMessage : ''}
+        ${isError ? styles.errorMessage : ''}`}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
@@ -204,10 +207,21 @@ const MessageBubble = memo(
         }}
       >
         <div className={styles.messageContent}>
-          <FormattedMessage
-            content={content}
-            className={isStreaming ? styles.streaming : ''}
-          />
+          {content && content.trim() ? (
+            <FormattedMessage
+              content={content}
+              className={isStreaming ? styles.streaming : ''}
+            />
+          ) : isStreaming ? (
+            <div className={styles.loadingDots}>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          ) : (
+            // Fallback for empty message that's not streaming
+            <span className={styles.emptyMessage}>&nbsp;</span>
+          )}
           {image && (
             <div
               className={styles.messageImage}

@@ -14,6 +14,7 @@ export interface Message {
   audio?: string; // Base64 encoded audio data
   isNew?: boolean; // Flag to indicate if this is a new message for auto-play
   isStreaming?: boolean; // Flag to indicate if the message is currently streaming
+  isError?: boolean; // Flag to indicate if this message is showing an error
 }
 
 /**
