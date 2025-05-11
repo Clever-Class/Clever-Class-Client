@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { HiOutlineLightningBolt } from 'react-icons/hi';
 import { RootState } from '~/store/types';
+import { usePaymentPopup } from '~/hooks';
+import { Payment } from '~/components/Payment';
 import styles from '../Sidebar.module.scss';
 
 // Define types for the user data
@@ -20,8 +22,20 @@ export const SidebarFooter: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state: RootState) => state.user);
 
+  // Create a local instance of the payment popup hook
+  const [showPaymentPopup, setShowPaymentPopup] = useState(false);
+  const { openPaymentPopup, closePaymentPopup, isOpen, paymentPopupProps } =
+    usePaymentPopup();
+
   // Cast user to our defined type
   const userData = user as UserData;
+
+  // When the popup is closed, update our local state
+  useEffect(() => {
+    if (!isOpen && showPaymentPopup) {
+      setShowPaymentPopup(false);
+    }
+  }, [isOpen, showPaymentPopup]);
 
   // Check if user has non-active subscription status
   const shouldShowUpgrade =
@@ -35,13 +49,24 @@ export const SidebarFooter: React.FC = () => {
     return null;
   }
 
-  // Navigate to pricing page
+  // Open payment popup when upgrade button is clicked
   const handleUpgradeClick = () => {
-    navigate('/pricing');
+    setShowPaymentPopup(true);
+    openPaymentPopup();
+  };
+
+  // Custom close handler to make sure we update our local state
+  const handleClosePopup = () => {
+    setShowPaymentPopup(false);
+    closePaymentPopup();
   };
 
   return (
     <div className={styles.sidebarFooter}>
+      {paymentPopupProps && (
+        <Payment {...paymentPopupProps} onClose={handleClosePopup} />
+      )}
+
       <div className={styles.upgradeBox} onClick={handleUpgradeClick}>
         <div className={styles.upgradeIcon}>
           <HiOutlineLightningBolt size={20} />

@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import moment from 'moment';
 import { HiMenuAlt2, HiX } from 'react-icons/hi';
@@ -20,6 +20,10 @@ import { api } from '~api';
 
 // Constants
 import { DEFAULT_SELECTED_PACKAGE } from '~constants';
+import { pricingPlansData } from '~/data/plansData';
+
+// Hooks
+import { usePaymentPopup } from '~/hooks';
 
 // Styles
 import styles from './DashboardLayout.module.scss';
@@ -44,11 +48,18 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 }) => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user, subscription } = useSelector(
     (state: RootStateType) => state.user,
   );
 
-  const [showPopup, setShowPopup] = useState(false);
+  const {
+    openPaymentPopup,
+    closePaymentPopup,
+    isOpen: showPopup,
+    paymentPopupProps,
+  } = usePaymentPopup();
+
   const [isResuming, setIsResuming] = useState(false);
   const [isUpdatingCard, setIsUpdatingCard] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -97,6 +108,41 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     return () => clearInterval(interval);
   }, [dispatch, navigate]);
 
+  // Check for payment_popup parameter and show popup if it exists
+  useEffect(() => {
+    const paymentPopupParam = searchParams.get('payment_popup');
+
+    if (paymentPopupParam === 'true' && user) {
+      // Check if a specific plan was provided in the URL
+      const planParam = searchParams.get('plan');
+
+      // Find the plan ID to use
+      let planId: string;
+
+      if (planParam) {
+        // If a plan parameter was provided, use it
+        planId = planParam;
+      } else {
+        // Otherwise use default logic
+        const selectedPackageId = user.selectedPackageId;
+        const popularPlan = pricingPlansData.find(
+          (plan) => plan.popular === true,
+        );
+        planId =
+          selectedPackageId || popularPlan?.planId || DEFAULT_SELECTED_PACKAGE;
+      }
+
+      // Open the payment popup with the determined plan ID
+      openPaymentPopup(planId);
+
+      // Remove the parameters from the URL without refreshing the page
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.delete('payment_popup');
+      newSearchParams.delete('plan');
+      navigate({ search: newSearchParams.toString() }, { replace: true });
+    }
+  }, [searchParams, user, navigate, openPaymentPopup]);
+
   useEffect(() => {
     const lastShownDate = localStorage.getItem('paymentPopupLastShown');
     const hasPendingSubscription = subscription?.status === 'not_started';
@@ -111,12 +157,18 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     };
 
     if (hasPendingSubscription && is24HoursPassed()) {
-      setShowPopup(true);
+      // Find the default plan to show
+      const selectedPackageId = user?.selectedPackageId;
+      const popularPlan = pricingPlansData.find(
+        (plan) => plan.popular === true,
+      );
+      const defaultPlanId =
+        selectedPackageId || popularPlan?.planId || DEFAULT_SELECTED_PACKAGE;
+
+      openPaymentPopup(defaultPlanId);
       localStorage.setItem('paymentPopupLastShown', new Date().toISOString());
     }
-  }, [user, subscription?.status]);
-
-  const handleClosePopup = () => setShowPopup(false);
+  }, [user, subscription?.status, openPaymentPopup]);
 
   const handleUpdateCard = () => {
     setIsUpdatingCard(true);
@@ -149,7 +201,17 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     localStorage.setItem('warningBannerHideTime', Date.now().toString());
   };
 
-  const packageId = user?.selectedPackageId || DEFAULT_SELECTED_PACKAGE;
+  // Create a custom payment popup props with our own close handler
+  const customPaymentProps = paymentPopupProps
+    ? {
+        ...paymentPopupProps,
+        onClose: () => {
+          // Use the hook's closePaymentPopup to ensure proper state cleanup
+          closePaymentPopup();
+        },
+      }
+    : null;
+
   const showBanner =
     (subscription?.status === 'past_due' ||
       subscription?.status === 'canceled') &&
@@ -188,14 +250,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         </button>
 
         <main className={styles.content}>
-          {showPopup && user && (
-            <Payment
-              userId={user.id}
-              priceId={packageId}
-              countryCode={user.country || 'US'}
-              email={user.email}
-              onClose={handleClosePopup}
-            />
+          {showPopup && customPaymentProps && (
+            <Payment {...customPaymentProps} />
           )}
 
           <div

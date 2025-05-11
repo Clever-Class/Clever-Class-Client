@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { IoCheckmarkSharp } from 'react-icons/io5';
 import { HiOutlineLightBulb } from 'react-icons/hi';
-import { pricingPlans } from '../../../data/pricingPlans';
+import { pricingPlansData } from '../../../data/plansData';
 import './PricingPlans.scss';
 
 const PricingPlans = ({ onSignupClick }) => {
   const [isYearly, setIsYearly] = useState(false);
+  const { user } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const isLoggedIn = !!user;
 
   const toggleBilling = (value) => {
     setIsYearly(value);
@@ -21,7 +26,11 @@ const PricingPlans = ({ onSignupClick }) => {
   };
 
   const handleSignupClick = (planId) => {
-    if (onSignupClick) {
+    if (isLoggedIn) {
+      // If user is logged in, redirect to dashboard with payment_popup=true and selected plan
+      navigate(`/dashboard?payment_popup=true&plan=${planId}`);
+    } else if (onSignupClick) {
+      // If not logged in, use the provided handler (which should show auth popup)
       onSignupClick(planId);
     }
   };
@@ -57,35 +66,31 @@ const PricingPlans = ({ onSignupClick }) => {
         </div>
 
         <div className="plans-container">
-          {pricingPlans.map((plan) => (
+          {pricingPlansData.map((plan) => (
             <div
               key={plan.id}
-              className={`plan ${plan.id === 'pro' ? 'popular' : ''} ${
-                plan.id === 'lite' ? 'starter' : ''
+              className={`plan ${plan.popular ? 'popular' : ''} ${
+                plan.id === 'free' ? 'starter' : ''
               }`}
             >
               <div className="plan-header">
                 {getIcon(plan.id)}
                 <h2>{plan.name}</h2>
-                <p className="plan-description">{plan.description}</p>
+                <p className="plan-description">{plan.planType}</p>
               </div>
 
               <div className="price-container">
                 <div className="price">
-                  ${isYearly ? plan.yearlyPrice : plan.monthlyPrice}
+                  ${isYearly ? plan.price.annually : plan.price.monthly}
                   <span className="price-period">
-                    {plan.id === 'lite'
-                      ? ' per seat/month'
-                      : isYearly
-                      ? '/year'
-                      : '/month'}
+                    {isYearly ? '/year' : '/month'}
                   </span>
                 </div>
               </div>
 
               <div className="plan-body">
                 <div className="plan-features-title">
-                  {plan.id === 'lite' ? 'Light includes:' : "What's included:"}
+                  {plan.id === 'free' ? 'Lite includes:' : "What's included:"}
                 </div>
                 <ul className="features-list">
                   {plan.features.map((feature, index) => (
@@ -101,11 +106,11 @@ const PricingPlans = ({ onSignupClick }) => {
 
               <button
                 className={`sign-up-button ${
-                  plan.id === 'pro' ? 'primary' : 'secondary'
+                  plan.popular ? 'primary' : 'secondary'
                 }`}
-                onClick={() => handleSignupClick(plan.id)}
+                onClick={() => handleSignupClick(plan.planId)}
               >
-                Get Started
+                {plan.buttonLabel || 'Get Started'}
               </button>
             </div>
           ))}
