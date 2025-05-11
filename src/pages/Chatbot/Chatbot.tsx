@@ -249,7 +249,8 @@ export function Chatbot() {
       setError(displayMessage);
 
       // Check if this is a credit-related error and show upgrade popup
-      if (isCreditError(displayMessage)) {
+      const isCreditIssue = isCreditError(displayMessage);
+      if (isCreditIssue) {
         setShowUpgradePopup(true);
       }
 
@@ -277,7 +278,10 @@ export function Chatbot() {
         ];
       });
 
-      toast.error('Failed to get AI response');
+      // Only show toast error for non-credit related errors
+      if (!isCreditIssue) {
+        toast.error('Failed to get AI response');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -420,20 +424,39 @@ export function Chatbot() {
       };
 
       setMessages((prev) => [...prev, aiResponse]);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to regenerate message:', err);
+
+      // Get the error message
+      let errorContent =
+        'Sorry, I encountered an error while regenerating the response. Please try again.';
+
+      if (err.response?.data?.message) {
+        errorContent = err.response.data.message;
+      }
+
       setError('Failed to regenerate response. Please try again.');
+
+      // Check if this is a credit-related error
+      const isCreditIssue = isCreditError(errorContent);
+      if (isCreditIssue) {
+        setShowUpgradePopup(true);
+      }
 
       const errorMessage: Message = {
         id: Date.now().toString(),
-        content:
-          'Sorry, I encountered an error while regenerating the response. Please try again.',
+        content: errorContent,
         isUser: false,
         timestamp: new Date(),
+        isError: true,
       };
 
       setMessages((prev) => [...prev, errorMessage]);
-      toast.error('Failed to regenerate AI response');
+
+      // Only show toast for non-credit related errors
+      if (!isCreditIssue) {
+        toast.error('Failed to regenerate AI response');
+      }
     } finally {
       setIsLoading(false);
     }

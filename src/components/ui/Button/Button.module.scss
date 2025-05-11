@@ -1,3 +1,5 @@
+@import '../../../styles/variables';
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -42,12 +44,12 @@
 
 // Variants
 .primary {
-  background: #4f46e5;
+  background: $primary-color;
   color: white;
   border: none;
 
   &:hover:not(.disabled) {
-    background: #4338ca;
+    background: $primary-color-light;
   }
 
   &:focus {

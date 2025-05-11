@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LiaTimesSolid } from 'react-icons/lia';
-import { HiOutlineLightningBolt, HiOutlineSparkles } from 'react-icons/hi';
+import {
+  HiOutlineLightningBolt,
+  HiOutlineSparkles,
+  HiOutlineBadgeCheck,
+  HiOutlineChip,
+} from 'react-icons/hi';
 import { Button } from '~/components/ui/Button/Button';
 import styles from './UpgradePopup.module.scss';
 
@@ -34,10 +39,10 @@ export const UpgradePopup: React.FC<UpgradePopupProps> = ({ onClose }) => {
           <div className={styles.illustration}>
             <HiOutlineLightningBolt size={60} />
           </div>
-          <h2>Your AI Credits Have Run Out</h2>
+          <h2>AI Credits Depleted</h2>
           <p>
-            Upgrade to our Pro plan to continue using AI features without
-            interruption.
+            Upgrade to our <span className={styles.highlight}>Pro plan</span> to
+            unlock unlimited AI-powered learning features.
           </p>
         </div>
 
@@ -61,6 +66,18 @@ export const UpgradePopup: React.FC<UpgradePopupProps> = ({ onClose }) => {
             <div className={styles.benefitText}>
               <h3>Faster Response Times</h3>
               <p>Priority processing for quicker help with your questions</p>
+            </div>
+          </div>
+
+          <div className={styles.benefitItem}>
+            <div className={styles.benefitIcon}>
+              <HiOutlineChip size={24} />
+            </div>
+            <div className={styles.benefitText}>
+              <h3>AI-Enhanced Education</h3>
+              <p>
+                Personalized learning experience adapted to your unique style
+              </p>
             </div>
           </div>
         </div>
