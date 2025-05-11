@@ -7,3 +7,8 @@ export interface FormFieldTypes {
   value?: string;
   required?: boolean;
 }
+
+export interface AuthFormFields {
+  login: FormFieldTypes[];
+  signup: FormFieldTypes[];
+}

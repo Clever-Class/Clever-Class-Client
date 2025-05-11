@@ -5,7 +5,7 @@ import {
   FeatureHighlight,
   LowerCTA,
   Navbar,
-  SignupPopup,
+  AuthPopup,
   SupportedAppSection,
   TestimonialsSection,
 } from '~components/index';
@@ -24,16 +24,20 @@ import Footer from '~components/Footer/Footer';
 import CTASection from '~components/CTASection';
 
 export const Homepage = () => {
-  const dispatch = useDispatch();
-  const [signupPopup, setSignupPopup] = useState<boolean>(false);
+  const [authPopup, setAuthPopup] = useState<{
+    isOpen: boolean;
+    mode: 'login' | 'signup';
+  }>({
+    isOpen: false,
+    mode: 'signup',
+  });
 
-  const handlePricingSignupClick = (planId: string) => {
-    dispatch({ type: 'SELECT_PRICING_PLAN', payload: planId });
-    setSignupPopup(true);
+  const handleJoinRequest = () => {
+    setAuthPopup({ isOpen: true, mode: 'signup' });
   };
 
-  const handleFreeTrial = () => {
-    setSignupPopup(true);
+  const handleLoginRequest = () => {
+    setAuthPopup({ isOpen: true, mode: 'login' });
   };
 
   const handleGetStarted = () => {
@@ -42,13 +46,21 @@ export const Homepage = () => {
 
   return (
     <div>
-      <Navbar onSignupClick={handleFreeTrial} />
+      <Navbar
+        onSignupClick={handleJoinRequest}
+        onLoginClick={handleLoginRequest}
+      />
 
-      {/* Signup Popup */}
-      {signupPopup && <SignupPopup onClose={() => setSignupPopup(false)} />}
+      {/* Auth Popup */}
+      {authPopup.isOpen && (
+        <AuthPopup
+          onClose={() => setAuthPopup({ isOpen: false, mode: 'signup' })}
+          mode={authPopup.mode}
+        />
+      )}
 
       <Hero />
-      <FeatureSection onGetStarted={handleFreeTrial} />
+      <FeatureSection onGetStarted={handleJoinRequest} />
       <ReviewsFeature />
       <FeatureHighlight />
       <LandingShowcase />
@@ -57,14 +69,6 @@ export const Homepage = () => {
       <FAQ />
       <CTASection />
       <Footer />
-      {/* <SupportedAppSection />
-      <FeatureHighlightSection primary />
-      <FeatureHighlightSection />
-      <FeatureHighlightSection primary />
-      <TestimonialsSection />
-      <PricingPlans onSignupClick={handlePricingSignupClick} />
-      <LowerCTA />
-      */}
     </div>
   );
 };

@@ -11,9 +11,13 @@ import styles from './Navbar.module.scss';
 
 interface NavbarProps {
   onSignupClick: () => void;
+  onLoginClick: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  onSignupClick,
+  onLoginClick,
+}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const userToken = Cookies.get('userToken');
@@ -107,9 +111,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
                 </div>
               ) : (
                 <div className={styles.navbarAuth}>
-                  <a href="/login" className={styles.navbarLogin}>
+                  <span className={styles.navbarLogin} onClick={onLoginClick}>
                     Log in
-                  </a>
+                  </span>
                   <a
                     href="#start-trial"
                     className={styles.navbarJoinFree}
