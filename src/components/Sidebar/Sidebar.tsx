@@ -1,9 +1,7 @@
 import React from 'react';
 import {
   RiDashboardLine,
-  RiTaskLine,
   RiSettingsLine,
-  RiTeamLine,
   RiFileTextLine,
 } from 'react-icons/ri';
 import styles from './Sidebar.module.scss';
@@ -47,8 +45,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: RiFileTextLine,
       route: '/dashboard/quick-notes',
     },
-    { name: 'Tasks', icon: RiTaskLine, route: '/dashboard/tasks' },
-    { name: 'Team', icon: RiTeamLine, route: '/dashboard/team' },
     { name: 'Settings', icon: RiSettingsLine, route: '/dashboard/settings' },
   ];
 

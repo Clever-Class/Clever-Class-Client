@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { HiOutlineLightningBolt } from 'react-icons/hi';
+import { Coins } from 'lucide-react';
 import { RootState } from '~/store/types';
 import { usePaymentPopup } from '~/hooks';
 import { Payment } from '~/components/Payment';
@@ -21,10 +22,12 @@ interface UserData {
 export const SidebarFooter: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state: RootState) => state.user);
+  const coinRef = useRef<HTMLDivElement>(null);
 
   // Create a local instance of the payment popup hook
   const [showPaymentPopup, setShowPaymentPopup] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
   const { openPaymentPopup, closePaymentPopup, isOpen, paymentPopupProps } =
     usePaymentPopup();
 
@@ -62,6 +65,17 @@ export const SidebarFooter: React.FC = () => {
       if (resetTimer) clearTimeout(resetTimer);
     };
   }, [isProcessing]);
+
+  // Add coin shine effect on hover
+  useEffect(() => {
+    if (isHovering && coinRef.current) {
+      coinRef.current.style.animation = 'coinPulse 1s infinite';
+      coinRef.current.style.transform = 'scale(1.1)';
+    } else if (coinRef.current) {
+      coinRef.current.style.animation = 'coinPulse 2s infinite';
+      coinRef.current.style.transform = 'scale(1)';
+    }
+  }, [isHovering]);
 
   // Check if user has non-active subscription status
   const shouldShowUpgrade =
@@ -113,6 +127,8 @@ export const SidebarFooter: React.FC = () => {
           isProcessing ? styles.processing : ''
         }`}
         onClick={handleUpgradeClick}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
       >
         <div className={styles.upgradeIcon}>
           <HiOutlineLightningBolt size={20} />
@@ -121,11 +137,16 @@ export const SidebarFooter: React.FC = () => {
           <span className={styles.upgradeTitle}>
             {isProcessing ? '' : 'Upgrade to Pro'}
           </span>
-          <span className={styles.upgradeCredits}>
-            {isProcessing
-              ? 'Loading...'
-              : `${userData?.trialCredits || 0} credits left`}
-          </span>
+          <div className={styles.upgradeCredits}>
+            <div ref={coinRef} className={styles.coinWrapper}>
+              <Coins size={16} />
+            </div>
+            <span className={styles.upgradeCreditsText}>
+              {isProcessing
+                ? 'Loading...'
+                : `${userData?.trialCredits || 0} credits left`}
+            </span>
+          </div>
         </div>
       </div>
     </div>
