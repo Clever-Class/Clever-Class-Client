@@ -1,6 +1,8 @@
 import { Environments, initializePaddle, Paddle } from '@paddle/paddle-js';
 import React, { useCallback, useEffect, useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import { PADDLE_TOKEN, PADDLE_ENVIRONMENT, AppRoutes } from '~/constants';
+import { RootStateType } from '~store/types/rootStateTypes';
 
 interface PaymentProps {
   priceId: string;
@@ -9,13 +11,6 @@ interface PaymentProps {
   countryCode: string;
   onError?: (error: Error) => void;
   onClose: () => void;
-}
-
-interface PaddleCheckoutData {
-  checkout: {
-    id: string;
-    completed: boolean;
-  };
 }
 
 export const Payment: React.FC<PaymentProps> = ({
@@ -30,6 +25,37 @@ export const Payment: React.FC<PaymentProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const checkoutOpenedRef = useRef(false);
+
+  // get user from the store
+  const { user, subscription } = useSelector(
+    (state: RootStateType) => state.user,
+  );
+
+  console.log(user, 'user on payment');
+  console.log(subscription, 'subscription on payment');
+
+  // Validate required props
+  useEffect(() => {
+    if (!priceId) {
+      const errorMessage = 'Missing required prop: priceId';
+      setError(new Error(errorMessage));
+      onError?.(new Error(errorMessage));
+    } else if (!userId) {
+      const errorMessage = 'Missing required prop: userId';
+      setError(new Error(errorMessage));
+      onError?.(new Error(errorMessage));
+    } else if (!email) {
+      const errorMessage = 'Missing required prop: email';
+      setError(new Error(errorMessage));
+      onError?.(new Error(errorMessage));
+    } else if (!countryCode) {
+      const errorMessage = 'Missing required prop: countryCode';
+      setError(new Error(errorMessage));
+      onError?.(new Error(errorMessage));
+      // Use default country code if missing
+      countryCode = 'US';
+    }
+  }, [priceId, userId, email, countryCode, onError]);
 
   useEffect(() => {
     // Set up event listener for when Paddle checkout is closed
@@ -48,6 +74,7 @@ export const Payment: React.FC<PaymentProps> = ({
           // Check if this is a checkout close event
           if (data && data.type === 'paddle-checkout-close') {
             console.log('Paddle checkout closed via postMessage');
+            checkoutOpenedRef.current = false;
             onClose();
           }
         } catch (e) {
@@ -91,6 +118,8 @@ export const Payment: React.FC<PaymentProps> = ({
           },
         });
 
+        localStorage.setItem('warningBannerHideTime', Date.now().toString());
+
         // Set up a backup method for detecting checkout close - check every second
         // if the checkout overlay is still in the DOM
         const checkoutCloseInterval = setInterval(() => {
@@ -108,6 +137,11 @@ export const Payment: React.FC<PaymentProps> = ({
         // Clear interval after 10 minutes to prevent memory leaks
         setTimeout(() => {
           clearInterval(checkoutCloseInterval);
+          // If checkout is still open after 10 minutes, force close it
+          if (checkoutOpenedRef.current) {
+            checkoutOpenedRef.current = false;
+            onClose();
+          }
         }, 10 * 60 * 1000);
       } catch (err) {
         setError(
@@ -151,17 +185,25 @@ export const Payment: React.FC<PaymentProps> = ({
     }
 
     return () => {
-      // Make sure we mark checkout as closed on component unmount
-      checkoutOpenedRef.current = false;
+      // Force close checkout when component unmounts
+      if (checkoutOpenedRef.current) {
+        checkoutOpenedRef.current = false;
+        onClose();
+      }
     };
   }, [paddle, isLoading, error, openCheckout]);
 
   if (isLoading) {
-    return <div>Loading payment gateway...</div>;
+    // Return empty div while loading instead of showing a loading message
+    return <div id="paddle-checkout-loading"></div>;
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    // Log the error but don't show it to the user
+    console.error('Payment error:', error.message);
+    // Close the payment popup immediately
+    onClose();
+    return null;
   }
 
   return <div id="paddle-checkout"></div>;

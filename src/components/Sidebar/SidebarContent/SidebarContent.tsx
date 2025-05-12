@@ -20,7 +20,13 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
 }) => {
   const handleLogout = () => {
     Cookies.remove('userToken');
+
+    // Clear all localStorage items
     localStorage.clear();
+
+    // Specifically ensure payment popup related items are cleared
+    localStorage.removeItem('paymentPopupLastShown');
+    localStorage.removeItem('paymentPopupSessionId');
 
     // Redirect to home page
     window.location.href = '/';

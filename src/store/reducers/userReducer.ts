@@ -11,6 +11,7 @@ import {
   UPDATE_PROFILE_REQUEST,
   UPDATE_PROFILE_SUCCESS,
   UPDATE_PROFILE_FAILURE,
+  LOGOUT,
 } from '~constants';
 import { UserState, ProfileActionTypes } from '~types';
 
@@ -44,6 +45,9 @@ type UserActionTypes =
   | {
       type: typeof FETCH_USER_FAILURE | typeof SIGNUP_FAILURE;
       payload: string;
+    }
+  | {
+      type: typeof LOGOUT;
     };
 
 export const userReducer = (
@@ -88,6 +92,9 @@ export const userReducer = (
         error: action.payload,
         message: action.payload,
       };
+
+    case LOGOUT:
+      return initialState;
 
     default:
       return state;

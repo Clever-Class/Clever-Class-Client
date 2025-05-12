@@ -1,9 +1,8 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import moment from 'moment';
-import { HiMenuAlt2, HiX } from 'react-icons/hi';
 import { Menu } from 'lucide-react';
 
 // Components
@@ -14,7 +13,6 @@ import { WarningBanner } from '~components/common/WarningBanner';
 // Store and Types
 import { AppDispatch } from '~store';
 import { RootStateType } from '~store/types/rootStateTypes';
-import { User } from '~/types/user/user.types';
 import { fetchUserData } from '~store/actions/authActions';
 import { api } from '~api';
 
@@ -53,6 +51,9 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     (state: RootStateType) => state.user,
   );
 
+  // Track previous user ID to detect login/logout
+  const prevUserIdRef = useRef<string | null>(null);
+
   const {
     openPaymentPopup,
     closePaymentPopup,
@@ -64,7 +65,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const [isUpdatingCard, setIsUpdatingCard] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
-  const [showWarningBanner, setShowWarningBanner] = useState(true);
+  const [showWarningBanner, setShowWarningBanner] = useState(false);
+  const [bannerInitialized, setBannerInitialized] = useState(false);
 
   // Handle window resize
   useEffect(() => {
@@ -79,15 +81,25 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   // Check if banner should be shown based on hide time
   useEffect(() => {
-    const bannerHideTime = localStorage.getItem('warningBannerHideTime');
-    if (bannerHideTime) {
-      const hideTime = parseInt(bannerHideTime, 10);
-      const now = Date.now();
-      if (now - hideTime < BANNER_HIDE_DURATION) {
-        setShowWarningBanner(false);
+    // Only initialize banner if user and subscription data is loaded
+    if (user && subscription) {
+      const bannerHideTime = localStorage.getItem('warningBannerHideTime');
+      if (bannerHideTime) {
+        const hideTime = parseInt(bannerHideTime, 10);
+        const now = Date.now();
+        const hoursDifference = (now - hideTime) / (1000 * 60 * 60);
+        // Only hide the banner if less than 24 hours have passed
+        if (hoursDifference < 24) {
+          setShowWarningBanner(false);
+        } else {
+          setShowWarningBanner(true);
+        }
+      } else {
+        setShowWarningBanner(true);
       }
+      setBannerInitialized(true);
     }
-  }, []);
+  }, [user, subscription]);
 
   // Fetch user data when component mounts and every 5 minutes
   useEffect(() => {
@@ -111,8 +123,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   // Check for payment_popup parameter and show popup if it exists
   useEffect(() => {
     const paymentPopupParam = searchParams.get('payment_popup');
+    const requiresPayment =
+      subscription?.status === 'pending' ||
+      subscription?.status === 'not_started';
 
-    if (paymentPopupParam === 'true' && user) {
+    if (paymentPopupParam === 'true' && user && requiresPayment) {
       // Check if a specific plan was provided in the URL
       const planParam = searchParams.get('plan');
 
@@ -141,22 +156,45 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       newSearchParams.delete('plan');
       navigate({ search: newSearchParams.toString() }, { replace: true });
     }
-  }, [searchParams, user, navigate, openPaymentPopup]);
+  }, [searchParams, user, navigate, openPaymentPopup, subscription?.status]);
 
   useEffect(() => {
     const lastShownDate = localStorage.getItem('paymentPopupLastShown');
-    const hasPendingSubscription = subscription?.status === 'not_started';
+    const lastSessionId = localStorage.getItem('paymentPopupSessionId');
+    const warningBannerHideTime = localStorage.getItem('warningBannerHideTime');
+    const currentSessionId = user?.id || '';
+    const requiresPayment =
+      subscription?.status === 'pending' ||
+      subscription?.status === 'not_started';
 
-    const is24HoursPassed = () => {
-      if (!lastShownDate) return true;
-      const lastShown = new Date(lastShownDate);
-      const now = new Date();
-      const hoursDifference =
-        Math.abs(now.getTime() - lastShown.getTime()) / (1000 * 60 * 60);
+    const is24HoursPassed = (timestamp: string | null) => {
+      if (!timestamp) return true;
+      const lastTime = parseInt(timestamp, 10);
+      const now = Date.now();
+      const hoursDifference = (now - lastTime) / (1000 * 60 * 60);
       return hoursDifference > 24;
     };
 
-    if (hasPendingSubscription && is24HoursPassed()) {
+    const isNewSession = lastSessionId !== currentSessionId;
+
+    // Reset timer if user has changed (logged out and logged back in)
+    if (user && isNewSession) {
+      localStorage.removeItem('paymentPopupLastShown');
+      localStorage.setItem('paymentPopupSessionId', currentSessionId);
+    }
+
+    // Show the payment popup if:
+    // 1. The subscription requires payment (pending or not_started status)
+    // 2. It hasn't been shown in the last 24 hours OR it's a new login session
+    // 3. The banner hide time is more than 24 hours ago
+    // 4. User has all required data
+    if (
+      requiresPayment &&
+      (is24HoursPassed(lastShownDate) || isNewSession) &&
+      is24HoursPassed(warningBannerHideTime) &&
+      user?.id &&
+      user?.email
+    ) {
       // Find the default plan to show
       const selectedPackageId = user?.selectedPackageId;
       const popularPlan = pricingPlansData.find(
@@ -166,9 +204,28 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         selectedPackageId || popularPlan?.planId || DEFAULT_SELECTED_PACKAGE;
 
       openPaymentPopup(defaultPlanId);
-      localStorage.setItem('paymentPopupLastShown', new Date().toISOString());
+      localStorage.setItem('paymentPopupLastShown', Date.now().toString());
     }
   }, [user, subscription?.status, openPaymentPopup]);
+
+  // Detect user changes (login/logout) and handle localStorage cleanup
+  useEffect(() => {
+    const currentUserId = user?.id || null;
+    const prevUserId = prevUserIdRef.current;
+
+    // If user ID changed, handle the change
+    if (currentUserId !== prevUserId) {
+      // If user logged in (was null, now has value)
+      if (currentUserId && !prevUserId) {
+        console.log('User logged in, clearing payment popup session data');
+        localStorage.removeItem('paymentPopupLastShown');
+        localStorage.removeItem('paymentPopupSessionId');
+      }
+
+      // Update the ref with current user ID
+      prevUserIdRef.current = currentUserId;
+    }
+  }, [user?.id]);
 
   const handleUpdateCard = () => {
     setIsUpdatingCard(true);
@@ -213,9 +270,63 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     : null;
 
   const showBanner =
+    bannerInitialized &&
     (subscription?.status === 'past_due' ||
-      subscription?.status === 'canceled') &&
+      subscription?.status === 'canceled' ||
+      subscription?.status === 'pending' ||
+      subscription?.status === 'not_started') &&
     showWarningBanner;
+
+  const getBannerMessage = () => {
+    if (subscription?.status === 'past_due') {
+      return pastDueMessage;
+    } else if (subscription?.status === 'canceled') {
+      return cancelledMessage(subscription?.billingPeriod?.ends_at);
+    } else if (
+      subscription?.status === 'pending' ||
+      subscription?.status === 'not_started'
+    ) {
+      return 'Complete your payment to activate all premium features.';
+    }
+    return '';
+  };
+
+  const getBannerButtonText = () => {
+    if (subscription?.status === 'past_due') {
+      return isUpdatingCard ? 'Redirecting...' : 'Update Card Details';
+    } else if (subscription?.status === 'canceled') {
+      return isResuming ? 'Resuming...' : "Don't Cancel";
+    } else if (
+      subscription?.status === 'pending' ||
+      subscription?.status === 'not_started'
+    ) {
+      return 'Complete Payment';
+    }
+    return '';
+  };
+
+  const handleBannerAction = () => {
+    if (subscription?.status === 'past_due') {
+      handleUpdateCard();
+    } else if (subscription?.status === 'canceled') {
+      handleResumeSubscription();
+    } else if (
+      subscription?.status === 'pending' ||
+      subscription?.status === 'not_started'
+    ) {
+      // Clear localStorage items to force payment popup to show
+      localStorage.removeItem('paymentPopupLastShown');
+      // Find the default plan to show
+      const selectedPackageId = user?.selectedPackageId;
+      const popularPlan = pricingPlansData.find(
+        (plan) => plan.popular === true,
+      );
+      const defaultPlanId =
+        selectedPackageId || popularPlan?.planId || DEFAULT_SELECTED_PACKAGE;
+
+      openPaymentPopup(defaultPlanId);
+    }
+  };
 
   const toggleSidebar = () => {
     if (window.innerWidth <= 1024) {
@@ -259,26 +370,13 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               showBanner ? styles.withBanner : ''
             }`}
           >
-            {subscription?.status === 'past_due' && showWarningBanner && (
+            {showBanner && (
               <WarningBanner
-                message={pastDueMessage}
-                buttonText={
-                  isUpdatingCard ? 'Redirecting...' : 'Update Card Details'
-                }
-                onButtonClick={handleUpdateCard}
+                message={getBannerMessage()}
+                buttonText={getBannerButtonText()}
+                onButtonClick={handleBannerAction}
                 onClose={handleBannerClose}
-                disabled={isUpdatingCard}
-              />
-            )}
-
-            {subscription?.status === 'canceled' && showWarningBanner && (
-              <WarningBanner
-                message={cancelledMessage(subscription?.billingPeriod?.ends_at)}
-                buttonText={isResuming ? 'Resuming...' : "Don't Cancel"}
-                noButton={false}
-                onButtonClick={handleResumeSubscription}
-                onClose={handleBannerClose}
-                disabled={isResuming}
+                disabled={isUpdatingCard || isResuming}
               />
             )}
 

@@ -77,21 +77,18 @@ export const usePaymentPopup = (
    * Close the payment popup
    */
   const closePaymentPopup = useCallback(() => {
+    console.log('Closing payment popup from hook');
     setIsOpen(false);
     // Record the close time to prevent immediate reopening
     lastClosedTimeRef.current = Date.now();
 
-    // Reset plan ID after a short delay to ensure proper cleanup
-    setTimeout(() => {
-      if (!isOpen) {
-        setPlanId('');
-      }
-    }, 300);
-  }, [isOpen]);
+    // Reset plan ID immediately to ensure proper cleanup
+    setPlanId('');
+  }, []);
 
   // Prepare the props needed for the Payment component if the popup is open
   const paymentPopupProps =
-    user && isOpen && planId
+    user && isOpen && planId && user.id && user.email
       ? {
           userId: user.id,
           priceId: planId,
