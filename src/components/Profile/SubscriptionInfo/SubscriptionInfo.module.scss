@@ -46,6 +46,158 @@
     }
   }
 
+  // New CTA styles
+  .upgradeCTA {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .upgradeContent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+
+    .upgradeText {
+      h4 {
+        font-size: clamp(16px, 2vw, 18px);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: rgba(255, 255, 255, 0.9);
+        background: linear-gradient(120deg, #fff, #2563ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.01em;
+      }
+
+      p {
+        font-size: clamp(14px, 1.5vw, 15px);
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0;
+        letter-spacing: -0.01em;
+        line-height: 1.4;
+      }
+    }
+  }
+
+  .sparkleIcon {
+    background: rgba(37, 99, 255, 0.12) !important;
+    border: 1px solid rgba(37, 99, 255, 0.2) !important;
+    color: #2563ff;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.2) 0%,
+        rgba(255, 255, 255, 0) 70%
+      );
+      animation: pulseGlow 2s infinite;
+    }
+  }
+
+  .upgradeButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2563ff, #1e50e0);
+    border: none;
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    margin-top: auto;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 99, 255, 0.2);
+    }
+
+    .buttonText {
+      position: relative;
+      z-index: 2;
+    }
+
+    .sparkleWrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0),
+        rgba(255, 255, 255, 0.2),
+        rgba(255, 255, 255, 0)
+      );
+      transition: all 0.6s;
+      z-index: 1;
+    }
+
+    &.pulsing {
+      &::before {
+        left: 100%;
+        transition: all 0.6s;
+      }
+
+      .sparkleWrapper {
+        animation: sparkle 1s infinite;
+      }
+    }
+  }
+
+  @keyframes pulseGlow {
+    0% {
+      opacity: 0.4;
+      transform: scale(0.95);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.05);
+    }
+    100% {
+      opacity: 0.4;
+      transform: scale(0.95);
+    }
+  }
+
+  @keyframes sparkle {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.3);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  // End of new CTA styles
+
   .planHeader,
   .creditsHeader {
     display: flex;
@@ -93,6 +245,78 @@
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(37, 99, 255, 0.12);
     }
+  }
+
+  // Update existing styles for updateButton to match our new CTA
+  .updateButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    background: rgba(37, 99, 255, 0.08);
+    border: 1px solid rgba(37, 99, 255, 0.12);
+    color: #2563ff;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    margin-top: auto;
+
+    &:hover {
+      background: rgba(37, 99, 255, 0.12);
+      border-color: rgba(37, 99, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37, 99, 255, 0.12);
+    }
+  }
+
+  .cancelButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 0.75rem;
+
+    &:hover {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(239, 68, 68, 0.12);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  .dontCancelButton {
+    background: rgba(37, 99, 255, 0.08);
+    border: 1px solid rgba(37, 99, 255, 0.12);
+    color: #2563ff;
+
+    &:hover {
+      background: rgba(37, 99, 255, 0.12);
+      border-color: rgba(37, 99, 255, 0.2);
+      box-shadow: 0 8px 24px rgba(37, 99, 255, 0.12);
+    }
+  }
+
+  .trial,
+  .cancelMessage {
+    color: #ef4444 !important;
   }
 
   .planActions {

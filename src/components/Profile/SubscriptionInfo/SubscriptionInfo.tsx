@@ -1,4 +1,4 @@
-import { Crown, Gift } from 'lucide-react';
+import { Crown, Gift, Sparkles } from 'lucide-react';
 import { Subscription, SubscriptionStatus } from '~store/types';
 import { capitalizeFirstLetter } from '~/lib/utils';
 import moment from 'moment';
@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { cancelSubscription, resumeCanceledSubscription } from '~api';
 import styles from './SubscriptionInfo.module.scss';
+import { useNavigate } from 'react-router-dom';
 
 interface SubscriptionInfoProps {
   subscription: Subscription | null;
@@ -20,6 +21,8 @@ export const SubscriptionInfo = ({
 }: SubscriptionInfoProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isResuming, setIsResuming] = useState(false);
+  const [isPulsingButton, setIsPulsingButton] = useState(false);
+  const navigate = useNavigate();
 
   const handleCancelSubscription = async () => {
     if (
@@ -84,6 +87,27 @@ export const SubscriptionInfo = ({
   const progressPercentage = (usedCredits / totalCredits) * 100;
   const dashOffset = ((100 - progressPercentage) / 100) * circumference;
 
+  // Function to handle upgrade button hover animation
+  const handleUpgradeHover = () => {
+    setIsPulsingButton(true);
+  };
+
+  const handleUpgradeLeave = () => {
+    setIsPulsingButton(false);
+  };
+
+  // Function to handle upgrade click
+  const handleUpgradeClick = () => {
+    // Here you can add the logic to redirect to subscription page
+    navigate('/pricing');
+  };
+
+  // Check if subscription is in not_started or pending state
+  const isInactiveSubscription =
+    !subscription ||
+    subscription.status === SubscriptionStatus.NOT_STARTED ||
+    subscription.status === SubscriptionStatus.PENDING;
+
   return (
     <div className={styles.subscriptionInfo}>
       <div className={styles.titleRow}>
@@ -91,83 +115,114 @@ export const SubscriptionInfo = ({
       </div>
       <div className={styles.grid}>
         <div className={styles.plan}>
-          <div className={styles.planHeader}>
-            <div className={styles.iconContainer}>
-              <Crown />
-            </div>
-            <div>
-              <h4>
-                Status:{' '}
-                {subscription
-                  ? capitalizeFirstLetter(subscription.status)
-                  : 'Trial'}
-              </h4>
-              {subscription?.status === SubscriptionStatus.TRIALING && (
-                <p className={styles.trial}>
-                  Trial ends:{' '}
-                  {moment(subscription.billingPeriod.ends_at).format(
-                    'MMM DD, YYYY',
-                  )}
-                </p>
-              )}
-              {subscription?.billingPeriod && (
-                <>
-                  <p>
-                    Current period starts:{' '}
-                    {moment(subscription.billingPeriod.starts_at).format(
-                      'MMM DD, YYYY',
-                    )}
-                  </p>
-                  <p>
-                    Current period ends:{' '}
-                    {moment(subscription.billingPeriod.ends_at).format(
-                      'MMM DD, YYYY',
-                    )}
-                  </p>
-                </>
-              )}
-              {subscription?.status === SubscriptionStatus.CANCELED && (
-                <p className={styles.cancelMessage}>
-                  Your subscription will end on{' '}
-                  {moment(subscription.billingPeriod.ends_at).format(
-                    'MMMM DD, YYYY',
-                  )}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {subscription?.updatePaymentMethodUrl && (
-            <a
-              href={subscription.updatePaymentMethodUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.updateButton}
-            >
-              Update Payment Method
-            </a>
-          )}
-
-          {subscription?.status === SubscriptionStatus.CANCELED && (
-            <button
-              className={`${styles.cancelButton} ${styles.dontCancelButton}`}
-              onClick={handleResumeSubscription}
-              disabled={isResuming}
-            >
-              {isResuming ? 'Processing...' : "Don't Cancel"}
-            </button>
-          )}
-
-          {subscription?.status !== SubscriptionStatus.CANCELED &&
-            subscription?.status !== SubscriptionStatus.NOT_STARTED && (
+          {isInactiveSubscription ? (
+            <div className={styles.upgradeCTA}>
+              <div className={styles.upgradeContent}>
+                <div
+                  className={`${styles.iconContainer} ${styles.sparkleIcon}`}
+                >
+                  <Sparkles />
+                </div>
+                <div className={styles.upgradeText}>
+                  <h4>Unlock Premium Features</h4>
+                  <p>Get unlimited access to all premium features and tools.</p>
+                </div>
+              </div>
               <button
-                className={styles.cancelButton}
-                onClick={handleCancelSubscription}
-                disabled={isLoading}
+                className={`${styles.upgradeButton} ${
+                  isPulsingButton ? styles.pulsing : ''
+                }`}
+                onMouseEnter={handleUpgradeHover}
+                onMouseLeave={handleUpgradeLeave}
+                onClick={handleUpgradeClick}
               >
-                {isLoading ? 'Processing...' : 'Cancel Subscription'}
+                <span className={styles.buttonText}>Upgrade to Pro</span>
+                <span className={styles.sparkleWrapper}>
+                  <Sparkles size={16} />
+                </span>
               </button>
-            )}
+            </div>
+          ) : (
+            <>
+              <div className={styles.planHeader}>
+                <div className={styles.iconContainer}>
+                  <Crown />
+                </div>
+                <div>
+                  <h4>
+                    Status:{' '}
+                    {subscription
+                      ? capitalizeFirstLetter(subscription.status)
+                      : 'Trial'}
+                  </h4>
+                  {subscription?.status === SubscriptionStatus.TRIALING && (
+                    <p className={styles.trial}>
+                      Trial ends:{' '}
+                      {moment(subscription.billingPeriod.ends_at).format(
+                        'MMM DD, YYYY',
+                      )}
+                    </p>
+                  )}
+                  {subscription?.billingPeriod && (
+                    <>
+                      <p>
+                        Current period starts:{' '}
+                        {moment(subscription.billingPeriod.starts_at).format(
+                          'MMM DD, YYYY',
+                        )}
+                      </p>
+                      <p>
+                        Current period ends:{' '}
+                        {moment(subscription.billingPeriod.ends_at).format(
+                          'MMM DD, YYYY',
+                        )}
+                      </p>
+                    </>
+                  )}
+                  {subscription?.status === SubscriptionStatus.CANCELED && (
+                    <p className={styles.cancelMessage}>
+                      Your subscription will end on{' '}
+                      {moment(subscription.billingPeriod.ends_at).format(
+                        'MMMM DD, YYYY',
+                      )}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {subscription?.updatePaymentMethodUrl && (
+                <a
+                  href={subscription.updatePaymentMethodUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.updateButton}
+                >
+                  Update Payment Method
+                </a>
+              )}
+
+              {subscription?.status === SubscriptionStatus.CANCELED && (
+                <button
+                  className={`${styles.cancelButton} ${styles.dontCancelButton}`}
+                  onClick={handleResumeSubscription}
+                  disabled={isResuming}
+                >
+                  {isResuming ? 'Processing...' : "Don't Cancel"}
+                </button>
+              )}
+
+              {subscription?.status !== SubscriptionStatus.CANCELED &&
+                subscription?.status !== SubscriptionStatus.NOT_STARTED && (
+                  <button
+                    className={styles.cancelButton}
+                    onClick={handleCancelSubscription}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Processing...' : 'Cancel Subscription'}
+                  </button>
+                )}
+            </>
+          )}
         </div>
 
         <div className={styles.credits}>
