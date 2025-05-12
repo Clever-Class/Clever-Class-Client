@@ -8,6 +8,7 @@ import { QuizHistory } from './components/QuizHistory/QuizHistory';
 import { QuizQuestion, QuizWithQuestions, QuizState } from './types';
 import { api } from '~api';
 import toast from 'react-hot-toast';
+import { creditsService } from '~/services';
 
 export const QuizBuilder = () => {
   const [activeTab, setActiveTab] = useState('history');
@@ -65,6 +66,9 @@ export const QuizBuilder = () => {
       const response = await api.ccServer.post('/quiz/generate', formData);
 
       if (response.status !== 200) throw new Error('Failed to generate quiz');
+
+      // Refresh credits after generating quiz
+      creditsService.refreshCredits();
 
       // Start the generated quiz
       await handleStartQuiz(response.data.quizId);

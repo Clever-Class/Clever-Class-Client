@@ -3,7 +3,7 @@ import { HiChatBubbleLeftRight } from 'react-icons/hi2';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Chatbot.module.scss';
 import { History } from '~/components/History/History';
-import { chatService, Conversation } from '~/services/chatService';
+import { chatService, Conversation, creditsService } from '~/services';
 import toast from 'react-hot-toast';
 import { UpgradePopup } from '~/components/UpgradePopup';
 
@@ -183,6 +183,9 @@ export function Chatbot() {
                 if (shouldUpdateConversations) {
                   fetchConversations();
                 }
+
+                // Refresh credits when the streaming is done
+                creditsService.refreshCredits();
                 return;
               }
 
@@ -284,6 +287,9 @@ export function Chatbot() {
       }
     } finally {
       setIsLoading(false);
+
+      // Refresh credits regardless of success or failure
+      creditsService.refreshCredits();
     }
   }, [message, currentConversationId, isLoading, attachedImage]);
 
@@ -377,6 +383,9 @@ export function Chatbot() {
         if (!currentConversationId) {
           fetchConversations();
         }
+
+        // Refresh credits after voice message processing
+        creditsService.refreshCredits();
       } catch (error) {
         console.error('Error handling voice message:', error);
         toast.error('Error processing voice message');
@@ -424,6 +433,9 @@ export function Chatbot() {
       };
 
       setMessages((prev) => [...prev, aiResponse]);
+
+      // Refresh credits after regenerating response
+      creditsService.refreshCredits();
     } catch (err: any) {
       console.error('Failed to regenerate message:', err);
 
@@ -459,6 +471,9 @@ export function Chatbot() {
       }
     } finally {
       setIsLoading(false);
+
+      // Refresh credits regardless of success or failure
+      creditsService.refreshCredits();
     }
   };
 

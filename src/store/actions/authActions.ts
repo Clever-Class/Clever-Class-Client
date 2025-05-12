@@ -181,3 +181,13 @@ export const updateProfile = (formData: FormData) => {
     }
   };
 };
+
+// Update user credits action
+export const updateUserCredits = (credits: number) => ({
+  type: UPDATE_USER_DATA,
+  payload: {
+    user: {
+      trialCredits: credits,
+    },
+  },
+});
