@@ -6,6 +6,7 @@ import { Coins } from 'lucide-react';
 import { RootState } from '~/store/types';
 import { usePaymentPopup } from '~/hooks';
 import { Payment } from '~/components/Payment';
+import { creditsService } from '~/services';
 import styles from '../Sidebar.module.scss';
 
 // Define types for the user data
@@ -28,11 +29,25 @@ export const SidebarFooter: React.FC = () => {
   const [showPaymentPopup, setShowPaymentPopup] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [credits, setCredits] = useState(0);
   const { openPaymentPopup, closePaymentPopup, isOpen, paymentPopupProps } =
     usePaymentPopup();
 
   // Cast user to our defined type
   const userData = user as UserData;
+
+  // Update credits whenever the component renders or the user changes
+  useEffect(() => {
+    // Get initial credits from redux store
+    setCredits(userData?.trialCredits || creditsService.getUserCredits());
+
+    // Setup interval to update credits regularly
+    const intervalId = setInterval(() => {
+      setCredits(creditsService.getUserCredits());
+    }, 2000); // Check every 2 seconds
+
+    return () => clearInterval(intervalId);
+  }, [userData]);
 
   // When the popup is closed, update our local state
   useEffect(() => {
@@ -142,9 +157,7 @@ export const SidebarFooter: React.FC = () => {
               <Coins size={16} />
             </div>
             <span className={styles.upgradeCreditsText}>
-              {isProcessing
-                ? 'Loading...'
-                : `${userData?.trialCredits || 0} credits left`}
+              {isProcessing ? 'Loading...' : `${credits} credits left`}
             </span>
           </div>
         </div>

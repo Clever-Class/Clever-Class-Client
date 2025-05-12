@@ -24,7 +24,7 @@ export const UserInfo = ({ user }: UserInfoProps) => {
           <Avatar className="w-full h-full">
             <AvatarImage src={user.avatar} alt={user.name} />
             <AvatarFallback>
-              {user.name.slice(0, 2).toUpperCase()}
+              {/* {user.name.slice(0, 2).toUpperCase()} */}
             </AvatarFallback>
           </Avatar>
         </div>
