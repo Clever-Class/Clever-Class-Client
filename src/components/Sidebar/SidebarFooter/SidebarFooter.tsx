@@ -2,17 +2,21 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { HiOutlineLightningBolt } from 'react-icons/hi';
-import { Coins } from 'lucide-react';
+import { Coins, Crown, Calendar, Settings, Shield, Star } from 'lucide-react';
 import { RootState } from '~/store/types';
 import { usePaymentPopup } from '~/hooks';
 import { Payment } from '~/components/Payment';
 import { creditsService } from '~/services';
 import styles from '../Sidebar.module.scss';
+import moment from 'moment';
 
 // Define types for the user data
 interface UserSubscription {
   isPremiumActive?: boolean;
   status?: string;
+  billingPeriod?: {
+    ends_at?: string;
+  };
 }
 
 interface UserData {
@@ -22,7 +26,7 @@ interface UserData {
 
 export const SidebarFooter: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useSelector((state: RootState) => state.user);
+  const { user, subscription } = useSelector((state: RootState) => state.user);
   const coinRef = useRef<HTMLDivElement>(null);
 
   // Create a local instance of the payment popup hook
@@ -92,17 +96,19 @@ export const SidebarFooter: React.FC = () => {
     }
   }, [isHovering]);
 
-  // Check if user has non-active subscription status
-  const shouldShowUpgrade =
-    !userData?.subscription?.isPremiumActive &&
-    ['not_started', 'pending', 'canceled', 'paused'].includes(
-      userData?.subscription?.status || 'not_started',
-    );
+  console.log(subscription, 'userData?.subscription');
+  // Check if user has active premium subscription
+  const hasPremiumSubscription = ![
+    'not_started',
+    'pending',
+    'canceled',
+    'paused',
+  ].includes(subscription?.status || 'not_started');
 
-  // If user shouldn't see upgrade box, render nothing
-  if (!shouldShowUpgrade) {
-    return null;
-  }
+  // Navigate to account settings
+  const handleManageSubscription = () => {
+    navigate('/account');
+  };
 
   // Open payment popup when upgrade button is clicked
   const handleUpgradeClick = (e: React.MouseEvent) => {
@@ -122,6 +128,50 @@ export const SidebarFooter: React.FC = () => {
     setShowPaymentPopup(true);
     openPaymentPopup();
   };
+
+  // If no sidebar footer content should be displayed
+  if (hasPremiumSubscription) {
+    // Format end date for display
+    const endDate = subscription?.billingPeriod?.ends_at
+      ? moment(subscription.billingPeriod.ends_at).format('MMM DD, YYYY')
+      : 'Active';
+
+    return (
+      <div className={styles.sidebarFooter}>
+        <div className={styles.premiumContainer}>
+          <div className={styles.premiumStatus}>
+            <div className={styles.premiumIcon}>
+              <Shield size={18} strokeWidth={2} />
+            </div>
+            <div className={styles.premiumText}>
+              <span>Premium Active</span>
+            </div>
+          </div>
+
+          <div className={styles.subscriptionDetails}>
+            <button
+              className={styles.manageButton}
+              onClick={handleManageSubscription}
+            >
+              <Settings size={14} />
+              <span>Manage</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // If user shouldn't see anything in the footer
+  if (
+    !user ||
+    (subscription &&
+      !['not_started', 'pending', 'canceled', 'paused'].includes(
+        subscription?.status || 'not_started',
+      ))
+  ) {
+    return null;
+  }
 
   return (
     <div className={styles.sidebarFooter}>

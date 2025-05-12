@@ -1,4 +1,4 @@
-import { Crown, Gift, Sparkles } from 'lucide-react';
+import { Crown, Gift, Sparkles, Award, Check } from 'lucide-react';
 import { Subscription, SubscriptionStatus } from '~store/types';
 import { capitalizeFirstLetter } from '~/lib/utils';
 import moment from 'moment';
@@ -76,7 +76,7 @@ export const SubscriptionInfo = ({
     }
   };
 
-  // Calculate credit usage
+  // Calculate credit usage for trial users
   const totalCredits = 5; // Total trial credits
   const remainingCredits = trialCredits || 0;
   const usedCredits = totalCredits - remainingCredits;
@@ -107,6 +107,13 @@ export const SubscriptionInfo = ({
     !subscription ||
     subscription.status === SubscriptionStatus.NOT_STARTED ||
     subscription.status === SubscriptionStatus.PENDING;
+
+  // Check if user has an active premium subscription
+  const hasActivePremium =
+    subscription &&
+    subscription.status !== SubscriptionStatus.NOT_STARTED &&
+    subscription.status !== SubscriptionStatus.PENDING &&
+    subscription.status !== SubscriptionStatus.CANCELED;
 
   return (
     <div className={styles.subscriptionInfo}>
@@ -225,41 +232,73 @@ export const SubscriptionInfo = ({
           )}
         </div>
 
-        <div className={styles.credits}>
-          <div className={styles.creditsHeader}>
-            <div className={styles.iconContainer}>
-              <Gift />
+        {hasActivePremium ? (
+          <div className={styles.premiumFeatures}>
+            <div className={styles.creditsHeader}>
+              <div className={styles.iconContainer}>
+                <Award size={20} />
+              </div>
+              <div>
+                <h4>Premium Benefits</h4>
+                <p>Your active premium features</p>
+              </div>
             </div>
-            <div>
-              <h4>Trial Credits</h4>
-              <p>{remainingCredits} remaining</p>
-            </div>
-          </div>
-          <div className={styles.creditsContent}>
-            <div className={styles.progressRing}>
-              <svg width="90" height="90" viewBox="0 0 90 90">
-                <circle
-                  className={styles.background}
-                  cx="45"
-                  cy="45"
-                  r={radius}
-                />
-                <circle
-                  className={styles.progress}
-                  cx="45"
-                  cy="45"
-                  r={radius}
-                  strokeDasharray={circumference}
-                  strokeDashoffset={dashOffset}
-                />
-              </svg>
-              <div className={styles.progressText}>
-                <div className={styles.used}>{usedCredits}</div>
-                <div className={styles.label}>Used</div>
+            <div className={styles.featuresList}>
+              <div className={styles.feature}>
+                <Check size={18} strokeWidth={3} />
+                <span>Unlimited access to all resources</span>
+              </div>
+              <div className={styles.feature}>
+                <Check size={18} strokeWidth={3} />
+                <span>Priority support</span>
+              </div>
+              <div className={styles.feature}>
+                <Check size={18} strokeWidth={3} />
+                <span>Ad-free experience</span>
+              </div>
+              <div className={styles.feature}>
+                <Check size={18} strokeWidth={3} />
+                <span>Advanced training tools</span>
               </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className={styles.credits}>
+            <div className={styles.creditsHeader}>
+              <div className={styles.iconContainer}>
+                <Gift />
+              </div>
+              <div>
+                <h4>Trial Credits</h4>
+                <p>{remainingCredits} remaining</p>
+              </div>
+            </div>
+            <div className={styles.creditsContent}>
+              <div className={styles.progressRing}>
+                <svg width="90" height="90" viewBox="0 0 90 90">
+                  <circle
+                    className={styles.background}
+                    cx="45"
+                    cy="45"
+                    r={radius}
+                  />
+                  <circle
+                    className={styles.progress}
+                    cx="45"
+                    cy="45"
+                    r={radius}
+                    strokeDasharray={circumference}
+                    strokeDashoffset={dashOffset}
+                  />
+                </svg>
+                <div className={styles.progressText}>
+                  <div className={styles.used}>{usedCredits}</div>
+                  <div className={styles.label}>Used</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

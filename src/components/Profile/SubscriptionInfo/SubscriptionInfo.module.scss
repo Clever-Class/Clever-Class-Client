@@ -618,3 +618,119 @@
     left: 100%;
   }
 }
+
+.premiumFeatures {
+  background: linear-gradient(
+    145deg,
+    rgba(19, 30, 75, 0.95),
+    rgba(29, 46, 108, 0.95)
+  );
+  border-radius: 14px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border: 1px solid rgba(67, 83, 255, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(67, 83, 255, 0.2) inset;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(67, 83, 255, 0.3) inset;
+    border-color: rgba(67, 83, 255, 0.4);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(
+      circle,
+      rgba(67, 83, 255, 0.3) 0%,
+      transparent 70%
+    );
+    top: -75px;
+    right: -75px;
+    border-radius: 50%;
+    z-index: 0;
+  }
+
+  .featuresList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: translateX(4px);
+      }
+
+      svg {
+        color: #4ade80;
+        filter: drop-shadow(0 0 4px rgba(74, 222, 128, 0.4));
+      }
+
+      span {
+        color: rgba(255, 255, 255, 0.9);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        letter-spacing: 0.02em;
+      }
+    }
+  }
+
+  .creditsHeader {
+    position: relative;
+    z-index: 1;
+
+    h4 {
+      font-size: 18px !important;
+      font-weight: 600 !important;
+      margin-bottom: 6px !important;
+      color: white !important;
+      background: linear-gradient(
+        to right,
+        #fff,
+        rgba(255, 255, 255, 0.8)
+      ) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+    }
+
+    p {
+      font-size: 15px !important;
+      color: rgba(255, 255, 255, 0.7) !important;
+      font-weight: 400;
+    }
+
+    .iconContainer {
+      background: rgba(74, 144, 226, 0.2) !important;
+      border: 1px solid rgba(74, 144, 226, 0.3) !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+      color: #4a90e2 !important;
+
+      svg {
+        color: #4a90e2;
+        filter: drop-shadow(0 0 4px rgba(74, 144, 226, 0.6));
+      }
+
+      &:hover {
+        background: rgba(74, 144, 226, 0.3) !important;
+        border-color: rgba(74, 144, 226, 0.4) !important;
+      }
+    }
+  }
+}
