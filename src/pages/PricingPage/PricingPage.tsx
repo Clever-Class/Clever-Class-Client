@@ -4,12 +4,11 @@ import { useNavigate } from 'react-router-dom';
 
 import { Navbar, AuthPopup } from '~components/index';
 import { Payment } from '~components/Payment';
+import PricingPlans from '~components/LandingPageComponent/PricingPlans';
 
 import './PricingPage.scss';
-import Footer from '~components/Footer';
-import PricingPlans from '~components/LandingPageComponent/PricingPlans/PricingPlans';
+import Footer from '~components/Footer/Footer';
 import { RootState } from '~store/types';
-import { pricingPlansData } from '~/data/plansData';
 import { usePaymentPopup } from '~/hooks';
 
 export const PricingPage = () => {

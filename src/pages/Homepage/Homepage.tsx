@@ -1,17 +1,8 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
-import {
-  FeatureHighlight,
-  LowerCTA,
-  Navbar,
-  AuthPopup,
-  SupportedAppSection,
-  TestimonialsSection,
-} from '~components/index';
-import PricingPlans from '~components/LandingPageComponent/PricingPlans/PricingPlans';
+import { FeatureHighlight, Navbar, AuthPopup } from '~components/index';
+import { PricingPlans } from '~components/LandingPageComponent';
 
-import StarImage from '~assets/images/star.png';
 import FAQ from '~components/LandingPageComponent/FaqSection/FaqSection';
 
 import './Homepage.scss';
@@ -40,10 +31,6 @@ export const Homepage = () => {
     setAuthPopup({ isOpen: true, mode: 'login' });
   };
 
-  const handleGetStarted = () => {
-    // Your get started logic here
-  };
-
   return (
     <div>
       <Navbar
@@ -65,7 +52,8 @@ export const Homepage = () => {
       <FeatureHighlight />
       <LandingShowcase />
       <LandingShowcase theme="dark" />
-      <FinalLowerCTA onGetStarted={handleGetStarted} />
+      <PricingPlans onSignupClick={handleJoinRequest} />
+      <FinalLowerCTA onGetStarted={handleJoinRequest} />
       <FAQ />
       <CTASection />
       <Footer />

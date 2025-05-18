@@ -4,19 +4,24 @@ import { useNavigate } from 'react-router-dom';
 import { IoCheckmarkSharp } from 'react-icons/io5';
 import { HiOutlineLightBulb } from 'react-icons/hi';
 import { pricingPlansData } from '../../../data/plansData';
+import { RootState } from '~store/types';
 import './PricingPlans.scss';
 
-const PricingPlans = ({ onSignupClick }) => {
+interface PricingPlansProps {
+  onSignupClick: (planId: string) => void;
+}
+
+const PricingPlans: React.FC<PricingPlansProps> = ({ onSignupClick }) => {
   const [isYearly, setIsYearly] = useState(false);
-  const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   const isLoggedIn = !!user;
 
-  const toggleBilling = (value) => {
+  const toggleBilling = (value: boolean) => {
     setIsYearly(value);
   };
 
-  const getIcon = (planId) => {
+  const getIcon = (planId: string) => {
     switch (planId) {
       case 'lite':
         return <HiOutlineLightBulb className="plan-icon" />;
@@ -25,7 +30,7 @@ const PricingPlans = ({ onSignupClick }) => {
     }
   };
 
-  const handleSignupClick = (planId) => {
+  const handleSignupClick = (planId: string) => {
     if (isLoggedIn) {
       // If user is logged in, redirect to dashboard with payment_popup=true and selected plan
       navigate(`/dashboard?payment_popup=true&plan=${planId}`);

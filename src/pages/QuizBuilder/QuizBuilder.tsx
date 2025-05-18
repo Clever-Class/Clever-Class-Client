@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './QuizBuilder.module.scss';
 import { FileUploader } from './components/FileUploader';
 import { QuizSettings } from './components/QuizSettings';
 import { QuizTest } from './components/QuizTest';
 import { QuizResults } from './components/QuizResults/QuizResults';
 import { QuizHistory } from './components/QuizHistory/QuizHistory';
-import { QuizQuestion, QuizWithQuestions, QuizState } from './types';
+import { QuizState } from './types';
 import { api } from '~api';
 import toast from 'react-hot-toast';
 import { creditsService } from '~/services';
