@@ -17,9 +17,7 @@ import {
 } from 'lucide-react';
 import styles from './LectureSummarizer.module.scss';
 import classNames from 'classnames';
-import { api } from '~api';
 import { MessageBubble } from '~/components/Chatbot';
-import { FormattedMessage } from '~/components/FormattedMessage/FormattedMessage';
 
 export const LectureSummarizer = () => {
   const [videoUrl, setVideoUrl] = useState('');
@@ -33,7 +31,6 @@ export const LectureSummarizer = () => {
   const [summary, setSummary] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  console.log(summary, 'summary');
   // Add refs for scrolling
   const progressCardRef = useRef<HTMLDivElement>(null);
   const summaryCardRef = useRef<HTMLDivElement>(null);
@@ -66,6 +63,10 @@ export const LectureSummarizer = () => {
   }, [summary]);
 
   const getProgressIcon = useCallback(() => {
+    if (loading) {
+      return <div className={styles.iosLoader} />;
+    }
+
     switch (progressStage) {
       case 'initializing':
         return <Clock className={styles.icon} size={18} />;
@@ -82,9 +83,9 @@ export const LectureSummarizer = () => {
       case 'error':
         return <AlertCircle className={styles.icon} size={18} />;
       default:
-        return <Loader className={styles.icon} size={18} />;
+        return <div className={styles.iosLoader} />;
     }
-  }, [progressStage]);
+  }, [progressStage, loading]);
 
   // Function to handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
