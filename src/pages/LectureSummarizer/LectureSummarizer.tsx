@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
   Sparkles,
   Video,
@@ -18,6 +18,8 @@ import {
 import styles from './LectureSummarizer.module.scss';
 import classNames from 'classnames';
 import { api } from '~api';
+import { MessageBubble } from '~/components/Chatbot';
+import { FormattedMessage } from '~/components/FormattedMessage/FormattedMessage';
 
 export const LectureSummarizer = () => {
   const [videoUrl, setVideoUrl] = useState('');
@@ -30,6 +32,38 @@ export const LectureSummarizer = () => {
   const [progressStage, setProgressStage] = useState<string | null>(null);
   const [summary, setSummary] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  console.log(summary, 'summary');
+  // Add refs for scrolling
+  const progressCardRef = useRef<HTMLDivElement>(null);
+  const summaryCardRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to element helper function with alignment option
+  const scrollToElement = (
+    ref: React.RefObject<HTMLElement>,
+    alignment: ScrollLogicalPosition = 'center',
+  ) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({
+        behavior: 'smooth',
+        block: alignment,
+      });
+    }
+  };
+
+  // Effect to scroll to progress card when loading starts
+  useEffect(() => {
+    if (loading) {
+      scrollToElement(progressCardRef, 'center');
+    }
+  }, [loading]);
+
+  // Effect to scroll to summary card when summary is ready
+  useEffect(() => {
+    if (summary) {
+      scrollToElement(summaryCardRef, 'start');
+    }
+  }, [summary]);
 
   const getProgressIcon = useCallback(() => {
     switch (progressStage) {
@@ -323,7 +357,7 @@ export const LectureSummarizer = () => {
 
         {/* Progress Indicator */}
         {loading && (
-          <div className={styles.progressCard}>
+          <div className={styles.progressCard} ref={progressCardRef}>
             <h3 className={styles.progressTitle}>
               {getProgressIcon()} Generating Summary...
             </h3>
@@ -405,13 +439,18 @@ export const LectureSummarizer = () => {
 
         {/* Summary Result */}
         {summary && (
-          <div className={styles.summaryCard}>
+          <div className={styles.summaryCard} ref={summaryCardRef}>
             <h3 className={styles.summaryTitle}>
               <Award size={20} /> Summary Results
             </h3>
-            <div
-              className={styles.summaryContent}
-              dangerouslySetInnerHTML={{ __html: summary }}
+            <MessageBubble
+              id="summary-result"
+              content={summary}
+              isUser={false}
+              isLatest={true}
+              onRegenerateResponse={() => {}}
+              onImageClick={() => {}}
+              isLoading={false}
             />
           </div>
         )}

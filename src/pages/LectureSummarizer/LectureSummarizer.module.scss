@@ -4,7 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 80px); /* Adjust based on your header height */
+  // min-height: calc(100vh - 80px); /* Adjust based on your header height */
   padding: 2.5rem 1rem;
   width: 100%;
   max-width: 100%;
@@ -482,6 +482,34 @@
 .summaryCard {
   composes: card;
   animation: fadeIn 0.5s ease-out;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  margin-bottom: 1.5rem;
+
+  &:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.summaryTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-primary, #f8fafc);
+  padding: 0 0.5rem;
+
+  svg {
+    color: #3b82f6;
+  }
 }
 
 @keyframes fadeIn {
@@ -493,15 +521,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.summaryTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
 }
 
 .summaryContent {
@@ -546,6 +565,7 @@
 
   p {
     margin-bottom: 1.25em;
+    color: var(--text-primary, #f8fafc);
   }
 
   ul,
@@ -556,6 +576,7 @@
 
   li {
     margin-bottom: 0.75em;
+    color: var(--text-primary, #f8fafc);
   }
 
   code {
