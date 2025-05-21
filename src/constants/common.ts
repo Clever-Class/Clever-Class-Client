@@ -12,4 +12,5 @@ export enum AppRoutes {
   Pricing = '/pricing',
   QuizBuilder = '/quiz-builder',
   QuickNotes = '/quick-notes',
+  LectureSummarizer = '/lecture-summarizer',
 }

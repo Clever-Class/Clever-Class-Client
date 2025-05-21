@@ -9,7 +9,7 @@ import { SidebarHeader } from './SidebarHeader/SidebarHeader';
 import { SidebarContent } from './SidebarContent/SidebarContent';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import classNames from 'classnames';
-import { BotMessageSquare, Dices } from 'lucide-react';
+import { BotMessageSquare, Dices, Video } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
@@ -44,6 +44,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       name: 'Quick Notes',
       icon: RiFileTextLine,
       route: '/dashboard/quick-notes',
+    },
+    {
+      name: 'Lecture Summarizer',
+      icon: Video,
+      route: '/dashboard/lecture-summarizer',
     },
     { name: 'Settings', icon: RiSettingsLine, route: '/dashboard/settings' },
   ];
