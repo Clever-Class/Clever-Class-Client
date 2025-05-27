@@ -38,11 +38,21 @@ export const LectureSummarizer = () => {
   const [replyMessage, setReplyMessage] = useState('');
   const [showReply, setShowReply] = useState(false);
   const [replyLoading, setReplyLoading] = useState(false);
+  const [chatMessages, setChatMessages] = useState<
+    Array<{
+      id: string;
+      content: string;
+      isUser: boolean;
+      timestamp: Date;
+      isStreaming?: boolean;
+    }>
+  >([]);
 
   // Add refs for scrolling
   const progressCardRef = useRef<HTMLDivElement>(null);
   const summaryCardRef = useRef<HTMLDivElement>(null);
   const replyInputRef = useRef<HTMLTextAreaElement>(null);
+  const chatEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   // Scroll to element helper function with alignment option
@@ -72,6 +82,13 @@ export const LectureSummarizer = () => {
       setShowReply(true);
     }
   }, [summary]);
+
+  // Add useEffect for scrolling to bottom of chat
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [chatMessages]);
 
   const getProgressIcon = useCallback(() => {
     if (loading) {
@@ -191,137 +208,113 @@ export const LectureSummarizer = () => {
     }
   };
 
-  // Function to handle sending reply and transition to chatbot
+  // Function to handle sending reply and continue chat in the same page
   const handleSendReply = async () => {
     if (!replyMessage.trim() || !summary || replyLoading) return;
 
     setReplyLoading(true);
 
     try {
-      // Create a meaningful title from the video URL
-      const videoIdPattern =
-        /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/i;
-      const videoId = videoUrl.match(videoIdPattern)?.[1];
-
-      // Extract video title to form a more meaningful conversation title
-      const titleWords = summary?.split(/\s+/).slice(0, 7).join(' ') || '';
-      const conversationTitle = titleWords
-        ? `${titleWords}...`
-        : `YouTube Video Summary`;
-
-      // First, create a conversation with an assistant message instead of user message
-      // We'll do a two-step process:
-      // 1. Start conversation with a fake "user" message (API limitation)
-      // 2. Then have the AI "respond" with our context message
       const token = Cookies.get('userToken');
 
       if (!token) {
         throw new Error('User not authenticated');
       }
 
-      console.log('Starting conversation with system context message');
+      // Add user message to chat
+      const userMessage = {
+        id: Date.now().toString(),
+        content: replyMessage,
+        isUser: true,
+        timestamp: new Date(),
+      };
+      setChatMessages((prev) => [...prev, userMessage]);
 
-      // Initial message to start the conversation - this is needed due to API requirements
-      // We use a placeholder message that won't be visible to the user
-      const initialMessage = `Summarize this YouTube video: ${videoUrl}`;
+      // Add a temporary AI message that will be updated during streaming
+      const tempAiMessage = {
+        id: Date.now().toString() + '-ai',
+        content: '',
+        isUser: false,
+        timestamp: new Date(),
+        isStreaming: true,
+      };
+      setChatMessages((prev) => [...prev, tempAiMessage]);
 
-      // Use a regular POST request first to start the conversation and get the conversationId
+      // Clear the input
+      setReplyMessage('');
+
+      // Create context message
+      const contextMessage = `Context: I've watched a YouTube video at ${videoUrl}. Here's what it was about:\n\n${summary}\n\nQuestion: ${replyMessage}`;
+
+      // Make the API call with streaming
       const response = await api.ccServer.post(
         '/chatbot/chat',
         {
-          message: initialMessage,
+          message: contextMessage,
         },
         {
+          responseType: 'text',
           headers: {
+            Accept: 'text/event-stream',
+            'Cache-Control': 'no-cache',
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-        },
-      );
+          onDownloadProgress: (progressEvent: any) => {
+            if (!progressEvent.event?.target?.responseText) return;
 
-      // Extract conversationId from response
-      let conversationId: string | undefined;
+            const rawText = progressEvent.event.target.responseText;
+            const chunks = rawText
+              .split('\n\n')
+              .filter((chunk: string) => chunk.trim());
 
-      // Parse response data to get conversationId
-      if (response.data && response.data.conversationId) {
-        conversationId = response.data.conversationId;
-        console.log('Received conversationId:', conversationId);
-      } else {
-        // If for some reason we don't have a conversationId in the response,
-        // try to extract it from the event data
-        const eventData = response.data;
-        if (
-          typeof eventData === 'string' &&
-          eventData.includes('conversationId')
-        ) {
-          try {
-            const match = eventData.match(/"conversationId":"([^"]+)"/);
-            if (match && match[1]) {
-              conversationId = match[1];
-              console.log(
-                'Extracted conversationId from event data:',
-                conversationId,
-              );
+            for (const chunk of chunks) {
+              if (!chunk.startsWith('data: ')) continue;
+
+              const data = chunk.replace('data: ', '').trim();
+              if (data === '[DONE]') {
+                setChatMessages((prev) => {
+                  const newMessages = [...prev];
+                  const lastMessage = newMessages[newMessages.length - 1];
+                  if (!lastMessage.isUser) {
+                    lastMessage.isStreaming = false;
+                  }
+                  return newMessages;
+                });
+                return;
+              }
+
+              try {
+                const parsed = JSON.parse(data);
+                if (parsed.content !== undefined) {
+                  setChatMessages((prev) => {
+                    const newMessages = [...prev];
+                    const lastMessage = newMessages[newMessages.length - 1];
+                    if (!lastMessage.isUser) {
+                      lastMessage.content = parsed.content;
+                      lastMessage.isStreaming = true;
+                    }
+                    return [...newMessages];
+                  });
+                }
+              } catch (e) {
+                console.error('Error parsing SSE data:', e, 'Raw data:', data);
+              }
             }
-          } catch (err) {
-            console.error(
-              'Error extracting conversationId from response:',
-              err,
-            );
-          }
-        }
-      }
-
-      if (!conversationId) {
-        throw new Error('Failed to get a valid conversation ID');
-      }
-
-      // Set a more descriptive title for the conversation
-      await api.ccServer.patch(
-        `/chatbot/conversations/${conversationId}`,
-        { title: conversationTitle },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
           },
         },
       );
-
-      // First, add AI assistant context as a message from the user
-      const contextMessage = `I've just watched a YouTube video at ${videoUrl}. Here's what it was about:\n\n${summary}\n\nNow I'd like to ask a follow-up question: ${replyMessage}`;
-
-      // Now send the user's actual question with context
-      await chatService.chatWithAI(contextMessage, conversationId);
-
-      console.log('Message sent successfully, navigating to chat page');
-
-      // Use simple navigatestate approach to avoid Cross-Origin-Opener-Policy issues
-      navigate('/dashboard/ai-chatbot', {
-        state: {
-          selectedConversationId: conversationId,
-          fromLectureSummarizer: true,
-        },
-        replace: true, // Use replace instead of push to avoid browser history issues
-      });
     } catch (error: any) {
-      console.error('Error transitioning to chat:', error);
-
-      // Handle different types of errors
-      if (
-        error.message.includes('authentication') ||
-        error.message.includes('log in')
-      ) {
-        setError(
-          'Authentication error: Please log in again before using this feature.',
-        );
-      } else {
-        setError(
-          `Failed to start chat conversation: ${
-            error.message || 'Please try again.'
-          }`,
-        );
-      }
+      console.error('Error sending reply:', error);
+      const errorMessage = {
+        id: Date.now().toString(),
+        content: 'Failed to get response. Please try again.',
+        isUser: false,
+        timestamp: new Date(),
+        isError: true,
+      };
+      setChatMessages((prev) => [...prev, errorMessage]);
+      setError('Failed to get response. Please try again.');
     } finally {
       setReplyLoading(false);
     }
@@ -566,11 +559,32 @@ export const LectureSummarizer = () => {
               id="summary-result"
               content={summary}
               isUser={false}
-              isLatest={true}
+              isLatest={chatMessages.length === 0}
               onRegenerateResponse={() => {}}
               onImageClick={() => {}}
               isLoading={false}
             />
+
+            {/* Chat Messages */}
+            {chatMessages.length > 0 && (
+              <div className={styles.chatMessages}>
+                {chatMessages.map((message) => (
+                  <MessageBubble
+                    key={message.id}
+                    id={message.id}
+                    content={message.content}
+                    isUser={message.isUser}
+                    isLatest={
+                      message.id === chatMessages[chatMessages.length - 1].id
+                    }
+                    onRegenerateResponse={() => {}}
+                    onImageClick={() => {}}
+                    isLoading={!!message.isStreaming}
+                  />
+                ))}
+                <div ref={chatEndRef} />
+              </div>
+            )}
 
             {/* Reply section */}
             {showReply && (
