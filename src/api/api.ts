@@ -3,7 +3,7 @@ import type { AxiosInstance } from 'axios';
 import Cookies from 'js-cookie';
 import store from '~store';
 
-import { LOCAL_SERVER_URL, PRODUCTION_SERVER_URL, NODE_ENV } from '~constants';
+import { NODE_ENV, SERVER_URL } from '~constants';
 
 type Environment = 'development' | 'production';
 
@@ -14,18 +14,8 @@ class Api {
   constructor() {
     this.role = null;
     this.ccServer = axios.create({
-      baseURL:
-        (NODE_ENV as Environment) === 'development'
-          ? LOCAL_SERVER_URL
-          : PRODUCTION_SERVER_URL,
+      baseURL: SERVER_URL as Environment,
       withCredentials: false,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers':
-          'Origin, Content-Type, Accept, Authorization, X-Request-With',
-      },
     });
 
     // Add a request interceptor
@@ -34,6 +24,7 @@ class Api {
         // Try to get token from cookies first
         let token = Cookies.get('userToken');
         console.log('API Interceptor - Token from cookies:', token);
+        console.log('NODE_ENV', NODE_ENV);
 
         // If no token in cookies, try to get from Redux store
         if (!token) {
@@ -42,12 +33,27 @@ class Api {
           console.log('API Interceptor - Token from Redux:', token);
         }
 
+        // Set default headers
+        config.headers = config.headers || {};
+
+        // Don't set Content-Type for FormData - axios will set it automatically with boundary
+        if (!(config.data instanceof FormData)) {
+          config.headers['Content-Type'] = 'application/json';
+        }
+
+        config.headers['Access-Control-Allow-Origin'] = '*';
+        config.headers['Access-Control-Allow-Methods'] =
+          'GET, POST, PUT, DELETE, OPTIONS';
+        config.headers['Access-Control-Allow-Headers'] =
+          'Origin, Content-Type, Accept, Authorization, X-Request-With';
+
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
           console.log('API Interceptor - Final headers:', config.headers);
         } else {
           console.log('API Interceptor - No token found');
         }
+
         return config;
       },
       (error) => {

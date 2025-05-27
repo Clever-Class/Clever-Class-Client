@@ -22,6 +22,11 @@ export const QuizBuilder = () => {
   });
 
   const handleFileUpload = (uploadedFile: File) => {
+    console.log('Handling file upload:', uploadedFile);
+    if (!uploadedFile) {
+      toast.error('Please select a valid PDF file');
+      return;
+    }
     setFile(uploadedFile);
     setActiveTab('settings');
   };
@@ -58,12 +63,35 @@ export const QuizBuilder = () => {
 
       // Create form data for new quiz
       const formData = new FormData();
-      if (file) formData.append('pdfFile', file);
+      if (file instanceof File) {
+        formData.append('pdfFile', file, file.name);
+      } else {
+        toast.error('Please upload a valid PDF file');
+        setIsLoading(false);
+        return;
+      }
       formData.append('numQuestions', numQuestions.toString());
       formData.append('timeLimit', timeLimit.toString());
 
-      // Call API to generate questions
-      const response = await api.ccServer.post('/quiz/generate', formData);
+      // Debug logs
+      console.log('File object:', file);
+      console.log('File name:', file?.name);
+      console.log('File size:', file?.size);
+      console.log('File type:', file?.type);
+      console.log('Number of Questions:', numQuestions);
+      console.log('Time Limit (minutes):', timeLimit);
+
+      // Log FormData entries
+      for (const pair of formData.entries()) {
+        console.log(`FormData entry - ${pair[0]}:`, pair[1]);
+      }
+
+      // Call API to generate questions with proper headers for file upload
+      const response = await api.ccServer.post('/quiz/generate', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
       if (response.status !== 200) throw new Error('Failed to generate quiz');
 

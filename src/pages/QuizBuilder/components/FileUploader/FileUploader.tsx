@@ -23,17 +23,40 @@ export const FileUploader: React.FC<FileUploaderProps> = ({ onFileUpload }) => {
     }
   };
 
+  const validateAndProcessFile = (file: File) => {
+    if (!file || !(file instanceof File)) {
+      alert('Please upload a valid file');
+      return false;
+    }
+
+    if (file.type !== 'application/pdf') {
+      alert('Please upload a PDF file');
+      return false;
+    }
+
+    if (file.size === 0) {
+      alert('The file appears to be empty');
+      return false;
+    }
+
+    console.log('Valid file being processed:', {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+    });
+
+    return true;
+  };
+
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
-      if (file.type === 'application/pdf') {
+      if (validateAndProcessFile(file)) {
         setSelectedFile(file);
         onFileUpload(file);
-      } else {
-        alert('Please upload a PDF file');
       }
     }
   };
@@ -42,11 +65,9 @@ export const FileUploader: React.FC<FileUploaderProps> = ({ onFileUpload }) => {
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      if (file.type === 'application/pdf') {
+      if (validateAndProcessFile(file)) {
         setSelectedFile(file);
         onFileUpload(file);
-      } else {
-        alert('Please upload a PDF file');
       }
     }
   };
