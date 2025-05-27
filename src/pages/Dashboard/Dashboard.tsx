@@ -3,6 +3,19 @@ import { motion } from 'framer-motion';
 import styles from './Dashboard.module.scss';
 
 export const Dashboard = () => {
+  const textVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: 0.1 * i,
+        duration: 0.5,
+        ease: [0.6, -0.05, 0.01, 0.99],
+      },
+    }),
+  };
+
   return (
     <motion.div
       className={styles.dashboardContainer}
@@ -17,29 +30,40 @@ export const Dashboard = () => {
       <div className={styles.content}>
         {/* Header Section */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          variants={textVariants}
+          custom={1}
+          initial="hidden"
+          animate="visible"
           className={styles.badge}
         >
           <span>Welcome Back</span>
         </motion.div>
 
         <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          variants={textVariants}
+          custom={2}
+          initial="hidden"
+          animate="visible"
           className={styles.title}
         >
           Your Learning
           <br />
-          <span className={styles.highlight}>Journey Starts Here.</span>
+          <motion.span
+            className={styles.highlight}
+            variants={textVariants}
+            custom={3}
+            initial="hidden"
+            animate="visible"
+          >
+            Journey Starts Here.
+          </motion.span>
         </motion.h2>
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          variants={textVariants}
+          custom={4}
+          initial="hidden"
+          animate="visible"
           className={styles.description}
         >
           Access all your learning tools in one place. Get instant help,
@@ -51,16 +75,19 @@ export const Dashboard = () => {
         <div className={styles.grid}>
           {/* Chrome Extension Card */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
+            variants={textVariants}
+            custom={5}
+            initial="hidden"
+            animate="visible"
             whileHover={{ scale: 1.02 }}
             className={`${styles.card} ${styles.blueCard}`}
           >
-            <div className={styles.cardIcon}>
-              <FiDownload />
+            <div className={styles.cardIconContainer}>
+              <div className={styles.cardIcon}>
+                <FiDownload />
+              </div>
+              <h3 className={styles.cardTitle}>Chrome Extension</h3>
             </div>
-            <h3 className={styles.cardTitle}>Chrome Extension</h3>
             <p className={styles.cardDescription}>
               Enhance your learning experience with our Chrome extension. Get
               instant access to AI-powered solutions and summaries directly in
@@ -78,16 +105,19 @@ export const Dashboard = () => {
 
           {/* AI Tutor Card */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
+            variants={textVariants}
+            custom={6}
+            initial="hidden"
+            animate="visible"
             whileHover={{ scale: 1.02 }}
             className={`${styles.card} ${styles.pinkCard}`}
           >
-            <div className={styles.cardIcon}>
-              <FiInfo />
+            <div className={styles.cardIconContainer}>
+              <div className={styles.cardIcon}>
+                <FiInfo />
+              </div>
+              <h3 className={styles.cardTitle}>AI Tutor</h3>
             </div>
-            <h3 className={styles.cardTitle}>AI Tutor</h3>
             <p className={styles.cardDescription}>
               Get personalized help from our AI tutor. Ask questions, solve
               problems, and receive step-by-step explanations in real-time.
@@ -99,16 +129,19 @@ export const Dashboard = () => {
 
           {/* Screenshot Tool Card */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
+            variants={textVariants}
+            custom={7}
+            initial="hidden"
+            animate="visible"
             whileHover={{ scale: 1.02 }}
             className={`${styles.card} ${styles.greenCard}`}
           >
-            <div className={styles.cardIcon}>
-              <FiTool />
+            <div className={styles.cardIconContainer}>
+              <div className={styles.cardIcon}>
+                <FiTool />
+              </div>
+              <h3 className={styles.cardTitle}>Screenshot to Solution</h3>
             </div>
-            <h3 className={styles.cardTitle}>Screenshot to Solution</h3>
             <p className={styles.cardDescription}>
               Take a screenshot of any problem and get instant solutions with
               detailed explanations using our advanced AI technology.
@@ -120,16 +153,19 @@ export const Dashboard = () => {
 
           {/* Help & Support Card */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
+            variants={textVariants}
+            custom={8}
+            initial="hidden"
+            animate="visible"
             whileHover={{ scale: 1.02 }}
             className={`${styles.card} ${styles.yellowCard}`}
           >
-            <div className={styles.cardIcon}>
-              <FiHelpCircle />
+            <div className={styles.cardIconContainer}>
+              <div className={styles.cardIcon}>
+                <FiHelpCircle />
+              </div>
+              <h3 className={styles.cardTitle}>Help & Support</h3>
             </div>
-            <h3 className={styles.cardTitle}>Help & Support</h3>
             <p className={styles.cardDescription}>
               Need help? Access our comprehensive guides, FAQ section, or
               contact our support team for assistance with any issues.
