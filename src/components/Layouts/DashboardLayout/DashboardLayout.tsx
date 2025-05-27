@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import moment from 'moment';
 import { Menu } from 'lucide-react';
@@ -46,6 +46,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 }) => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const { user, subscription } = useSelector(
     (state: RootStateType) => state.user,
@@ -337,7 +338,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   };
 
   return (
-    <div className={styles.dashboard}>
+    <div className={styles.dashboard} data-route={location.pathname}>
       <Sidebar
         isCollapsed={isSidebarCollapsed}
         isVisible={isSidebarVisible}
