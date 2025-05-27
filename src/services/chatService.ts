@@ -55,12 +55,34 @@ export const chatService = {
       payload.image = imageData;
     }
 
-    const response = await api.ccServer.post(`/chatbot/chat`, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
+    try {
+      const response = await api.ccServer.post(`/chatbot/chat`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      console.error('Chat API error:', error);
+
+      // Handle specific error types
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        if (error.response.status === 403 || error.response.status === 401) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
+
+        if (error.response.data && error.response.data.message) {
+          throw new Error(error.response.data.message);
+        }
+      }
+
+      // Generic error for network issues or unexpected errors
+      throw new Error(
+        'Failed to connect to chat service. Please try again later.',
+      );
+    }
   },
 
   // Chat with AI using voice
@@ -128,14 +150,25 @@ export const chatService = {
   // Get all conversations
   getConversations: async () => {
     const token = Cookies.get('userToken');
-    if (!token) throw new Error('User not authenticated');
+    console.log('ChatService - Getting conversations with token:', token);
 
-    const response = await api.ccServer.get(`/chatbot/conversations`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data.conversations as Conversation[];
+    if (!token) {
+      console.error('ChatService - No token found');
+      throw new Error('User not authenticated');
+    }
+
+    try {
+      const response = await api.ccServer.get(`/chatbot/conversations`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log('ChatService - Conversations response:', response.data);
+      return response.data.conversations as Conversation[];
+    } catch (error) {
+      console.error('ChatService - Error fetching conversations:', error);
+      throw error;
+    }
   },
 
   // Get messages for a specific conversation

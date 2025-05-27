@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { HiChatBubbleLeftRight } from 'react-icons/hi2';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import styles from './Chatbot.module.scss';
 import { History } from '~/components/History/History';
 import { chatService, Conversation, creditsService } from '~/services';
 import toast from 'react-hot-toast';
 import { UpgradePopup } from '~/components/UpgradePopup';
+import Cookies from 'js-cookie';
 
 // Import our modular components and types
 import {
@@ -19,6 +21,14 @@ import { api } from '~api';
 
 export function Chatbot() {
   console.log('Chatbot component rendered');
+
+  const location = useLocation();
+  const locationStateRef = useRef(location.state);
+
+  // Refs for tracking state between renders
+  const shouldUpdateConversationsRef = useRef(false);
+  // Track last render timestamp to prevent too frequent re-renders
+  const lastRenderTimeRef = useRef(Date.now());
 
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -36,6 +46,7 @@ export function Chatbot() {
     null,
   );
   const [showUpgradePopup, setShowUpgradePopup] = useState(false);
+  const [hasProcessedFollowup, setHasProcessedFollowup] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -50,9 +61,13 @@ export function Chatbot() {
   const fetchConversations = useCallback(async () => {
     try {
       console.log('Fetching conversations...');
+      const token = Cookies.get('userToken');
+      console.log('Current auth token:', token);
       const conversationsData = await chatService.getConversations();
+      console.log('Fetched conversations:', conversationsData);
       setConversations(conversationsData);
     } catch (err: any) {
+      console.error('Error fetching conversations:', err);
       if (err.message !== 'User not authenticated') {
         toast.error('Failed to fetch conversation history');
       }
@@ -158,15 +173,22 @@ export function Chatbot() {
           headers: {
             Accept: 'text/event-stream',
             'Cache-Control': 'no-cache',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers':
+              'Origin, Content-Type, Accept, Authorization, X-Request-With',
+            'X-Requested-With': 'XMLHttpRequest',
           },
           onDownloadProgress: (progressEvent: any) => {
+            if (!progressEvent.event?.target?.responseText) return;
+
             const rawText = progressEvent.event.target.responseText;
             const chunks = rawText
               .split('\n\n')
               .filter((chunk: string) => chunk.trim());
 
             for (const chunk of chunks) {
-              console.log(chunk.length, 'chunk');
               if (!chunk.startsWith('data: ')) continue;
 
               const data = chunk.replace('data: ', '').trim();
@@ -191,7 +213,7 @@ export function Chatbot() {
 
               try {
                 const parsed = JSON.parse(data);
-                if (parsed.content) {
+                if (parsed.content !== undefined) {
                   setMessages((prev) => {
                     const newMessages = [...prev];
                     const lastMessage = newMessages[newMessages.length - 1];
@@ -209,9 +231,7 @@ export function Chatbot() {
                   }
                 }
               } catch (e) {
-                if (!data.includes('[DONE]')) {
-                  console.error('Error parsing SSE data:', e);
-                }
+                console.error('Error parsing SSE data:', e, 'Raw data:', data);
               }
             }
           },
@@ -291,7 +311,13 @@ export function Chatbot() {
       // Refresh credits regardless of success or failure
       creditsService.refreshCredits();
     }
-  }, [message, currentConversationId, isLoading, attachedImage]);
+  }, [
+    message,
+    currentConversationId,
+    isLoading,
+    attachedImage,
+    fetchConversations,
+  ]);
 
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -523,6 +549,391 @@ export function Chatbot() {
       }
     }
   }, [messages]);
+
+  // Add a new function to handle followup questions
+  const handleFollowupQuestion = useCallback(
+    async (followupQuestion: string) => {
+      if (!followupQuestion.trim() || isLoading) return;
+
+      console.log('Processing follow-up question:', followupQuestion);
+
+      // Set loading state once
+      setIsLoading(true);
+      setError(null);
+
+      // Reset the ref flag before we start
+      shouldUpdateConversationsRef.current = false;
+
+      try {
+        // Create a temporary message for the AI's response (avoid setState if message already exists)
+        const messagesSnapshot = [...messages];
+        const hasAiMessage = messagesSnapshot.some(
+          (msg) => !msg.isUser && msg.isStreaming,
+        );
+
+        if (!hasAiMessage) {
+          // Only add a temporary message if one doesn't exist already
+          const tempAiMessage: Message = {
+            id: Date.now().toString() + '-ai',
+            content: '',
+            isUser: false,
+            timestamp: new Date(),
+            isStreaming: true,
+          };
+
+          // Use functional update to avoid dependency on messages state
+          setMessages((prev) => [...prev, tempAiMessage]);
+        }
+
+        // Make the API call with streaming using axios
+        console.log('Sending follow-up question to API');
+        const response = await api.ccServer.post(
+          '/chatbot/chat',
+          {
+            message: followupQuestion,
+            conversationId: currentConversationId,
+          },
+          {
+            responseType: 'text',
+            headers: {
+              Accept: 'text/event-stream',
+              'Cache-Control': 'no-cache',
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+              'Access-Control-Allow-Headers':
+                'Origin, Content-Type, Accept, Authorization, X-Request-With',
+              'X-Requested-With': 'XMLHttpRequest',
+            },
+            onDownloadProgress: (progressEvent: any) => {
+              if (!progressEvent.event?.target?.responseText) return;
+
+              const rawText = progressEvent.event.target.responseText;
+              console.log('Received data length:', rawText.length);
+              const chunks = rawText
+                .split('\n\n')
+                .filter((chunk: string) => chunk.trim());
+
+              for (const chunk of chunks) {
+                if (!chunk.startsWith('data: ')) continue;
+
+                const data = chunk.replace('data: ', '').trim();
+                if (data === '[DONE]') {
+                  setMessages((prev) => {
+                    const newMessages = [...prev];
+                    const lastMessage =
+                      newMessages.length > 0
+                        ? newMessages[newMessages.length - 1]
+                        : null;
+                    if (lastMessage && !lastMessage.isUser) {
+                      lastMessage.isStreaming = false;
+                    }
+                    return [...newMessages];
+                  });
+
+                  if (shouldUpdateConversationsRef.current) {
+                    // Use setTimeout to avoid immediate state update that might interfere with rendering
+                    setTimeout(() => {
+                      fetchConversations();
+                    }, 100);
+                  }
+
+                  // Refresh credits when the streaming is done
+                  creditsService.refreshCredits();
+                  return;
+                }
+
+                try {
+                  const parsed = JSON.parse(data);
+                  console.log('Parsed chunk data:', parsed);
+                  if (parsed.content !== undefined) {
+                    setMessages((prev) => {
+                      const newMessages = [...prev];
+                      const lastMessage =
+                        newMessages.length > 0
+                          ? newMessages[newMessages.length - 1]
+                          : null;
+
+                      if (lastMessage && !lastMessage.isUser) {
+                        // Update the existing message
+                        lastMessage.content = parsed.content;
+                        lastMessage.isStreaming = true;
+                      } else {
+                        // Create a new message if somehow we don't have one
+                        newMessages.push({
+                          id: Date.now().toString() + '-ai',
+                          content: parsed.content,
+                          isUser: false,
+                          timestamp: new Date(),
+                          isStreaming: true,
+                        });
+                      }
+
+                      return [...newMessages];
+                    });
+
+                    if (parsed.conversationId && !currentConversationId) {
+                      setCurrentConversationId(parsed.conversationId);
+                      shouldUpdateConversationsRef.current = true;
+                    }
+                  }
+                } catch (e) {
+                  console.error(
+                    'Error parsing SSE data:',
+                    e,
+                    'Raw data:',
+                    data,
+                  );
+                }
+              }
+            },
+          },
+        );
+      } catch (err: any) {
+        console.error('Error in follow-up question:', err);
+
+        // Only update error state if we're still mounted and the error is relevant
+        setError(
+          'Sorry, I encountered an error while processing your request. Please try again.',
+        );
+
+        // Error handling code...
+      } finally {
+        // Set loading state to false to allow new interactions
+        setIsLoading(false);
+
+        // Refresh credits regardless of success or failure
+        creditsService.refreshCredits();
+      }
+    },
+    [currentConversationId, isLoading, messages],
+  );
+
+  // Add a new effect to handle state passed from LectureSummarizer once on mount
+  // This effect needs to be placed after the function definitions
+  useEffect(() => {
+    // Only run this once on mount
+    const handleInitialLocationState = async () => {
+      // Access the location state directly to ensure we get the fresh value
+      const state = location.state as {
+        selectedConversationId?: string;
+        fromLectureSummarizer?: boolean;
+        previousResponse?: string;
+        followupQuestion?: string;
+      } | null;
+
+      if (!state) return;
+
+      console.log('Processing location state:', state);
+
+      // Case 2: Coming with previous response and followup question - HANDLE THIS FIRST
+      if (state.previousResponse && state.followupQuestion) {
+        console.log('============================================');
+        console.log('HANDLING FOLLOWUP QUESTION FLOW');
+        console.log('Previous response length:', state.previousResponse.length);
+        console.log('Follow-up question:', state.followupQuestion);
+        console.log('============================================');
+
+        // Immediately show the conversation UI
+        setIsWelcomeScreen(false);
+
+        // Start with the AI's previous response
+        const aiMessage: Message = {
+          id: Date.now().toString() + '-prev',
+          content: state.previousResponse,
+          isUser: false,
+          timestamp: new Date(Date.now() - 1000), // 1 second ago
+        };
+
+        // Add the user's followup question
+        const userMessage: Message = {
+          id: Date.now().toString(),
+          content: state.followupQuestion,
+          isUser: true,
+          timestamp: new Date(),
+        };
+
+        // Set messages to include both
+        setMessages([aiMessage, userMessage]);
+
+        // Mark that we've processed the followup to prevent re-processing
+        setHasProcessedFollowup(true);
+
+        // Clear state before API call to prevent issues
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname,
+        );
+
+        // CRITICAL: Store the followup question in a variable to ensure it's not lost
+        const followupToSend = state.followupQuestion;
+
+        // Send the question directly and immediately rather than deferring with timeout
+        try {
+          console.log(
+            'Directly sending followup question to API:',
+            followupToSend,
+          );
+
+          // Set loading state
+          setIsLoading(true);
+
+          // Add a streaming message placeholder
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: Date.now().toString() + '-ai-streaming',
+              content: '',
+              isUser: false,
+              timestamp: new Date(),
+              isStreaming: true,
+            },
+          ]);
+
+          // Make the direct API call
+          const response = await api.ccServer.post(
+            '/chatbot/chat',
+            {
+              message: followupToSend,
+              conversationId: currentConversationId,
+            },
+            {
+              responseType: 'text',
+              headers: {
+                Accept: 'text/event-stream',
+                'Cache-Control': 'no-cache',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods':
+                  'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers':
+                  'Origin, Content-Type, Accept, Authorization, X-Request-With',
+                'X-Requested-With': 'XMLHttpRequest',
+              },
+              onDownloadProgress: (progressEvent: any) => {
+                if (!progressEvent.event?.target?.responseText) return;
+
+                const rawText = progressEvent.event.target.responseText;
+                console.log('Received data length:', rawText.length);
+                const chunks = rawText
+                  .split('\n\n')
+                  .filter((chunk: string) => chunk.trim());
+
+                for (const chunk of chunks) {
+                  if (!chunk.startsWith('data: ')) continue;
+
+                  const data = chunk.replace('data: ', '').trim();
+                  if (data === '[DONE]') {
+                    setMessages((prev) => {
+                      const newMessages = [...prev];
+                      const lastMessage =
+                        newMessages.length > 0
+                          ? newMessages[newMessages.length - 1]
+                          : null;
+                      if (lastMessage && !lastMessage.isUser) {
+                        lastMessage.isStreaming = false;
+                      }
+                      return [...newMessages];
+                    });
+
+                    // When done, refresh conversations
+                    fetchConversations();
+
+                    // Refresh credits when the streaming is done
+                    creditsService.refreshCredits();
+
+                    // Clear loading state
+                    setIsLoading(false);
+                    return;
+                  }
+
+                  try {
+                    const parsed = JSON.parse(data);
+                    console.log('Parsed chunk data:', parsed);
+                    if (parsed.content !== undefined) {
+                      setMessages((prev) => {
+                        const newMessages = [...prev];
+                        const lastMessage =
+                          newMessages.length > 0
+                            ? newMessages[newMessages.length - 1]
+                            : null;
+
+                        if (lastMessage && !lastMessage.isUser) {
+                          // Update the existing message
+                          lastMessage.content = parsed.content;
+                          lastMessage.isStreaming = true;
+                        } else {
+                          // Create a new message if somehow we don't have one
+                          newMessages.push({
+                            id: Date.now().toString() + '-ai',
+                            content: parsed.content,
+                            isUser: false,
+                            timestamp: new Date(),
+                            isStreaming: true,
+                          });
+                        }
+
+                        return [...newMessages];
+                      });
+
+                      if (parsed.conversationId && !currentConversationId) {
+                        setCurrentConversationId(parsed.conversationId);
+                      }
+                    }
+                  } catch (e) {
+                    console.error(
+                      'Error parsing SSE data:',
+                      e,
+                      'Raw data:',
+                      data,
+                    );
+                  }
+                }
+              },
+            },
+          );
+
+          console.log('API call completed');
+        } catch (err) {
+          console.error('Error sending followup question directly:', err);
+          setIsLoading(false);
+          setError(
+            'Failed to get AI response. Please try sending your question again.',
+          );
+          toast.error('Failed to get AI response');
+        }
+      }
+      // Case 1: Coming from lecture summarizer with existing conversation
+      else if (state.selectedConversationId && state.fromLectureSummarizer) {
+        console.log(
+          'Detected navigation from LectureSummarizer, loading conversation:',
+          state.selectedConversationId,
+        );
+
+        // Use setTimeout to ensure this runs after component is fully mounted
+        setTimeout(() => {
+          // TypeScript safety - additional check to ensure selectedConversationId is not undefined
+          if (state.selectedConversationId) {
+            loadConversation(state.selectedConversationId);
+          }
+
+          // Clear the location state reference to prevent reprocessing
+          locationStateRef.current = null;
+
+          // Clear the location state after using it to prevent issues on refresh
+          window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname,
+          );
+        }, 100);
+      }
+    };
+
+    // Only run once on component mount
+    handleInitialLocationState();
+  }, []);
 
   return (
     <div

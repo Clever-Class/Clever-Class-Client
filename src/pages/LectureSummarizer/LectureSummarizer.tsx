@@ -14,10 +14,15 @@ import {
   FileText,
   Award,
   ArrowRightCircle,
+  Send,
 } from 'lucide-react';
 import styles from './LectureSummarizer.module.scss';
 import classNames from 'classnames';
-import { MessageBubble } from '~/components/Chatbot';
+import { MessageBubble, InputContainer } from '~/components/Chatbot';
+import { useNavigate } from 'react-router-dom';
+import { chatService } from '~/services/chatService';
+import Cookies from 'js-cookie';
+import { api } from '~api';
 
 export const LectureSummarizer = () => {
   const [videoUrl, setVideoUrl] = useState('');
@@ -30,10 +35,15 @@ export const LectureSummarizer = () => {
   const [progressStage, setProgressStage] = useState<string | null>(null);
   const [summary, setSummary] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [replyMessage, setReplyMessage] = useState('');
+  const [showReply, setShowReply] = useState(false);
+  const [replyLoading, setReplyLoading] = useState(false);
 
   // Add refs for scrolling
   const progressCardRef = useRef<HTMLDivElement>(null);
   const summaryCardRef = useRef<HTMLDivElement>(null);
+  const replyInputRef = useRef<HTMLTextAreaElement>(null);
+  const navigate = useNavigate();
 
   // Scroll to element helper function with alignment option
   const scrollToElement = (
@@ -59,6 +69,7 @@ export const LectureSummarizer = () => {
   useEffect(() => {
     if (summary) {
       scrollToElement(summaryCardRef, 'start');
+      setShowReply(true);
     }
   }, [summary]);
 
@@ -98,122 +109,231 @@ export const LectureSummarizer = () => {
     setProgressMessage('Starting summarization process...');
     setSummary(null);
     setError(null);
+    setShowReply(false);
 
     try {
-      // Use the correct backend URL with port 8000
-      const backendURL = 'http://localhost:8000';
+      const token = Cookies.get('userToken');
 
-      // Create a separate instance for direct connection to backend
-      // This bypasses any proxy settings in the main api instance
-      const response = await fetch(
-        `${backendURL}/lecture-summarizer/summarize`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'text/event-stream',
-          },
-          body: JSON.stringify({
-            videoUrl,
-            language,
-          }),
-        },
-      );
-
-      if (!response.ok || !response.body) {
-        throw new Error(`Server responded with status: ${response.status}`);
+      if (!token) {
+        setError('You must be logged in to use this feature');
+        setLoading(false);
+        return;
       }
 
-      console.log('Response headers:', response.headers);
-      console.log('Response status:', response.status);
+      // For EventSource, we need to include the token in the URL as a query parameter
+      // since EventSource doesn't support custom headers
+      const eventSourceUrl = `${
+        api.ccServer.defaults.baseURL
+      }/lecture-summarizer/summarize?videoUrl=${encodeURIComponent(
+        videoUrl,
+      )}&language=${language}&token=${token}`;
 
-      // Process the SSE stream using the ReadableStream API
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
+      console.log('Connecting to EventSource...');
 
-      // Function to process the stream
-      const processStream = async () => {
-        let processing = true;
+      // Set up event source using EventSource
+      const eventSource = new EventSource(eventSourceUrl);
 
-        while (processing) {
-          try {
-            const { done, value } = await reader.read();
+      // Define the event handlers
+      eventSource.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          console.log('SSE update received:', data);
 
-            if (done) {
-              console.log('Stream completed');
-              processing = false;
-              break;
-            }
+          // Update state based on the data
+          if (data.progress !== undefined) setProgress(data.progress);
+          if (data.message) setProgressMessage(data.message);
+          if (data.stage) setProgressStage(data.stage);
 
-            // Decode the chunk and add to buffer
-            const chunk = decoder.decode(value, { stream: true });
-            console.log('Received chunk:', chunk);
-            buffer += chunk;
-
-            // Process complete SSE messages (separated by double newlines)
-            const messages = buffer.split('\n\n');
-            buffer = messages.pop() || ''; // Keep the last (possibly incomplete) chunk
-
-            for (const message of messages) {
-              if (message.trim().startsWith('data:')) {
-                try {
-                  // Extract and parse the JSON data
-                  const jsonStr = message.trim().substring(5); // Remove 'data:' prefix
-                  const data = JSON.parse(jsonStr);
-
-                  console.log('SSE update received:', data);
-
-                  // Update state based on the data
-                  if (data.progress !== undefined) setProgress(data.progress);
-                  if (data.message) setProgressMessage(data.message);
-                  if (data.stage) setProgressStage(data.stage);
-
-                  // Handle completion
-                  if (data.stage === 'complete' && data.data?.summary) {
-                    setSummary(data.data.summary);
-                    reader.cancel();
-                    setLoading(false);
-                    processing = false;
-                  }
-
-                  // Handle errors
-                  if (data.stage === 'error') {
-                    setError(
-                      data.message || 'An error occurred during summarization',
-                    );
-                    reader.cancel();
-                    setLoading(false);
-                    processing = false;
-                  }
-                } catch (parseError) {
-                  console.error('Error parsing SSE data:', parseError, message);
-                }
-              }
-            }
-          } catch (readError) {
-            console.error('Error reading from stream:', readError);
-            processing = false;
-            setError('Error processing response stream');
+          // Handle completion
+          if (data.stage === 'complete' && data.data?.summary) {
+            setSummary(data.data.summary);
+            eventSource.close();
             setLoading(false);
           }
+
+          // Handle errors
+          if (data.stage === 'error') {
+            setError(data.message || 'An error occurred during summarization');
+            eventSource.close();
+            setLoading(false);
+          }
+        } catch (parseError) {
+          console.error('Error parsing SSE data:', parseError, event.data);
         }
       };
 
-      // Start processing the stream
-      processStream().catch((streamError) => {
-        console.error('Stream processing error:', streamError);
-        setError('Error processing response stream');
+      // Handle connection error
+      eventSource.onerror = (error) => {
+        console.error('EventSource error:', error);
+        setError(
+          'Connection error. Please check your authentication and try again.',
+        );
+        eventSource.close();
         setLoading(false);
-      });
-    } catch (err) {
+      };
+
+      // No need for a separate POST request since we're passing everything in the EventSource URL
+    } catch (err: any) {
       console.error('API request error:', err);
-      setError(
-        `Failed to start summarization process: ${
-          err instanceof Error ? err.message : String(err)
-        }`,
-      );
+
+      // Handle auth errors specifically
+      if (err.response?.status === 401 || err.response?.status === 403) {
+        setError(
+          'Authentication error: Please log in again before using this feature.',
+        );
+      } else {
+        setError(
+          `Failed to start summarization process: ${
+            err instanceof Error ? err.message : String(err)
+          }`,
+        );
+      }
+
       setLoading(false);
+    }
+  };
+
+  // Function to handle sending reply and transition to chatbot
+  const handleSendReply = async () => {
+    if (!replyMessage.trim() || !summary || replyLoading) return;
+
+    setReplyLoading(true);
+
+    try {
+      // Create a meaningful title from the video URL
+      const videoIdPattern =
+        /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/i;
+      const videoId = videoUrl.match(videoIdPattern)?.[1];
+
+      // Extract video title to form a more meaningful conversation title
+      const titleWords = summary?.split(/\s+/).slice(0, 7).join(' ') || '';
+      const conversationTitle = titleWords
+        ? `${titleWords}...`
+        : `YouTube Video Summary`;
+
+      // First, create a conversation with an assistant message instead of user message
+      // We'll do a two-step process:
+      // 1. Start conversation with a fake "user" message (API limitation)
+      // 2. Then have the AI "respond" with our context message
+      const token = Cookies.get('userToken');
+
+      if (!token) {
+        throw new Error('User not authenticated');
+      }
+
+      console.log('Starting conversation with system context message');
+
+      // Initial message to start the conversation - this is needed due to API requirements
+      // We use a placeholder message that won't be visible to the user
+      const initialMessage = `Summarize this YouTube video: ${videoUrl}`;
+
+      // Use a regular POST request first to start the conversation and get the conversationId
+      const response = await api.ccServer.post(
+        '/chatbot/chat',
+        {
+          message: initialMessage,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      // Extract conversationId from response
+      let conversationId: string | undefined;
+
+      // Parse response data to get conversationId
+      if (response.data && response.data.conversationId) {
+        conversationId = response.data.conversationId;
+        console.log('Received conversationId:', conversationId);
+      } else {
+        // If for some reason we don't have a conversationId in the response,
+        // try to extract it from the event data
+        const eventData = response.data;
+        if (
+          typeof eventData === 'string' &&
+          eventData.includes('conversationId')
+        ) {
+          try {
+            const match = eventData.match(/"conversationId":"([^"]+)"/);
+            if (match && match[1]) {
+              conversationId = match[1];
+              console.log(
+                'Extracted conversationId from event data:',
+                conversationId,
+              );
+            }
+          } catch (err) {
+            console.error(
+              'Error extracting conversationId from response:',
+              err,
+            );
+          }
+        }
+      }
+
+      if (!conversationId) {
+        throw new Error('Failed to get a valid conversation ID');
+      }
+
+      // Set a more descriptive title for the conversation
+      await api.ccServer.patch(
+        `/chatbot/conversations/${conversationId}`,
+        { title: conversationTitle },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      // First, add AI assistant context as a message from the user
+      const contextMessage = `I've just watched a YouTube video at ${videoUrl}. Here's what it was about:\n\n${summary}\n\nNow I'd like to ask a follow-up question: ${replyMessage}`;
+
+      // Now send the user's actual question with context
+      await chatService.chatWithAI(contextMessage, conversationId);
+
+      console.log('Message sent successfully, navigating to chat page');
+
+      // Use simple navigatestate approach to avoid Cross-Origin-Opener-Policy issues
+      navigate('/dashboard/ai-chatbot', {
+        state: {
+          selectedConversationId: conversationId,
+          fromLectureSummarizer: true,
+        },
+        replace: true, // Use replace instead of push to avoid browser history issues
+      });
+    } catch (error: any) {
+      console.error('Error transitioning to chat:', error);
+
+      // Handle different types of errors
+      if (
+        error.message.includes('authentication') ||
+        error.message.includes('log in')
+      ) {
+        setError(
+          'Authentication error: Please log in again before using this feature.',
+        );
+      } else {
+        setError(
+          `Failed to start chat conversation: ${
+            error.message || 'Please try again.'
+          }`,
+        );
+      }
+    } finally {
+      setReplyLoading(false);
+    }
+  };
+
+  // Handle key press for reply input
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendReply();
     }
   };
 
@@ -453,6 +573,35 @@ export const LectureSummarizer = () => {
               onImageClick={() => {}}
               isLoading={false}
             />
+
+            {/* Reply section */}
+            {showReply && (
+              <div className={styles.replySection}>
+                <h4 className={styles.replyTitle}>Ask a follow-up question</h4>
+                <div className={styles.replyContainer}>
+                  <textarea
+                    ref={replyInputRef}
+                    className={styles.replyInput}
+                    placeholder="Ask a question about this lecture..."
+                    value={replyMessage}
+                    onChange={(e) => setReplyMessage(e.target.value)}
+                    onKeyDown={handleKeyPress}
+                    disabled={replyLoading}
+                  />
+                  <button
+                    className={styles.replyButton}
+                    onClick={handleSendReply}
+                    disabled={!replyMessage.trim() || replyLoading}
+                  >
+                    {replyLoading ? (
+                      <div className={styles.buttonLoader} />
+                    ) : (
+                      <Send size={16} />
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
