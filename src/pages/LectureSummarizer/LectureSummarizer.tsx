@@ -10,7 +10,6 @@ import {
   CheckCircle,
   AlertCircle,
   Clock,
-  Loader,
   FileText,
   Award,
   ArrowRightCircle,
@@ -18,11 +17,12 @@ import {
 } from 'lucide-react';
 import styles from './LectureSummarizer.module.scss';
 import classNames from 'classnames';
-import { MessageBubble, InputContainer } from '~/components/Chatbot';
+import { MessageBubble } from '~/components/Chatbot';
 import { useNavigate } from 'react-router-dom';
 import { chatService } from '~/services/chatService';
 import Cookies from 'js-cookie';
 import { api } from '~api';
+import { SERVER_URL } from '~constants';
 
 export const LectureSummarizer = () => {
   const [videoUrl, setVideoUrl] = useState('');
@@ -122,9 +122,7 @@ export const LectureSummarizer = () => {
 
       // For EventSource, we need to include the token in the URL as a query parameter
       // since EventSource doesn't support custom headers
-      const eventSourceUrl = `${
-        api.ccServer.defaults.baseURL
-      }/lecture-summarizer/summarize?videoUrl=${encodeURIComponent(
+      const eventSourceUrl = `${SERVER_URL}/lecture-summarizer/summarize?videoUrl=${encodeURIComponent(
         videoUrl,
       )}&language=${language}&token=${token}`;
 
