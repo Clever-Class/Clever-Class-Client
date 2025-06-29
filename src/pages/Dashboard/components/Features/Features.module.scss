@@ -1,0 +1,289 @@
+@import '../../../../styles/variables';
+
+.featuresSection {
+  width: 100%;
+  margin: 4rem 0;
+  position: relative;
+
+  @media (max-width: $tablet) {
+    padding: 0 2rem;
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+
+  @media (max-width: $mobile) {
+    padding: 0 1.5rem;
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: $tablet) {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (max-width: $mobile) {
+    gap: 1rem;
+  }
+}
+
+.card {
+  position: relative;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  text-align: left;
+  height: auto;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  transform-origin: center bottom;
+  transition: all 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  will-change: transform, box-shadow;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at top left,
+      rgba(255, 255, 255, 0.03) 0%,
+      transparent 50%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.15),
+      0 10px 10px rgba(37, 99, 255, 0.1);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &.blueCard {
+    border-color: rgba(37, 99, 255, 0.2);
+    background: linear-gradient(
+      135deg,
+      rgba(37, 99, 255, 0.1) 0%,
+      rgba(37, 99, 255, 0.05) 100%
+    );
+  }
+
+  &.pinkCard {
+    border-color: rgba(236, 72, 153, 0.2);
+    background: linear-gradient(
+      135deg,
+      rgba(236, 72, 153, 0.1) 0%,
+      rgba(236, 72, 153, 0.05) 100%
+    );
+  }
+
+  &.greenCard {
+    border-color: rgba(48, 196, 0, 0.2);
+    background: linear-gradient(
+      135deg,
+      rgba(48, 196, 0, 0.1) 0%,
+      rgba(48, 196, 0, 0.05) 100%
+    );
+  }
+
+  &.yellowCard {
+    border-color: rgba(234, 179, 8, 0.2);
+    background: linear-gradient(
+      135deg,
+      rgba(234, 179, 8, 0.1) 0%,
+      rgba(234, 179, 8, 0.05) 100%
+    );
+  }
+
+  @media (max-width: $tablet) {
+    min-height: 220px;
+    padding: 1.75rem;
+  }
+}
+
+.cardIconContainer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.cardIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  will-change: transform, background-color;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      45deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+    color: #fff;
+    opacity: 0.9;
+    transition: all 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+    will-change: transform, opacity;
+  }
+
+  .card:hover & {
+    transform: scale(1.1) rotate(5deg);
+    background: rgba(255, 255, 255, 0.1);
+
+    &::before {
+      opacity: 1;
+    }
+
+    svg {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+  }
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.02em;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 8px rgba(37, 99, 255, 0.15);
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  will-change: transform;
+
+  .card:hover & {
+    transform: translateX(6px);
+    text-shadow: 0 4px 12px rgba(37, 99, 255, 0.25);
+  }
+}
+
+.cardDescription {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: 1rem 0 1.5rem;
+  position: relative;
+  z-index: 1;
+  font-weight: 400;
+  transition: all 0.3s ease;
+
+  .card:hover & {
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+.cardAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  text-decoration: none;
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  overflow: hidden;
+  will-change: transform, background-color;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      45deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  @media (max-width: $tablet) {
+    width: 100%;
+    justify-content: center;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+    transition: all 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+    will-change: transform;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+
+    &::before {
+      opacity: 1;
+    }
+
+    svg {
+      transform: translateX(4px);
+    }
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
