@@ -3,7 +3,7 @@ import { Route, Routes as ReactRouterRoutes } from 'react-router-dom';
 import PrivateRoutes from './PrivateRoutes';
 
 import { AppRoutes } from '~constants';
-import { Dashboard } from '~pages/Dashboard';
+// import { Dashboard } from '~pages/Dashboard';
 import { Homepage } from '~pages/Homepage';
 import { Signup } from '~pages/Signup';
 import { ForgotPassword } from '~pages/ForgotPassword';
@@ -17,12 +17,13 @@ import { PricingPage } from '~pages/PricingPage';
 import { QuizBuilder } from '~pages/QuizBuilder';
 import { QuickNotes } from '~pages/QuickNotes';
 import LectureSummarizer from '~pages/LectureSummarizer';
+import DashboardMKII from '~pages/Dashboard/DashboardMKII';
 
 const DashboardRoutes = () => {
   return (
     <DashboardLayout>
       <ReactRouterRoutes>
-        <Route index element={<Dashboard />} />
+        <Route index element={<DashboardMKII />} />
         <Route path={AppRoutes.Settings} element={<Settings />} />
         <Route path={AppRoutes.Chatbot} element={<Chatbot />} />
         <Route path={AppRoutes.QuizBuilder} element={<QuizBuilder />} />

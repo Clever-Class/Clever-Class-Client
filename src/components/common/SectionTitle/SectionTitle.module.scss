@@ -1,0 +1,36 @@
+.sectionTitleWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.sectionGradientTitle {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.8) 60%,
+    rgba(37, 99, 255, 0.25) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 12px rgba(37, 99, 255, 0.2);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  font-size: 2.2rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.decorativeLine {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    rgba(37, 99, 255, 0.1) 0%,
+    rgba(37, 99, 255, 0.6) 50%,
+    rgba(37, 99, 255, 0.1) 100%
+  );
+  border-radius: 2px;
+}
