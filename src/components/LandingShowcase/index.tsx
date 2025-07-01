@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './LandingShowcase.module.scss';
 import { HiAcademicCap, HiChip, HiLightBulb } from 'react-icons/hi';
+import { RiRobot2Line } from 'react-icons/ri';
 import classNames from 'classnames';
 
 interface LandingShowcaseProps {
@@ -17,53 +18,55 @@ export const LandingShowcase: React.FC<LandingShowcaseProps> = ({
         <div className={styles.content}>
           <div className={styles.textContent}>
             <div className={styles.badge}>
-              <HiChip />
-              AI-Powered Learning
+              <RiRobot2Line />
+              AI Study Companion
             </div>
             <h2 className={styles.title}>
-              Transform Your Learning with <span>AI-Enhanced</span> Education
+              Your Personal <span>AI Tutor</span> for Every Subject
             </h2>
             <p className={styles.description}>
-              Experience the future of education with CleverClass. Our
-              AI-powered platform adapts to your learning style, providing
-              personalized guidance and intelligent feedback to help you master
-              any subject.
+              Meet your intelligent study partner that understands every
+              subject. Chat, share images of problems, or have voice
+              conversations with our AI tutor that adapts to your learning style
+              and provides instant, expert-level assistance 24/7.
             </p>
           </div>
           <div className={styles.optionsDisplay}>
             <div className={styles.qualityOption}>
               <div className={styles.formatBadge}>
                 <HiAcademicCap />
-                PRO
+                SMART
               </div>
               <div className={styles.details}>
-                <div className={styles.quality}>Personalized Learning Path</div>
+                <div className={styles.quality}>
+                  Subject-Specific AI Tutoring
+                </div>
                 <div className={styles.size}>
-                  AI-tailored curriculum & progress tracking
+                  Expert guidance in any academic field
                 </div>
               </div>
             </div>
             <div className={styles.qualityOption}>
               <div className={styles.formatBadge}>
                 <HiLightBulb />
-                SMART
+                VISUAL
               </div>
               <div className={styles.details}>
-                <div className={styles.quality}>Intelligent Tutoring</div>
+                <div className={styles.quality}>Image Problem Solving</div>
                 <div className={styles.size}>
-                  24/7 AI assistance & instant feedback
+                  Upload & get instant problem solutions
                 </div>
               </div>
             </div>
             <div className={styles.qualityOption}>
               <div className={styles.formatBadge}>
                 <HiChip />
-                PREMIUM
+                VOICE
               </div>
               <div className={styles.details}>
-                <div className={styles.quality}>Advanced Analytics</div>
+                <div className={styles.quality}>Voice Interaction</div>
                 <div className={styles.size}>
-                  Deep learning insights & performance metrics
+                  Natural conversations with AI tutor
                 </div>
               </div>
             </div>
