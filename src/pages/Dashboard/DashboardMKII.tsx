@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import styles from './DashboardMKII.module.scss';
-import { Hero, HowItWorks, Features, Support } from './components';
+import { Hero, Features, Support } from './components';
 
 export const DashboardMKII = () => {
   return (
@@ -16,7 +16,6 @@ export const DashboardMKII = () => {
 
       <div className={styles.content}>
         <Hero />
-        <HowItWorks />
         <Features />
         <Support />
       </div>

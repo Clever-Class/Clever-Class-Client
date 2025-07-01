@@ -1,4 +1,4 @@
-import { FiDownload } from 'react-icons/fi';
+import { FiDownload, FiPlay } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import styles from './Hero.module.scss';
 import AddExtensionIcon from '~assets/images/AddExtensionIcon';
@@ -30,39 +30,18 @@ export const Hero = () => {
           <span>Welcome Back</span>
         </motion.div>
 
-        <motion.div className={styles.titleContainer}>
-          <motion.h1
-            variants={textVariants}
-            custom={2}
-            initial="hidden"
-            animate="visible"
-            className={styles.heroTitle}
-          >
-            Your Learning
-            <motion.span
-              className={styles.highlight}
-              variants={textVariants}
-              custom={3}
-              initial="hidden"
-              animate="visible"
-            >
-              {' '}
-              Journey Starts Here.
-            </motion.span>
-          </motion.h1>
-        </motion.div>
-
-        <motion.p
+        <motion.div
           variants={textVariants}
-          custom={4}
+          custom={2}
           initial="hidden"
           animate="visible"
-          className={styles.heroDescription}
+          className={styles.videoContainer}
         >
-          Access all your learning tools in one place. Get instant help,
-          summarize content, and enhance your study experience with our
-          AI-powered features.
-        </motion.p>
+          <div className={styles.videoPlaceholder}>
+            <FiPlay className={styles.playIcon} />
+            <span>How It Works</span>
+          </div>
+        </motion.div>
       </div>
 
       <motion.div
