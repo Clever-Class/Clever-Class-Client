@@ -165,7 +165,7 @@
     }
 
     .description {
-      font-size: clamp(14px, 2.5vw, 18px);
+      font-size: clamp(14px, 2.5vw, 16px);
       line-height: 1.55;
       color: rgba(255, 255, 255, 0.8);
       margin-bottom: clamp(2rem, 4vw, 3rem);
@@ -229,6 +229,7 @@
     .iconWrapper {
       padding: clamp(0.35rem, 1vw, 0.5rem);
       border-radius: 0.5rem;
+      padding-top: 0;
 
       svg {
         width: clamp(1.25rem, 2.5vw, 1.5rem);
