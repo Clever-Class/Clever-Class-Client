@@ -82,16 +82,14 @@ const Hero: React.FC = () => {
           <div className={styles.heroCTAContainer}>
             <div className={styles.content}>
               <h1 className={styles.title}>
-                The all-in-one
-                <br aria-hidden="true" />
-                solution to excel
-                <br aria-hidden="true" />
-                <span className={styles.highlight}>in your studies.</span>
+                The Secret to{' '}
+                <span className={styles.highlight}>Study Smarter</span>, Not
+                Harder.
               </h1>
               <p className={styles.description}>
-                Unlock a smarter way to study with our AI-driven suite of
-                powerful learning tools designed to enhance your academic
-                journey.
+                Clever Class is your AI-powered toolkit for acing quizzes,
+                understanding lectures, and mastering your subjects. Get the
+                grades you want, in less time.
               </p>
 
               <div className={styles.socialProof} aria-label="Social Proof">
@@ -125,16 +123,16 @@ const Hero: React.FC = () => {
                       />
                     ))}
                   </div>
-                  <span>Loved by 100k+ students worldwide</span>
+                  <span>Loved by 10,000+ students worldwide</span>
                 </div>
               </div>
 
               <button
                 className={styles.cta}
                 onClick={handleGetStarted}
-                aria-label="Get Started Now"
+                aria-label="Get Started for Free"
               >
-                Get Started Now
+                Get Started for Free
                 <HiArrowRight className={styles.arrow} aria-hidden="true" />
               </button>
             </div>
@@ -142,18 +140,18 @@ const Hero: React.FC = () => {
             <div className={styles.stats}>
               <div className={styles.statItem}>
                 <span className={styles.label}>delivering</span>
-                <h2 className={styles.value}>98%</h2>
+                <h2 className={styles.value}>95%</h2>
                 <span className={styles.description}>accuracy rate</span>
               </div>
               <div className={styles.statItem}>
                 <span className={styles.label}>more than</span>
-                <h2 className={styles.value}>50M</h2>
+                <h2 className={styles.value}>1M</h2>
                 <span className={styles.description}>questions solved</span>
               </div>
               <div className={styles.statItem}>
                 <span className={styles.label}>achieve</span>
-                <h2 className={styles.value}>5x</h2>
-                <span className={styles.description}>faster learning</span>
+                <h2 className={styles.value}>3x</h2>
+                <span className={styles.description}>concept review</span>
               </div>
             </div>
           </div>
