@@ -10,3 +10,4 @@ export * from './Layouts';
 export * from './Payment';
 export * from './OAuthSignup/OAuthSignup';
 export * from './AuthPopup/AuthPopup';
+export { default as ExtensionShowcase } from './ExtensionShowcase';

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './FeatureSection.module.scss';
 import { FeatureSectionProps } from './FeatureSection.types';
+import ExtensionShowcase from '../../ExtensionShowcase';
 import featureSectionSideBackground from '../../../assets/images/extension-bg-browser.png';
 import {
   FaSquareRootAlt,
@@ -185,107 +186,54 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
         </div>
 
         <div
-          className={`${styles.heroContent} ${animationClass}`}
+          className={`${styles.mainContent} ${animationClass}`}
           style={{ willChange: 'transform, opacity' }}
         >
-          <h1 className={styles.heroTitle}>
-            Your Learning Copilot,
-            <br />
-            on Every Tab.
-          </h1>
+          <div className={styles.contentLeft}>
+            <h1 className={styles.heroTitle}>
+              The modern approach
+              <br />
+              to learning is here.
+            </h1>
 
-          <p className={styles.heroDescription}>
-            Stop switching between tabs to find answers.
-            <br />
-            The Clever Class extension gives you instant solutions,
-            <br />
-            video summaries, and AI assistance right where you need it— on your
-            <br /> course pages, online quizzes, and research sites.
-            <br />
-            <br />
-            <span className={styles.highlight}>
-              Get the answers you need, in less time.
-            </span>
-          </p>
+            <p className={styles.heroDescription}>
+              Say goodbye to guesswork, tough problems, and juggling tabs to find answers.
+              <br />
+              Transcript's AI powered homework helper makes finding answers a breeze.
+            </p>
 
-          <button
-            className={styles.getStartedButton}
-            onClick={onGetStarted}
-            aria-label="Get Started"
-          >
-            Add to Chrome for Free
-          </button>
+            <button
+              className={styles.getStartedButton}
+              onClick={onGetStarted}
+              aria-label="Get Started"
+            >
+              Add to Chrome for Free
+            </button>
+          </div>
+
+          <div className={styles.contentRight}>
+            <ExtensionShowcase className={styles.extensionShowcase} />
+          </div>
         </div>
 
         <div
-          className={`${styles.featureCards} ${animationClass}`}
+          className={`${styles.featureHighlights} ${animationClass}`}
           style={{ willChange: 'transform, opacity' }}
         >
-          <div className={`${styles.featureCard} ${styles.pinkCard}`}>
-            <h2>From Physics to Philosophy</h2>
-            <p>
-              From high school to university, get expert help across all
-              subjects.
-            </p>
-            <div
-              className={styles.scrollingSubjects}
-              style={{
-                willChange: 'transform',
-                perspective: '1000px',
-              }}
-            >
-              <div className={styles.scrollRow}>
-                {createSeamlessLoop(subjectsRow1).map((subject, index) => (
-                  <span key={`row1-${index}`}>
-                    {subject.icon}
-                    {subject.name}
-                  </span>
-                ))}
-              </div>
-              <div className={styles.scrollRow}>
-                {createSeamlessLoop(subjectsRow2).map((subject, index) => (
-                  <span key={`row2-${index}`}>
-                    {subject.icon}
-                    {subject.name}
-                  </span>
-                ))}
-              </div>
-              <div className={styles.scrollRow}>
-                {createSeamlessLoop(subjectsRow3).map((subject, index) => (
-                  <span key={`row3-${index}`}>
-                    {subject.icon}
-                    {subject.name}
-                  </span>
-                ))}
-              </div>
+          <div className={styles.featureHighlight}>
+            <div className={styles.highlightIcon}>🎯</div>
+            <div className={styles.highlightContent}>
+              <h3>Any subject, any level</h3>
+              <p>Get expert help from beginner to advanced, tailored to your learning needs.</p>
             </div>
           </div>
 
-          <div className={`${styles.featureCard} ${styles.whiteCard}`}>
-            <h2>Break It Down, Ace It Up!</h2>
-            <p>Complex problem? We'll guide you through it like a pro. 🚀</p>
-          </div>
-        </div>
-
-        <div
-          className={`${styles.featureCards} ${animationClass}`}
-          style={{ willChange: 'transform, opacity' }}
-        >
-          <div className={`${styles.featureCard} ${styles.blueCard}`}>
-            <h2>Your Question, Your Way.</h2>
-            <p>
-              Snap a quiz, paste a lecture link, or ask anything - Clever Class
-              is your instant academic sidekick that works wherever you study.
-            </p>
-          </div>
-
-          <div className={`${styles.featureCard} ${styles.darkCard}`}>
-            <h2>Step-by-Step Solutions</h2>
-            <p>
-              Get more than just answers - get the method! Clever Class shows
-              you step-by-step how to solve any problem, so you'll ace it next
-              time.
-            </p>
+          <div className={styles.featureHighlight}>
+            <div className={styles.highlightIcon}>🧠</div>
+            <div className={styles.highlightContent}>
+              <h3>Solve it your way</h3>
+              <p>Take your study companion across the web. Search your questions in the way that suits you best.</p>
+            </div>
           </div>
         </div>
       </div>

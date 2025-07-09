@@ -1,0 +1,697 @@
+@import '../../styles/variables';
+
+.extensionShowcase {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  
+  @media (max-width: $tablet) {
+    max-width: 100%;
+    padding: 0 20px;
+  }
+  
+  @media (max-width: $mobile) {
+    max-width: 100%;
+    padding: 0 16px;
+  }
+}
+
+.browserWindow {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.15),
+    0 8px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+  transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: perspective(1000px) rotateY(-2deg) rotateX(2deg);
+  }
+  
+  @media (max-width: $tablet) {
+    transform: perspective(1000px) rotateY(-3deg) rotateX(3deg);
+    
+    &:hover {
+      transform: perspective(1000px) rotateY(-1deg) rotateX(1deg);
+    }
+  }
+  
+  @media (max-width: $mobile) {
+    transform: none;
+    
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+.browserHeader {
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  height: 40px;
+  
+  @media (max-width: $mobile) {
+    padding: 6px 12px;
+    height: 36px;
+  }
+}
+
+.browserControls {
+  display: flex;
+  gap: 8px;
+  margin-right: 16px;
+  
+  @media (max-width: $mobile) {
+    margin-right: 8px;
+    gap: 6px;
+  }
+}
+
+.controlButton {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff5f57;
+  
+  &:nth-child(2) {
+    background: #ffbd2e;
+  }
+  
+  &:nth-child(3) {
+    background: #28ca42;
+  }
+  
+  @media (max-width: $mobile) {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+.addressBar {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 4px 12px;
+  margin-right: 16px;
+  
+  @media (max-width: $mobile) {
+    margin-right: 8px;
+    padding: 3px 8px;
+  }
+}
+
+.addressBarContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #6c757d;
+  
+  @media (max-width: $mobile) {
+    font-size: 11px;
+    gap: 4px;
+  }
+}
+
+.secureIcon {
+  font-size: 12px;
+  
+  @media (max-width: $mobile) {
+    font-size: 10px;
+  }
+}
+
+.url {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.browserActions {
+  display: flex;
+  align-items: center;
+}
+
+.extensionIcon {
+  width: 24px;
+  height: 24px;
+  
+  @media (max-width: $mobile) {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.cleverClassIcon {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #4285f4, #3367d6);
+  color: white;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  
+  @media (max-width: $mobile) {
+    font-size: 9px;
+  }
+}
+
+.pageContent {
+  background: #fff;
+  padding: 24px;
+  min-height: 300px;
+  position: relative;
+  
+  @media (max-width: $tablet) {
+    padding: 20px;
+    min-height: 250px;
+  }
+  
+  @media (max-width: $mobile) {
+    padding: 16px;
+    min-height: 200px;
+  }
+}
+
+.pageHeader {
+  margin-bottom: 24px;
+  
+  @media (max-width: $mobile) {
+    margin-bottom: 16px;
+  }
+}
+
+.courseName {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a73e8;
+  margin-bottom: 4px;
+  
+  @media (max-width: $tablet) {
+    font-size: 20px;
+  }
+  
+  @media (max-width: $mobile) {
+    font-size: 18px;
+  }
+}
+
+.assignment {
+  font-size: 16px;
+  color: #5f6368;
+  
+  @media (max-width: $mobile) {
+    font-size: 14px;
+  }
+}
+
+.question {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  
+  @media (max-width: $mobile) {
+    padding: 16px;
+  }
+}
+
+.questionNumber {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a73e8;
+  margin-bottom: 8px;
+  
+  @media (max-width: $mobile) {
+    font-size: 12px;
+  }
+}
+
+.questionText {
+  font-size: 18px;
+  font-weight: 500;
+  color: #202124;
+  margin-bottom: 16px;
+  
+  @media (max-width: $tablet) {
+    font-size: 16px;
+  }
+  
+  @media (max-width: $mobile) {
+    font-size: 14px;
+  }
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  
+  @media (max-width: $mobile) {
+    gap: 6px;
+  }
+}
+
+.option {
+  padding: 8px 12px;
+  background: #fff;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #3c4043;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: #1a73e8;
+    background: #f8f9ff;
+  }
+  
+  @media (max-width: $mobile) {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+.extensionInterface {
+  position: absolute;
+  top: 80px;
+  right: 30px;
+  width: 280px;
+  background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 50%, #1d4ed8 100%);
+  border-radius: 20px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 8px 25px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  z-index: 10;
+  
+  @media (max-width: $tablet) {
+    position: relative;
+    width: 100%;
+    max-width: 350px;
+    right: auto;
+    top: 20px;
+    margin: 0 auto;
+    transform: none;
+  }
+  
+  @media (max-width: $mobile) {
+    position: relative;
+    width: 90%;
+    max-width: 300px;
+    right: auto;
+    top: 15px;
+    margin: 0 auto;
+    transform: none;
+    border-radius: 14px;
+    box-shadow: 
+      0 15px 40px rgba(0, 0, 0, 0.25),
+      0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.extensionHeader {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  @media (max-width: $mobile) {
+    padding: 8px 10px;
+  }
+}
+
+.notificationIcon {
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  position: relative;
+  color: white;
+  
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    width: 6px;
+    height: 6px;
+    background: #ef4444;
+    border-radius: 50%;
+  }
+  
+  @media (max-width: $mobile) {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+    
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+    
+    &::after {
+      top: 3px;
+      right: 4px;
+      width: 5px;
+      height: 5px;
+    }
+  }
+}
+
+.extensionTitle {
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+  
+  @media (max-width: $mobile) {
+    font-size: 12px;
+  }
+}
+
+.settingsIcon {
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  color: white;
+  
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+  
+  @media (max-width: $mobile) {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+    
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+}
+
+.extensionContent {
+  padding: 0 16px 16px 16px;
+  
+  @media (max-width: $mobile) {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+.featureButtons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+  
+  @media (max-width: $mobile) {
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+}
+
+.featureButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  aspect-ratio: 1;
+  
+  &.active {
+    background: rgba(59, 130, 246, 0.3);
+    border-color: rgba(59, 130, 246, 0.5);
+  }
+  
+  &.inactive {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+  }
+  
+  @media (max-width: $mobile) {
+    padding: 6px;
+    gap: 2px;
+    border-radius: 10px;
+  }
+}
+
+.featureButtonIcon {
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 2px;
+  
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  @media (max-width: $mobile) {
+    width: 22px;
+    height: 22px;
+    font-size: 10px;
+    border-radius: 6px;
+    margin-bottom: 1px;
+    
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+}
+
+.featureButtonName {
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 1px;
+  text-align: center;
+  line-height: 1.2;
+  
+  @media (max-width: $mobile) {
+    font-size: 8px;
+    line-height: 1.1;
+  }
+}
+
+.featureButtonStatus {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  
+  @media (max-width: $mobile) {
+    font-size: 7px;
+  }
+}
+
+.toolsCircles {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  
+  @media (max-width: $mobile) {
+    gap: 6px;
+  }
+}
+
+.toolCircle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+  
+  @media (max-width: $mobile) {
+    gap: 6px;
+  }
+}
+
+.toolCircleIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  
+  svg {
+    width: 26px;
+    height: 26px;
+  }
+  
+  &.aiChat {
+    background: linear-gradient(135deg, #ec4899 0%, #ef4444 50%, #dc2626 100%);
+    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+  }
+  
+  &.snapshot {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+  }
+  
+  &.notebook {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+  }
+  
+  &:hover {
+    transform: scale(1.05) translateY(-1px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    
+    &.aiChat {
+      box-shadow: 0 8px 30px rgba(236, 72, 153, 0.5);
+    }
+    
+    &.snapshot {
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5);
+    }
+    
+    &.notebook {
+      box-shadow: 0 8px 30px rgba(245, 158, 11, 0.5);
+    }
+  }
+  
+  @media (max-width: $mobile) {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+    
+    &.aiChat {
+      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+    }
+    
+    &.snapshot {
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    
+    &.notebook {
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+    }
+  }
+}
+
+.toolCircleName {
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  letter-spacing: 0.2px;
+  
+  @media (max-width: $mobile) {
+    font-size: 8px;
+    font-weight: 500;
+  }
+}
+
+.chromeExtensionBadge {
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  background: linear-gradient(135deg, #4285f4, #3367d6);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+  
+  @media (max-width: $mobile) {
+    top: -10px;
+    left: 16px;
+    padding: 4px 8px;
+    font-size: 10px;
+    gap: 4px;
+  }
+}
+
+.badgeContent {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  
+  @media (max-width: $mobile) {
+    gap: 4px;
+  }
+}
+
+.chromeLogo {
+  width: 16px;
+  height: 16px;
+  
+  @media (max-width: $mobile) {
+    width: 14px;
+    height: 14px;
+  }
+} 
