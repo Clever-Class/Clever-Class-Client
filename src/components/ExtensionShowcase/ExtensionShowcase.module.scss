@@ -18,7 +18,9 @@
 }
 
 .browserWindow {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   box-shadow: 
     0 20px 60px rgba(0, 0, 0, 0.15),
@@ -50,8 +52,9 @@
 }
 
 .browserHeader {
-  background: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
+  background: rgba(248, 249, 250, 0.6);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(233, 236, 239, 0.4);
   display: flex;
   align-items: center;
   padding: 8px 16px;
@@ -96,8 +99,9 @@
 
 .addressBar {
   flex: 1;
-  background: #fff;
-  border: 1px solid #e9ecef;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(233, 236, 239, 0.5);
   border-radius: 6px;
   padding: 4px 12px;
   margin-right: 16px;
@@ -161,14 +165,65 @@
   justify-content: center;
   font-size: 10px;
   font-weight: 600;
+  position: relative;
+  
+  &.animate {
+    // Pulse animation to indicate interaction
+    animation: iconPulse 2s ease-in-out 0.5s;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(135deg, #4285f4, #3367d6);
+      border-radius: 6px;
+      opacity: 0;
+      z-index: -1;
+      animation: iconGlow 1.5s ease-out 0.8s;
+    }
+  }
+  
+  // Reset icon animation state
+  &:not(.animate) {
+    animation: none;
+    
+    &::after {
+      display: none;
+    }
+  }
   
   @media (max-width: $mobile) {
     font-size: 9px;
   }
 }
 
+@keyframes iconPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes iconGlow {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.4);
+  }
+}
+
 .pageContent {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(8px);
   padding: 24px;
   min-height: 300px;
   position: relative;
@@ -217,7 +272,9 @@
 }
 
 .question {
-  background: #f8f9fa;
+  background: rgba(248, 249, 250, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
   padding: 20px;
   
@@ -264,8 +321,9 @@
 
 .option {
   padding: 8px 12px;
-  background: #fff;
-  border: 1px solid #dadce0;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(218, 220, 224, 0.6);
   border-radius: 4px;
   font-size: 14px;
   color: #3c4043;
@@ -274,7 +332,7 @@
   
   &:hover {
     border-color: #1a73e8;
-    background: #f8f9ff;
+    background: rgba(248, 249, 255, 0.8);
   }
   
   @media (max-width: $mobile) {
@@ -297,6 +355,23 @@
   overflow: hidden;
   z-index: 10;
   
+  // Initial state - hidden and positioned for animation
+  opacity: 0;
+  transform: scale(0.1) translateX(100px) translateY(-20px);
+  transform-origin: top right;
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  
+  // Popup animation when animate class is applied
+  &.animate {
+    animation: popupFromIcon 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  }
+  
+  // Reset animation when not visible (for re-triggering)
+  &:not(.animate) {
+    opacity: 0;
+    transform: scale(0.1) translateX(100px) translateY(-20px);
+  }
+  
   @media (max-width: $tablet) {
     position: relative;
     width: 100%;
@@ -304,7 +379,17 @@
     right: auto;
     top: 20px;
     margin: 0 auto;
-    transform: none;
+    transform: scale(0.3);
+    transform-origin: center top;
+    
+    &.animate {
+      animation: popupFromCenter 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    }
+    
+    &:not(.animate) {
+      opacity: 0;
+      transform: scale(0.3);
+    }
   }
   
   @media (max-width: $mobile) {
@@ -314,11 +399,73 @@
     right: auto;
     top: 15px;
     margin: 0 auto;
-    transform: none;
+    transform: scale(0.3);
     border-radius: 14px;
     box-shadow: 
       0 15px 40px rgba(0, 0, 0, 0.25),
       0 6px 15px rgba(0, 0, 0, 0.15);
+    transform-origin: center top;
+    
+    &.animate {
+      animation: popupFromCenter 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    }
+    
+    &:not(.animate) {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+  }
+}
+
+// Popup animation from extension icon (desktop)
+@keyframes popupFromIcon {
+  0% {
+    transform: scale(0.1) translateX(100px) translateY(-20px);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1) translateX(0) translateY(0);
+    opacity: 1;
+  }
+}
+
+// Popup animation from center (tablet/mobile)
+@keyframes popupFromCenter {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// Delay animation for interface content
+.extensionInterface.animate .extensionContent {
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+// Reset state for content when not animating
+.extensionInterface:not(.animate) .extensionContent {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes fadeInUp {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 
@@ -427,6 +574,9 @@
 
 .extensionContent {
   padding: 0 16px 16px 16px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
   
   @media (max-width: $mobile) {
     padding: 0 10px 10px 10px;

@@ -159,7 +159,7 @@ const Hero: React.FC = () => {
           <div className={styles.heroVideoContainer}>
             <video
               ref={videoRef}
-              src="https://cdn.transcript.study/landing/heroVideo/main.mp4"
+              // src="https://cdn.transcript.study/landing/heroVideo/main.mp4"
               title="Product Demo"
               autoPlay
               loop

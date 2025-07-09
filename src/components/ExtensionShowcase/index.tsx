@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './ExtensionShowcase.module.scss';
 import AddExtensionIcon from '../../assets/images/AddExtensionIcon';
 import { 
@@ -16,8 +16,47 @@ export interface ExtensionShowcaseProps {
 }
 
 const ExtensionShowcase: React.FC<ExtensionShowcaseProps> = ({ className }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const showcaseRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        
+        // Clear any existing timeout
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+        
+        // Add a small debounce to prevent rapid triggering
+        timeoutRef.current = setTimeout(() => {
+          setIsVisible(entry.isIntersecting);
+        }, 100);
+      },
+      {
+        threshold: 0.3, // Trigger when 30% of component is visible
+        rootMargin: '-50px 0px', // Add some margin for better timing
+      }
+    );
+
+    if (showcaseRef.current) {
+      observer.observe(showcaseRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
   return (
-    <div className={`${styles.extensionShowcase} ${className || ''}`}>
+    <div 
+      ref={showcaseRef}
+      className={`${styles.extensionShowcase} ${className || ''}`}
+    >
       {/* Browser Window */}
       <div className={styles.browserWindow}>
         {/* Browser Header */}
@@ -35,7 +74,7 @@ const ExtensionShowcase: React.FC<ExtensionShowcaseProps> = ({ className }) => {
           </div>
           <div className={styles.browserActions}>
             <div className={styles.extensionIcon}>
-              <div className={styles.cleverClassIcon}>It</div>
+              <div className={`${styles.cleverClassIcon} ${isVisible ? styles.animate : ''}`}>It</div>
             </div>
           </div>
         </div>
@@ -48,21 +87,21 @@ const ExtensionShowcase: React.FC<ExtensionShowcaseProps> = ({ className }) => {
           </div>
 
           <div className={styles.question}>
-            <div className={styles.questionNumber}>Question 2</div>
+            <div className={styles.questionNumber}>Question 3</div>
             <div className={styles.questionText}>
-              What is the value of ∫₀² x² dx?
+              Find the derivative of f(x) = 3x³ + 2x² - 5x + 1
             </div>
             <div className={styles.options}>
-              <div className={styles.option}>A. 8/3</div>
-              <div className={styles.option}>B. 4/3</div>
-              <div className={styles.option}>C. 8</div>
-              <div className={styles.option}>D. 2</div>
+              <div className={styles.option}>A. 9x² + 4x - 5</div>
+              <div className={styles.option}>B. 6x² + 4x - 5</div>
+              <div className={styles.option}>C. 9x² + 2x - 5</div>
+              <div className={styles.option}>D. 3x² + 4x - 5</div>
             </div>
           </div>
         </div>
 
         {/* Extension Interface Overlay */}
-        <div className={styles.extensionInterface}>
+        <div className={`${styles.extensionInterface} ${isVisible ? styles.animate : ''}`}>
           <div className={styles.extensionHeader}>
             <div className={styles.notificationIcon}>
               <IoNotifications />
