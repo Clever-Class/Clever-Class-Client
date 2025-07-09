@@ -45,31 +45,22 @@
   }
 }
 
-// Scrolling animations for each row
-@keyframes scrollRow1 {
+// Scrolling animations for subject tags
+@keyframes scrollLeft {
   0% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(-33.33%);
   }
 }
 
-@keyframes scrollRow2 {
+@keyframes scrollRight {
   0% {
-    transform: translateX(-50%);
+    transform: translateX(-33.33%);
   }
   100% {
     transform: translateX(0);
-  }
-}
-
-@keyframes scrollRow3 {
-  0% {
-    transform: translateX(-25%);
-  }
-  100% {
-    transform: translateX(-75%);
   }
 }
 
@@ -296,7 +287,7 @@
     .featureHighlights {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: clamp(1.5rem, 4vw, 3rem);
+      gap: clamp(1rem, 3vw, 2rem);
       margin-bottom: clamp(2rem, 4vw, 3rem);
       opacity: 0;
 
@@ -307,75 +298,416 @@
 
       @include respond-to(tablet) {
         grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-
-      @include respond-to(mobile) {
         gap: 1.5rem;
       }
 
-      .featureHighlight {
+      @include respond-to(mobile) {
+        gap: 1rem;
+      }
+
+      .featureCard {
         display: flex;
-        align-items: flex-start;
-        gap: clamp(1rem, 2vw, 1.5rem);
-        padding: clamp(1.5rem, 3vw, 2rem);
-        background: rgba(255, 255, 255, 0.1);
+        flex-direction: column;
+        padding: clamp(1.5rem, 3.5vw, 2.1rem);
+        border-radius: 24px;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+        overflow: hidden;
+        min-height: 264px;
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 16px;
-        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+
+        // Glass morphism effect
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+          border-radius: 24px;
+          z-index: -1;
+        }
 
         &:hover {
-          transform: translateY(-4px);
-          background: rgba(255, 255, 255, 0.15);
-          border-color: rgba(255, 255, 255, 0.25);
-          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+          transform: translateY(-8px);
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+          border-color: rgba(255, 255, 255, 0.3);
         }
 
         @include respond-to(mobile) {
           padding: 1.5rem;
-          gap: 1rem;
+          min-height: 232px;
         }
 
-        .highlightIcon {
-          font-size: clamp(24px, 4vw, 32px);
-          flex-shrink: 0;
-          margin-top: 0.25rem;
-
-          @include respond-to(mobile) {
-            font-size: 24px;
-          }
+        .cardIcon {
+          font-size: clamp(28px, 5.5vw, 36px);
+          margin-bottom: clamp(1rem, 2.2vw, 1.5rem);
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          opacity: 0.9;
         }
 
-        .highlightContent {
+        .cardContent {
           flex: 1;
+          display: flex;
+          flex-direction: column;
 
           h3 {
-            font-size: clamp(16px, 3vw, 20px);
-            font-weight: 600;
-            margin-bottom: clamp(0.5rem, 1vw, 0.75rem);
-            color: $white;
-            line-height: 1.3;
-
-            @include respond-to(mobile) {
-              font-size: 16px;
-            }
+            font-size: clamp(18px, 3.8vw, 24px);
+            font-weight: 700;
+            margin-bottom: clamp(0.7rem, 1.6vw, 1rem);
+            line-height: 1.2;
           }
 
           p {
-            font-size: clamp(13px, 2.5vw, 15px);
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.9);
-            margin: 0;
+            font-size: clamp(14px, 2.8vw, 16px);
+            line-height: 1.5;
+            margin-bottom: clamp(1rem, 2.2vw, 1.5rem);
+            flex-grow: 1;
+            opacity: 0.9;
+          }
+        }
+
+        // Primary card (pink gradient with glass effect)
+        &.cardPrimary {
+          background: linear-gradient(135deg, rgba(255, 64, 129, 0.9), rgba(255, 107, 157, 0.85), rgba(194, 24, 91, 0.9));
+          color: white;
+
+          .scrollingSubjects {
+            margin-top: auto;
+            overflow: hidden;
+            mask: linear-gradient(90deg, transparent, white 8%, white 92%, transparent);
+            -webkit-mask: linear-gradient(90deg, transparent, white 8%, white 92%, transparent);
 
             @include respond-to(mobile) {
-              font-size: 13px;
+              mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
+              -webkit-mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
+            }
+
+            .subjectRow {
+              margin-bottom: clamp(0.6rem, 1.5vw, 0.8rem);
+              overflow: hidden;
+
+              &:last-child {
+                margin-bottom: 0;
+              }
+
+              .scrollingTrack {
+                display: flex;
+                gap: clamp(0.8rem, 2vw, 1.2rem);
+                animation: scrollLeft 20s linear infinite;
+                width: max-content;
+                will-change: transform;
+
+                @include respond-to(mobile) {
+                  animation-duration: 15s; // Faster on mobile for better UX
+                  gap: clamp(0.6rem, 1.5vw, 0.8rem);
+                }
+
+                .subjectTag {
+                  background: rgba(255, 255, 255, 0.25);
+                  backdrop-filter: blur(15px);
+                  padding: clamp(0.6rem, 1.5vw, 0.8rem) clamp(1rem, 2.5vw, 1.4rem);
+                  border-radius: 25px;
+                  font-size: clamp(13px, 2.8vw, 16px);
+                  font-weight: 600;
+                  border: 1px solid rgba(255, 255, 255, 0.4);
+                  white-space: nowrap;
+                  flex-shrink: 0;
+                  transition: all 0.3s ease;
+                  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+                  &:hover {
+                    background: rgba(255, 255, 255, 0.35);
+                    transform: scale(1.05);
+                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+                  }
+
+                  @include respond-to(mobile) {
+                    padding: clamp(0.5rem, 1.2vw, 0.6rem) clamp(0.8rem, 2vw, 1rem);
+                    font-size: clamp(12px, 2.5vw, 14px);
+                    
+                    &:hover {
+                      transform: none; // Disable hover effects on mobile
+                    }
+                  }
+                }
+              }
+
+              &.reverse .scrollingTrack {
+                animation: scrollRight 25s linear infinite;
+
+                @include respond-to(mobile) {
+                  animation-duration: 18s; // Different speed for variety
+                }
+              }
             }
           }
         }
 
+        // Secondary card (light background with glass effect)
+        &.cardSecondary {
+          background: linear-gradient(135deg, rgba(248, 250, 252, 0.9), rgba(226, 232, 240, 0.85));
+          color: #334155;
 
+          .featureImage {
+            margin-top: auto;
+
+            .mockupWindow {
+              background: rgba(255, 255, 255, 0.95);
+              backdrop-filter: blur(10px);
+              border-radius: 12px;
+              box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+              overflow: hidden;
+              border: 1px solid rgba(226, 232, 240, 0.8);
+
+              .windowHeader {
+                background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+                padding: 1rem;
+                border-bottom: 1px solid #e2e8f0;
+
+                .windowControls {
+                  display: flex;
+                  gap: 0.6rem;
+
+                  span {
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    background: #cbd5e1;
+
+                    &:first-child { background: #ef4444; }
+                    &:nth-child(2) { background: #f59e0b; }
+                    &:last-child { background: #10b981; }
+                  }
+                }
+              }
+
+              .windowContent {
+                padding: 1.2rem;
+
+                .questionBox {
+                  display: flex;
+                  align-items: center;
+                  gap: 0.75rem;
+                  margin-bottom: 1rem;
+
+                  .questionLabel {
+                    font-size: 14px;
+                    color: #64748b;
+                    font-weight: 500;
+                  }
+
+                  .transcriptLabel {
+                    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+                    color: white;
+                    padding: 0.4rem 0.8rem;
+                    border-radius: 6px;
+                    font-size: 11px;
+                    font-weight: 600;
+                    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+                  }
+                }
+
+                .answerOptions {
+                  display: grid;
+                  grid-template-columns: repeat(2, 1fr);
+                  gap: 0.5rem;
+
+                  .answerOption {
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 6px;
+                    padding: 0.4rem 0.6rem;
+                    font-size: 12px;
+                    color: #475569;
+                    text-align: center;
+                    transition: all 0.2s ease;
+
+                    &:hover {
+                      background: #e2e8f0;
+                      border-color: #cbd5e1;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        // Tertiary card (blue with glass effect)
+        &.cardTertiary {
+          background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(29, 78, 216, 0.85), rgba(30, 64, 175, 0.9));
+          color: white;
+
+          .solutionSlider {
+            margin-top: auto;
+            position: relative;
+            height: 116px;
+            overflow: hidden;
+
+            .stepsContainer {
+              display: flex;
+              transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+              height: 100%;
+
+              .step {
+                flex: 0 0 100%;
+                padding: 0 0.5rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+
+                .stepHeader {
+                  margin-bottom: 0.8rem;
+
+                  .stepNumber {
+                    background: rgba(255, 255, 255, 0.2);
+                    padding: 0.3rem 0.7rem;
+                    border-radius: 15px;
+                    font-size: clamp(11px, 2.2vw, 13px);
+                    font-weight: 700;
+                    margin-right: 0.5rem;
+                    backdrop-filter: blur(10px);
+                  }
+
+                  .stepTitle {
+                    font-size: clamp(12px, 2.5vw, 14px);
+                    font-weight: 600;
+                    opacity: 0.9;
+                  }
+                }
+
+                .stepContent {
+                  .mathProblem, .mathStep {
+                    background: rgba(255, 255, 255, 0.95);
+                    color: #1e40af;
+                    padding: 1rem;
+                    border-radius: 10px;
+                    font-family: 'Times New Roman', serif;
+                    font-weight: 600;
+                    font-size: clamp(14px, 3vw, 16px);
+                    text-align: center;
+                    margin-bottom: 0.5rem;
+                    backdrop-filter: blur(10px);
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                  }
+
+                  .stepExplanation {
+                    font-size: clamp(11px, 2.2vw, 13px);
+                    opacity: 0.8;
+                    text-align: center;
+                    font-style: italic;
+                  }
+
+                  .checkmark {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    background: #10b981;
+                    font-size: 16px;
+                    font-weight: bold;
+                    margin: 0.5rem auto 0;
+                    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+                  }
+                }
+              }
+            }
+
+            .stepIndicators {
+              display: flex;
+              justify-content: center;
+              gap: 0.5rem;
+              margin-top: 1rem;
+
+              .indicator {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.3);
+                transition: all 0.3s ease;
+
+                &.active {
+                  background: rgba(255, 255, 255, 0.9);
+                  transform: scale(1.3);
+                }
+              }
+            }
+          }
+        }
+
+        // Quaternary card (dark with glass effect)
+        &.cardQuaternary {
+          background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.85), rgba(2, 6, 23, 0.9));
+          color: white;
+
+          .sourceExamples {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            .sourceQuote {
+              background: rgba(255, 255, 255, 0.08);
+              border: 1px solid rgba(255, 255, 255, 0.15);
+              border-radius: 12px;
+              padding: 1rem;
+              backdrop-filter: blur(15px);
+              transition: all 0.3s ease;
+
+              &:hover {
+                background: rgba(255, 255, 255, 0.12);
+                border-color: rgba(255, 255, 255, 0.25);
+                transform: translateY(-2px);
+              }
+
+              p {
+                font-size: clamp(12px, 2.5vw, 14px);
+                margin: 0 0 0.75rem 0;
+                font-style: italic;
+                color: rgba(255, 255, 255, 0.9);
+                line-height: 1.5;
+                quotes: '"' '"' "'" "'";
+              }
+
+              p::before {
+                content: open-quote;
+              }
+
+              p::after {
+                content: close-quote;
+              }
+
+              .sourceAttribution {
+                display: flex;
+                align-items: center;
+                gap: 0.6rem;
+
+                .sourceIcon {
+                  font-size: 14px;
+                  opacity: 0.8;
+                }
+
+                .sourceName {
+                  font-size: clamp(11px, 2.2vw, 13px);
+                  color: #60a5fa;
+                  font-weight: 600;
+                  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+                  -webkit-background-clip: text;
+                  -webkit-text-fill-color: transparent;
+                  background-clip: text;
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

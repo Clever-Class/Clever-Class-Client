@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './LandingHero.module.scss';
 import { LandingHeroProps } from './LandingHero.types';
-import ChromeExtensionIcon from '../../assets/icons/ChromeExtensionIcon';
+import ChromeExtensionIcon from '../../assets/images/chrome-extension-icon.svg';
 
 const LandingHero: React.FC<LandingHeroProps> = ({ onGetStarted }) => {
   return (

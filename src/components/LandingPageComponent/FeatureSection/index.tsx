@@ -42,10 +42,17 @@ import {
   TbDice5,
   TbMathFunction as TbDiff,
 } from 'react-icons/tb';
+import {
+  HiOutlineAcademicCap,
+  HiOutlineCheckCircle,
+  HiOutlineShieldCheck,
+} from 'react-icons/hi2';
+import { RiBrainLine } from 'react-icons/ri';
 
 const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   // Check for mobile devices
@@ -60,6 +67,15 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
     return () => {
       window.removeEventListener('resize', checkMobile);
     };
+  }, []);
+
+  // Step-by-step solution animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStep((prev) => (prev + 1) % 4); // 4 steps total
+    }, 3000); // Change step every 3 seconds
+
+    return () => clearInterval(interval);
   }, []);
 
   // Subjects with their icons for the scrolling animation
@@ -216,23 +232,219 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
           </div>
         </div>
 
-        <div
+                <div
           className={`${styles.featureHighlights} ${animationClass}`}
           style={{ willChange: 'transform, opacity' }}
         >
-          <div className={styles.featureHighlight}>
-            <div className={styles.highlightIcon}>🎯</div>
-            <div className={styles.highlightContent}>
+          <div className={`${styles.featureCard} ${styles.cardPrimary}`}>
+            <div className={styles.cardIcon}>
+              <HiOutlineAcademicCap />
+            </div>
+            <div className={styles.cardContent}>
               <h3>Any subject, any level</h3>
               <p>Get expert help from beginner to advanced, tailored to your learning needs.</p>
+              <div className={styles.scrollingSubjects}>
+                {/* Row 1 - Science subjects */}
+                <div className={styles.subjectRow}>
+                  <div className={styles.scrollingTrack}>
+                    {Array(3).fill([
+                       'Biology',
+                       'Physics', 
+                       'Chemistry',
+                       'Astronomy',
+                       'Computer Science',
+                       'Engineering',
+                     ]).flat().map((subject, index) => (
+                       <span key={index} className={styles.subjectTag}>
+                         {subject}
+                       </span>
+                     ))}
+                  </div>
+                </div>
+
+                {/* Row 2 - Liberal Arts */}
+                <div className={`${styles.subjectRow} ${styles.reverse}`}>
+                  <div className={styles.scrollingTrack}>
+                    {Array(3).fill([
+                      'Literature',
+                      'History',
+                      'Philosophy',
+                      'Political Science',
+                      'Geography',
+                      'Psychology',
+                    ]).flat().map((subject, index) => (
+                      <span key={index} className={styles.subjectTag}>
+                        {subject}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Row 3 - Math subjects */}
+                <div className={styles.subjectRow}>
+                  <div className={styles.scrollingTrack}>
+                    {Array(3).fill([
+                      'Geometry',
+                      'Calculus',
+                      'Statistics',
+                      'Algebra',
+                      'Data Science',
+                      'Trigonometry',
+                    ]).flat().map((subject, index) => (
+                      <span key={index} className={styles.subjectTag}>
+                        {subject}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className={styles.featureHighlight}>
-            <div className={styles.highlightIcon}>🧠</div>
-            <div className={styles.highlightContent}>
+          <div className={`${styles.featureCard} ${styles.cardSecondary}`}>
+            <div className={styles.cardIcon}>
+              <RiBrainLine />
+            </div>
+            <div className={styles.cardContent}>
               <h3>Solve it your way</h3>
               <p>Take your study companion across the web. Search your questions in the way that suits you best.</p>
+              <div className={styles.featureImage}>
+                <div className={styles.mockupWindow}>
+                  <div className={styles.windowHeader}>
+                    <div className={styles.windowControls}>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
+                  <div className={styles.windowContent}>
+                    <div className={styles.questionBox}>
+                      <span className={styles.questionLabel}>Question 3</span>
+                      <span className={styles.transcriptLabel}>transcript</span>
+                    </div>
+                    <div className={styles.answerOptions}>
+                      <div className={styles.answerOption}>A) 14</div>
+                      <div className={styles.answerOption}>B) 21</div>
+                      <div className={styles.answerOption}>C) 28</div>
+                      <div className={styles.answerOption}>D) 35</div>
+                      <div className={styles.answerOption}>E) 42</div>
+                      <div className={styles.answerOption}>F) 49</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={`${styles.featureCard} ${styles.cardTertiary}`}>
+            <div className={styles.cardIcon}>
+              <HiOutlineCheckCircle />
+            </div>
+            <div className={styles.cardContent}>
+              <h3>Step-by-step solutions</h3>
+              <p>Simplify complex problems into clear, actionable steps to deepen your understanding.</p>
+              <div className={styles.solutionSlider}>
+                <div 
+                  className={styles.stepsContainer}
+                  style={{ transform: `translateX(-${currentStep * 100}%)` }}
+                >
+                  {/* Step 0 - Problem */}
+                  <div className={styles.step}>
+                    <div className={styles.stepHeader}>
+                      <span className={styles.stepNumber}>Problem</span>
+                    </div>
+                    <div className={styles.stepContent}>
+                      <div className={styles.mathProblem}>
+                        Find the value of x: 2x + 8 = 20
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Step 1 - Isolate variable */}
+                  <div className={styles.step}>
+                    <div className={styles.stepHeader}>
+                      <span className={styles.stepNumber}>Step 1</span>
+                      <span className={styles.stepTitle}>Isolate the variable</span>
+                    </div>
+                    <div className={styles.stepContent}>
+                      <div className={styles.mathStep}>
+                        2x + 8 - 8 = 20 - 8
+                      </div>
+                      <div className={styles.stepExplanation}>
+                        Subtract 8 from both sides
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Step 2 - Simplify */}
+                  <div className={styles.step}>
+                    <div className={styles.stepHeader}>
+                      <span className={styles.stepNumber}>Step 2</span>
+                      <span className={styles.stepTitle}>Simplify</span>
+                    </div>
+                    <div className={styles.stepContent}>
+                      <div className={styles.mathStep}>
+                        2x = 12
+                      </div>
+                      <div className={styles.stepExplanation}>
+                        Combine like terms
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Step 3 - Solve */}
+                  <div className={styles.step}>
+                    <div className={styles.stepHeader}>
+                      <span className={styles.stepNumber}>Step 3</span>
+                      <span className={styles.stepTitle}>Solve for x</span>
+                    </div>
+                    <div className={styles.stepContent}>
+                      <div className={styles.mathStep}>
+                        x = 6
+                      </div>
+                      <div className={styles.stepExplanation}>
+                        Divide both sides by 2
+                      </div>
+                      <div className={styles.checkmark}>✓</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className={styles.stepIndicators}>
+                  {[0, 1, 2, 3].map((step) => (
+                    <div 
+                      key={step}
+                      className={`${styles.indicator} ${currentStep === step ? styles.active : ''}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={`${styles.featureCard} ${styles.cardQuaternary}`}>
+            <div className={styles.cardIcon}>
+              <HiOutlineShieldCheck />
+            </div>
+            <div className={styles.cardContent}>
+              <h3>Results you can trust</h3>
+              <p>AI ensures your answers are backed by trustworthy sources, so you can learn with absolute confidence.</p>
+              <div className={styles.sourceExamples}>
+                <div className={styles.sourceQuote}>
+                  <p>"Evaporation is a type of vaporization that occurs on the surface of a liquid as it changes into the gas phase."</p>
+                  <div className={styles.sourceAttribution}>
+                    <span className={styles.sourceIcon}>🌐</span>
+                    <span className={styles.sourceName}>Khan Academy</span>
+                  </div>
+                </div>
+                <div className={styles.sourceQuote}>
+                  <p>"Evaporation occurs when molecules at the surface of a liquid gain enough energy to enter the gas phase."</p>
+                  <div className={styles.sourceAttribution}>
+                    <span className={styles.sourceIcon}>📚</span>
+                    <span className={styles.sourceName}>Scientific Sources</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
