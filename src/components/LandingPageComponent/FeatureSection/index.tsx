@@ -352,11 +352,41 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
             <div className={styles.cardContent}>
               <p>Simplify complex problems into clear, actionable steps to deepen your understanding.</p>
               <div className={styles.solutionSlider}>
+                {/* Floating Background Elements */}
+                <div className={styles.floatingElements}>
+                  {[...Array(6)].map((_, i) => (
+                    <motion.div
+                      key={`float-${i}`}
+                      className={styles.floatingElement}
+                      animate={{
+                        y: [0, -20, 0],
+                        x: [0, 10, 0],
+                        rotate: [0, 180, 360],
+                        opacity: [0.2, 0.6, 0.2]
+                      }}
+                      transition={{
+                        duration: 4 + i * 0.5,
+                        repeat: Infinity,
+                        delay: i * 0.8,
+                        ease: "easeInOut"
+                      }}
+                      style={{
+                        left: `${15 + i * 15}%`,
+                        top: `${20 + (i % 3) * 30}%`
+                      }}
+                    >
+                      {i % 3 === 0 ? "∆" : i % 3 === 1 ? "∑" : "∫"}
+                    </motion.div>
+                  ))}
+                </div>
+
+
+
                 <motion.div 
                   className={styles.stepsContainer}
                   animate={{ x: `${-currentStep * 100}%` }}
                   transition={{ 
-                    duration: 0.5, 
+                    duration: 0.8, 
                     ease: [0.25, 0.46, 0.45, 0.94]
                   }}
                 >
@@ -366,8 +396,19 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
                       <span className={styles.stepNumber}>Problem</span>
                     </div>
                     <div className={styles.stepContent}>
-                      <div className={styles.mathProblem}>
+                      <motion.div 
+                        className={styles.mathProblem}
+                        animate={{
+                          boxShadow: currentStep === 0 ? 
+                            ["0 4px 15px rgba(0, 0, 0, 0.1)", "0 8px 25px rgba(59, 130, 246, 0.3)", "0 4px 15px rgba(0, 0, 0, 0.1)"] :
+                            "0 4px 15px rgba(0, 0, 0, 0.1)"
+                        }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
                         Find the value of x: 2x + 8 = 20
+                      </motion.div>
+                      <div className={styles.stepExplanation}>
+                        This is the problem we need to solve.
                       </div>
                     </div>
                   </div>
@@ -379,12 +420,21 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
                       <span className={styles.stepTitle}>Isolate the variable</span>
                     </div>
                     <div className={styles.stepContent}>
-                      <div className={styles.mathStep}>
+                      <motion.div 
+                        className={styles.mathStep}
+                        animate={{
+                          boxShadow: currentStep === 1 ? 
+                            ["0 4px 15px rgba(0, 0, 0, 0.1)", "0 8px 25px rgba(168, 85, 247, 0.3)", "0 4px 15px rgba(0, 0, 0, 0.1)"] :
+                            "0 4px 15px rgba(0, 0, 0, 0.1)"
+                        }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
                         2x + 8 - 8 = 20 - 8
-                      </div>
+                      </motion.div>
                       <div className={styles.stepExplanation}>
                         Subtract 8 from both sides
                       </div>
+                     
                     </div>
                   </div>
 
@@ -395,12 +445,21 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
                       <span className={styles.stepTitle}>Simplify</span>
                     </div>
                     <div className={styles.stepContent}>
-                      <div className={styles.mathStep}>
+                      <motion.div 
+                        className={styles.mathStep}
+                        animate={{
+                          boxShadow: currentStep === 2 ? 
+                            ["0 4px 15px rgba(0, 0, 0, 0.1)", "0 8px 25px rgba(234, 179, 8, 0.3)", "0 4px 15px rgba(0, 0, 0, 0.1)"] :
+                            "0 4px 15px rgba(0, 0, 0, 0.1)"
+                        }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
                         2x = 12
-                      </div>
+                      </motion.div>
                       <div className={styles.stepExplanation}>
                         Combine like terms
                       </div>
+                      
                     </div>
                   </div>
 
@@ -411,16 +470,84 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
                       <span className={styles.stepTitle}>Solve for x</span>
                     </div>
                     <div className={styles.stepContent}>
-                      <div className={styles.mathStep}>
+                      <motion.div 
+                        className={styles.mathStep}
+                        animate={{
+                          boxShadow: currentStep === 3 ? 
+                            ["0 4px 15px rgba(0, 0, 0, 0.1)", "0 8px 25px rgba(34, 197, 94, 0.4)", "0 4px 15px rgba(0, 0, 0, 0.1)"] :
+                            "0 4px 15px rgba(0, 0, 0, 0.1)"
+                        }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
                         x = 6
-                      </div>
+                      </motion.div>
                       <div className={styles.stepExplanation}>
                         Divide both sides by 2
                       </div>
+                      {currentStep === 3 && (
+                        <motion.div
+                          className={styles.celebrationElements}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          {[...Array(5)].map((_, i) => (
+                            <motion.div
+                              key={`confetti-${i}`}
+                              className={styles.confetti}
+                              animate={{
+                                y: [0, -30, 30],
+                                x: [0, Math.random() * 40 - 20],
+                                rotate: [0, 360],
+                                opacity: [1, 0]
+                              }}
+                              transition={{
+                                duration: 2,
+                                delay: i * 0.1,
+                                repeat: Infinity
+                              }}
+                              style={{
+                                left: `${20 + i * 15}%`,
+                                color: i % 2 === 0 ? "#34d399" : "#fbbf24"
+                              }}
+                            >
+                              ✨
+                            </motion.div>
+                          ))}
+                        </motion.div>
+                      )}
                     </div>
-                    <div className={styles.stepCheckmark}>✓</div>
+                    {currentStep === 3 && (
+                      <motion.div 
+                        className={styles.stepCheckmark}
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ 
+                          type: "spring", 
+                          stiffness: 200, 
+                          damping: 15,
+                          delay: 0.3
+                        }}
+                      >
+                        ✓
+                      </motion.div>
+                    )}
                   </div>
                 </motion.div>
+
+                {/* Step Dots at Bottom */}
+                <div className={styles.stepDots}>
+                  {[...Array(4)].map((_, i) => (
+                    <motion.div
+                      key={`dot-${i}`}
+                      className={`${styles.stepDot} ${i <= currentStep ? styles.active : ''}`}
+                      animate={{
+                        backgroundColor: i <= currentStep ? "rgba(255, 255, 255, 0.9)" : "rgba(255, 255, 255, 0.3)"
+                      }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </motion.div>

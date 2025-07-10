@@ -566,6 +566,45 @@
             height: auto;
             overflow: hidden;
 
+            .floatingElements {
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              pointer-events: none;
+              z-index: 1;
+
+              .floatingElement {
+                position: absolute;
+                font-size: clamp(16px, 4vw, 24px);
+                color: rgba(255, 255, 255, 0.3);
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+                user-select: none;
+              }
+            }
+
+            .stepDots {
+              display: flex;
+              justify-content: center;
+              gap: 0.8rem;
+              margin-top: 1rem;
+              padding-top: 1rem;
+
+              .stepDot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.3);
+                transition: all 0.3s ease;
+
+                &.active {
+                  background: rgba(255, 255, 255, 0.9);
+                  transform: scale(1.2);
+                }
+              }
+            }
+
             .stepsContainer {
               display: flex;
               height: 100%;
@@ -621,7 +660,31 @@
                     opacity: 0.8;
                     text-align: center;
                     font-style: italic;
-                                  }
+                  }
+
+                  .stepArrow {
+                    font-size: clamp(20px, 5vw, 28px);
+                    color: rgba(255, 255, 255, 0.8);
+                    text-align: center;
+                    margin-top: 0.5rem;
+                    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+                  }
+
+                  .celebrationElements {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    pointer-events: none;
+
+                    .confetti {
+                      position: absolute;
+                      font-size: clamp(16px, 3.5vw, 20px);
+                      z-index: 5;
+                    }
+                  }
+                }
 
                 .stepCheckmark {
                   position: absolute;
@@ -640,30 +703,10 @@
                   box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
                   z-index: 10;
                 }
-                
-                }
               }
             }
 
-            .stepIndicators {
-              display: flex;
-              justify-content: center;
-              gap: 0.5rem;
-              margin-top: 0.75rem;
 
-              .indicator {
-                width: 8px;
-                height: 8px;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.3);
-                transition: all 0.3s ease;
-
-                &.active {
-                  background: rgba(255, 255, 255, 0.9);
-                  transform: scale(1.3);
-                }
-              }
-            }
           }
         }
 
