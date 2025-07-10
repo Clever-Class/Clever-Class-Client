@@ -290,10 +290,19 @@
       gap: clamp(1rem, 3vw, 2rem);
       margin-bottom: clamp(2rem, 4vw, 3rem);
       opacity: 0;
+      
+      // Hardware acceleration for smooth animations
+      will-change: transform, opacity;
+      transform: translateZ(0);
 
       &.visible {
         animation: fadeInUp 0.8s ease forwards;
         animation-delay: 0.6s;
+      }
+
+      // Enhanced responsive design
+      @media (min-width: 1200px) {
+        gap: 2.5rem;
       }
 
       @include respond-to(tablet) {
@@ -313,10 +322,15 @@
         transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         position: relative;
         overflow: hidden;
-        min-height: 264px;
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.2);
+        
+        // Consistent dimensions on desktop only
+        @media (min-width: 768px) {
+          min-height: 320px;
+          height: 320px;
+        }
 
         // Glass morphism effect
         &::before {
@@ -335,20 +349,56 @@
           transform: translateY(-8px);
           box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
           border-color: rgba(255, 255, 255, 0.3);
+          
+          // Enhanced shadow for professional look
+          filter: brightness(1.02);
+          
+          // Smooth transition for all interactive elements
+          .cardHeader .cardIcon {
+            transform: scale(1.05);
+          }
+        }
+
+        // Performance optimization
+        &:not(:hover) {
+          transform: translateY(0);
+          .cardHeader .cardIcon {
+            transform: scale(1);
+          }
         }
 
         @include respond-to(mobile) {
           padding: 1.5rem;
           min-height: 232px;
+          height: auto; // Allow natural height on mobile
         }
 
-        .cardIcon {
-          font-size: clamp(28px, 5.5vw, 36px);
-          margin-bottom: clamp(1rem, 2.2vw, 1.5rem);
+        .cardHeader {
           display: flex;
           align-items: center;
-          justify-content: flex-start;
-          opacity: 0.9;
+          gap: clamp(0.75rem, 2vw, 1rem);
+          margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+          flex-shrink: 0;
+
+          .cardIcon {
+            font-size: clamp(24px, 4.5vw, 28px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.9;
+            flex-shrink: 0;
+            width: clamp(28px, 5vw, 32px);
+            height: clamp(28px, 5vw, 32px);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          }
+
+          h3 {
+            font-size: clamp(16px, 3.2vw, 20px);
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+            flex: 1;
+          }
         }
 
         .cardContent {
@@ -356,19 +406,24 @@
           display: flex;
           flex-direction: column;
 
-          h3 {
-            font-size: clamp(18px, 3.8vw, 24px);
-            font-weight: 700;
-            margin-bottom: clamp(0.7rem, 1.6vw, 1rem);
-            line-height: 1.2;
-          }
-
           p {
             font-size: clamp(14px, 2.8vw, 16px);
             line-height: 1.5;
             margin-bottom: clamp(1rem, 2.2vw, 1.5rem);
-            flex-grow: 1;
             opacity: 0.9;
+            flex-shrink: 0;
+          }
+
+          // Ensure content areas take remaining space
+          .scrollingSubjects,
+          .featureImage,
+          .solutionSlider,
+          .sourceExamples {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 0; // Important for flex overflow
           }
         }
 

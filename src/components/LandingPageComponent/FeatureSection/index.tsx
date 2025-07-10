@@ -237,11 +237,13 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
           style={{ willChange: 'transform, opacity' }}
         >
           <div className={`${styles.featureCard} ${styles.cardPrimary}`}>
-            <div className={styles.cardIcon}>
-              <HiOutlineAcademicCap />
+            <div className={styles.cardHeader}>
+              <div className={styles.cardIcon}>
+                <HiOutlineAcademicCap />
+              </div>
+              <h3>Any subject, any level</h3>
             </div>
             <div className={styles.cardContent}>
-              <h3>Any subject, any level</h3>
               <p>Get expert help from beginner to advanced, tailored to your learning needs.</p>
               <div className={styles.scrollingSubjects}>
                 {/* Row 1 - Science subjects */}
@@ -302,11 +304,13 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
           </div>
 
           <div className={`${styles.featureCard} ${styles.cardSecondary}`}>
-            <div className={styles.cardIcon}>
-              <RiBrainLine />
+            <div className={styles.cardHeader}>
+              <div className={styles.cardIcon}>
+                <RiBrainLine />
+              </div>
+              <h3>Solve it your way</h3>
             </div>
             <div className={styles.cardContent}>
-              <h3>Solve it your way</h3>
               <p>Take your study companion across the web. Search your questions in the way that suits you best.</p>
               <div className={styles.featureImage}>
                 <div className={styles.mockupWindow}>
@@ -337,11 +341,13 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
           </div>
 
           <div className={`${styles.featureCard} ${styles.cardTertiary}`}>
-            <div className={styles.cardIcon}>
-              <HiOutlineCheckCircle />
+            <div className={styles.cardHeader}>
+              <div className={styles.cardIcon}>
+                <HiOutlineCheckCircle />
+              </div>
+              <h3>Step-by-step solutions</h3>
             </div>
             <div className={styles.cardContent}>
-              <h3>Step-by-step solutions</h3>
               <p>Simplify complex problems into clear, actionable steps to deepen your understanding.</p>
               <div className={styles.solutionSlider}>
                 <div 
@@ -423,11 +429,13 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
           </div>
 
           <div className={`${styles.featureCard} ${styles.cardQuaternary}`}>
-            <div className={styles.cardIcon}>
-              <HiOutlineShieldCheck />
+            <div className={styles.cardHeader}>
+              <div className={styles.cardIcon}>
+                <HiOutlineShieldCheck />
+              </div>
+              <h3>Results you can trust</h3>
             </div>
             <div className={styles.cardContent}>
-              <h3>Results you can trust</h3>
               <p>AI ensures your answers are backed by trustworthy sources, so you can learn with absolute confidence.</p>
               <div className={styles.sourceExamples}>
                 <div className={styles.sourceQuote}>
