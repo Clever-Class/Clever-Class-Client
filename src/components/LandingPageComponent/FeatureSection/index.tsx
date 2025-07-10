@@ -52,6 +52,7 @@ import { RiBrainLine } from 'react-icons/ri';
 
 const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [aiProcessingStep, setAiProcessingStep] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { 
     once: true, 
@@ -66,6 +67,15 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
     }, 3500); // Slightly slower for better UX
 
     return () => clearInterval(interval);
+  }, []);
+
+  // AI Processing animation
+  useEffect(() => {
+    const aiInterval = setInterval(() => {
+      setAiProcessingStep((prev) => (prev + 1) % 4);
+    }, 2000);
+
+    return () => clearInterval(aiInterval);
   }, []);
 
   // Optimized subject arrays - reduced complexity while maintaining visual richness
@@ -407,10 +417,173 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
                       <div className={styles.stepExplanation}>
                         Divide both sides by 2
                       </div>
-                      <div className={styles.checkmark}>✓</div>
                     </div>
+                    <div className={styles.stepCheckmark}>✓</div>
                   </div>
                 </motion.div>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            className={`${styles.featureCard} ${styles.cardQuaternary}`}
+            variants={itemVariants}
+          >
+            <div className={styles.cardHeader}>
+              <div className={styles.cardIcon}>
+                <FaBrain />
+              </div>
+              <h3>Lightning Fast Results</h3>
+            </div>
+            <div className={styles.cardContent}>
+              <p>Get instant answers to any question. Our AI processes complex problems in milliseconds, not minutes.</p>
+              <div className={styles.speedDemo}>
+                {/* Neural Network Background */}
+                <div className={styles.neuralBackground}>
+                  <div className={styles.neuralNodes}>
+                    {[...Array(8)].map((_, i) => (
+                      <motion.div
+                        key={`node-${i}`}
+                        className={styles.neuralNode}
+                        animate={{
+                          opacity: [0.3, 0.8, 0.3],
+                          scale: [0.8, 1, 0.8]
+                        }}
+                        transition={{ 
+                          duration: 2, 
+                          repeat: Infinity, 
+                          delay: i * 0.2,
+                          ease: "easeInOut"
+                        }}
+                        style={{
+                          left: `${20 + (i % 4) * 20}%`,
+                          top: `${30 + Math.floor(i / 4) * 40}%`
+                        }}
+                      />
+                    ))}
+                  </div>
+                  
+                  <div className={styles.neuralConnections}>
+                    {[...Array(6)].map((_, i) => (
+                      <motion.div
+                        key={`connection-${i}`}
+                        className={styles.neuralLine}
+                        animate={{
+                          opacity: aiProcessingStep > 0 ? [0.1, 0.6, 0.1] : 0.1,
+                          pathLength: aiProcessingStep > 0 ? [0, 1, 0] : 0
+                        }}
+                        transition={{ 
+                          duration: 1.5, 
+                          repeat: Infinity, 
+                          delay: i * 0.1
+                        }}
+                        style={{
+                          left: `${15 + i * 12}%`,
+                          top: `${25 + (i % 2) * 50}%`,
+                          width: `${20 + i * 5}%`,
+                          transform: `rotate(${i * 15}deg)`
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div className={styles.timer}>
+                  <motion.div 
+                    className={styles.timeDisplay}
+                    animate={{
+                      scale: aiProcessingStep === 0 ? [1, 1.05, 1] : 1
+                    }}
+                    transition={{ duration: 0.8 }}
+                  >
+                    <span className={styles.timeNumber}>
+                      {aiProcessingStep === 0 ? "0.3" : aiProcessingStep === 1 ? "0.2" : aiProcessingStep === 2 ? "0.1" : "0.0"}
+                    </span>
+                    <span className={styles.timeUnit}>sec</span>
+                  </motion.div>
+
+                  {/* Dynamic Status Pill */}
+                  <motion.div 
+                    className={styles.statusPill}
+                    animate={{
+                      backgroundColor: 
+                        aiProcessingStep === 0 ? "rgba(255, 255, 255, 0.15)" :
+                        aiProcessingStep === 1 ? "rgba(255, 255, 255, 0.18)" :
+                        aiProcessingStep === 2 ? "rgba(255, 255, 255, 0.22)" :
+                        "rgba(255, 255, 255, 0.25)",
+                      scale: [0.95, 1, 0.95]
+                    }}
+                    transition={{ 
+                      backgroundColor: { duration: 0.3 },
+                      scale: { duration: 2, repeat: Infinity }
+                    }}
+                  >
+                    <motion.div className={styles.pillIcon}>
+                      {aiProcessingStep === 0 && "🔍"}
+                      {aiProcessingStep === 1 && "🧠"}
+                      {aiProcessingStep === 2 && "⚡"}
+                      {aiProcessingStep === 3 && "✨"}
+                    </motion.div>
+                    <motion.span 
+                      className={styles.pillText}
+                      key={aiProcessingStep}
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {aiProcessingStep === 0 && "Scanning..."}
+                      {aiProcessingStep === 1 && "Analyzing..."}
+                      {aiProcessingStep === 2 && "Processing..."}
+                      {aiProcessingStep === 3 && "Complete!"}
+                    </motion.span>
+                  </motion.div>
+                  
+                  {/* AI Scanning Lines */}
+                  <div className={styles.scanningLines}>
+                    <motion.div 
+                      className={styles.scanLine}
+                      animate={{
+                        x: [-50, 100],
+                        opacity: [0, 1, 0]
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    />
+                    <motion.div 
+                      className={styles.scanLine}
+                      animate={{
+                        x: [-30, 120],
+                        opacity: [0, 0.6, 0]
+                      }}
+                      transition={{
+                        duration: 2.5,
+                        repeat: Infinity,
+                        delay: 0.5,
+                        ease: "easeInOut"
+                      }}
+                    />
+                  </div>
+                </div>
+                
+                <div className={styles.speedIndicators}>
+                  <div className={styles.speedBars}>
+                    {[...Array(5)].map((_, i) => (
+                      <motion.div
+                        key={`bar-${i}`}
+                        className={styles.speedBar}
+                        animate={{
+                          height: aiProcessingStep > i ? "100%" : "20%",
+                          backgroundColor: aiProcessingStep > i ? "#10b981" : "rgba(255,255,255,0.2)"
+                        }}
+                        transition={{ duration: 0.3, delay: i * 0.1 }}
+                      />
+                    ))}
+                  </div>
+                  <span className={styles.speedLabel}>AI Processing Speed</span>
+                </div>
               </div>
             </div>
           </motion.div>
