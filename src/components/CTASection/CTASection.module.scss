@@ -2,395 +2,377 @@
 
 .ctaSection {
   position: relative;
-  width: 100%;
+  background: linear-gradient(135deg, $primary-blue 0%, $primary-blue-light 100%);
+  color: white;
   padding: clamp(4rem, 8vw, 8rem) 0;
-  background: linear-gradient(
-    to bottom right,
-    $primary-blue,
-    $primary-color-hover
-  );
   overflow: hidden;
+  // GPU acceleration for smooth scrolling
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
 
-  &::before {
-    content: '';
+  @include respond-to(mobile) {
+    padding: 3rem 0;
+  }
+
+  .gradientOverlay {
     position: absolute;
-    inset: 0;
-    background-image: url('../../assets/images/edu-pattern.jpg');
-    background-size: 800px auto;
-    background-repeat: repeat;
-    opacity: 0.035;
-    animation: subtleFloat 60s linear infinite;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+      circle at top right,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 50%
+    );
+    z-index: 1;
   }
-}
 
-.gradientOverlay {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.1),
-    transparent 70%
-  );
-  z-index: 1;
-}
-
-.patternBackground {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  opacity: 0.04;
-  pointer-events: none;
-  z-index: 1;
-
-  .row {
+  .patternBackground {
     position: absolute;
-    display: flex;
-    gap: 4rem;
-    animation: floatLeft 120s linear infinite;
-    opacity: 0.5;
-    width: max-content;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.05;
+    z-index: 0;
+    // Optimized mask for better performance
+    mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
+    -webkit-mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
 
-    svg {
-      width: 32px;
-      height: 32px;
-      opacity: 0.6;
-      filter: brightness(0) invert(1);
-    }
+    .row {
+      display: flex;
+      gap: clamp(2rem, 4vw, 4rem);
+      width: max-content;
+      padding: clamp(1rem, 2vw, 2rem) 0;
+      // GPU acceleration for smooth animation
+      transform: translate3d(0, 0, 0);
+      -webkit-transform: translate3d(0, 0, 0);
 
-    &:nth-child(1) {
-      top: 10%;
-    }
-
-    &:nth-child(2) {
-      top: 35%;
-      animation: floatRight 100s linear infinite;
-      animation-delay: -20s;
-    }
-
-    &:nth-child(3) {
-      top: 60%;
-      animation: floatLeft 80s linear infinite;
-      animation-delay: -40s;
-    }
-
-    &:nth-child(4) {
-      top: 85%;
-      animation: floatRight 90s linear infinite;
-      animation-delay: -60s;
+      svg {
+        width: clamp(2rem, 4vw, 3rem);
+        height: clamp(2rem, 4vw, 3rem);
+        color: rgba(255, 255, 255, 0.3);
+        flex-shrink: 0;
+      }
     }
   }
-}
 
-.container {
-  position: relative;
-  z-index: 2;
-  max-width: min(90%, 1200px);
-  margin: 0 auto;
-  padding: 0 clamp(1rem, 3vw, 2rem);
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: clamp(2rem, 5vw, 4rem);
-  align-items: center;
-
-  @media (max-width: $tablet) {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-}
-
-.content {
-  opacity: 0;
-  animation: fadeInUp 0.8s ease forwards;
-
-  .badge {
-    display: inline-flex;
+  .container {
+    position: relative;
+    max-width: min(90%, 1200px);
+    margin: 0 auto;
+    padding: 0 clamp(1rem, 3vw, 2rem);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(3rem, 6vw, 6rem);
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 9999px;
-    color: white;
-    font-weight: 500;
-    font-size: 0.875rem;
-    margin-bottom: 1.5rem;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    z-index: 2;
 
-    svg {
-      width: 16px;
-      height: 16px;
-      color: white;
-    }
-  }
-
-  .title {
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
-    font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: clamp(1rem, 3vw, 1.5rem);
-    color: white;
-    letter-spacing: -0.02em;
-
-    .highlight {
-      color: white;
-    }
-  }
-
-  .description {
-    font-size: clamp(1rem, 1.5vw, 1.125rem);
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: clamp(2rem, 4vw, 3rem);
-    max-width: 600px;
-
-    @media (max-width: $tablet) {
-      margin-left: auto;
-      margin-right: auto;
-    }
-  }
-
-  .actions {
-    display: flex;
-    gap: 1rem;
-    animation: fadeInUp 0.8s ease forwards;
-    animation-delay: 0.2s;
-    opacity: 0;
-
-    @media (max-width: $tablet) {
-      justify-content: center;
+    @include respond-to(tablet) {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      text-align: center;
     }
 
-    @media (max-width: $mobile) {
+    @include respond-to(mobile) {
+      gap: 2rem;
+    }
+
+    .content {
+      display: flex;
       flex-direction: column;
-      max-width: 300px;
+      gap: clamp(1rem, 2.5vw, 1.5rem);
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50px;
+        padding: 0.75rem 1.25rem;
+        font-size: 14px;
+        font-weight: 600;
+        width: fit-content;
+        transition: all 0.3s ease;
+        // GPU acceleration
+        transform: translate3d(0, 0, 0);
+        -webkit-transform: translate3d(0, 0, 0);
+
+        @include respond-to(tablet) {
+          align-self: center;
+        }
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+          border-color: rgba(255, 255, 255, 0.3);
+        }
+      }
+
+      .title {
+        font-size: clamp(28px, 6vw, 56px);
+        font-weight: 700;
+        line-height: 1.1;
+        margin: 0;
+        letter-spacing: -0.04em;
+
+        .highlight {
+          background: linear-gradient(45deg, #60a5fa, #a78bfa);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        @include respond-to(mobile) {
+          font-size: clamp(24px, 8vw, 32px);
+        }
+      }
+
+      .description {
+        font-size: clamp(16px, 3vw, 20px);
+        line-height: 1.6;
+        opacity: 0.9;
+        margin: 0;
+        max-width: 500px;
+
+        @include respond-to(tablet) {
+          max-width: 600px;
+          margin: 0 auto;
+        }
+      }
+
+      .actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: clamp(0.5rem, 2vw, 1rem);
+
+        @include respond-to(tablet) {
+          justify-content: center;
+        }
+
+        @include respond-to(mobile) {
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+      }
+    }
+
+    .primaryButton {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $white;
+      color: $primary-blue;
+      font-weight: 600;
+      font-size: clamp(16px, 2.5vw, 18px);
+      padding: clamp(1rem, 2.5vw, 1.25rem) clamp(2rem, 4vw, 3rem);
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      text-decoration: none;
+      // GPU acceleration
+      transform: translate3d(0, 0, 0);
+      -webkit-transform: translate3d(0, 0, 0);
+
+      &:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        background-color: rgba(255, 255, 255, 0.95);
+      }
+
+      svg {
+        width: 18px;
+        height: 18px;
+        margin-left: 0.5rem;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover svg {
+        transform: translateX(4px);
+      }
+    }
+
+    .secondaryButton {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-weight: 600;
+      font-size: clamp(16px, 2.5vw, 18px);
+      padding: clamp(1rem, 2.5vw, 1.25rem) clamp(2rem, 4vw, 3rem);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      // Removed backdrop-filter for better performance
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      }
+
+      svg {
+        width: 18px;
+        height: 18px;
+        margin-left: 0.5rem;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover svg {
+        transform: translateX(4px);
+      }
+    }
+  }
+
+  .cardPreview {
+    position: relative;
+    perspective: 1000px;
+
+    @media (max-width: $tablet) {
+      max-width: 400px;
       margin: 0 auto;
     }
   }
 
-  .primaryButton {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: $white;
-    color: $primary-blue;
-    font-weight: 600;
-    font-size: clamp(16px, 2.5vw, 18px);
-    padding: clamp(1rem, 2.5vw, 1.25rem) clamp(2rem, 4vw, 3rem);
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    text-decoration: none;
+  .card {
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    // Removed backdrop-filter for better performance
+    transform: perspective(1000px) rotateX(6deg) scale(0.98);
+    transform-origin: center bottom;
+    transition: all 0.3s ease;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    // GPU acceleration
+    -webkit-transform: perspective(1000px) rotateX(6deg) scale(0.98) translate3d(0, 0, 0);
 
-    &:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-      background-color: rgba(255, 255, 255, 0.95);
+    @include respond-to(mobile) {
+      transform: none;
+      -webkit-transform: none;
     }
 
-    &:active {
-      transform: translateY(-1px);
+    .cardHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
     }
 
-    svg {
-      width: 18px;
-      height: 18px;
-      margin-left: 0.5rem;
-      transition: transform 0.3s ease;
+    .cardBadge {
+      padding: 0.5rem 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 500;
     }
 
-    &:hover svg {
-      transform: translateX(4px);
-    }
-  }
+    .cardIcon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      color: white;
 
-  .secondaryButton {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    font-weight: 600;
-    font-size: clamp(16px, 2.5vw, 18px);
-    padding: clamp(1rem, 2.5vw, 1.25rem) clamp(2rem, 4vw, 3rem);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.15);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      svg {
+        width: 20px;
+        height: 20px;
+      }
     }
 
-    svg {
-      width: 18px;
-      height: 18px;
-      margin-left: 0.5rem;
-      transition: transform 0.3s ease;
+    .cardContent {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      font-style: italic;
     }
 
-    &:hover svg {
-      transform: translateX(4px);
+    .cardFooter {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .statValue {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .statLabel {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
   }
 }
 
-.cardPreview {
-  position: relative;
-  perspective: 1000px;
-  opacity: 0;
-  animation: fadeInUp 0.8s ease forwards;
-  animation-delay: 0.3s;
-
-  @media (max-width: $tablet) {
-    max-width: 400px;
-    margin: 0 auto;
-  }
-}
-
-.card {
-  background: rgba(255, 255, 255, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 1.5rem;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transform: perspective(1000px) rotateX(6deg) scale(0.98);
-  transform-origin: center bottom;
-  transition: all 0.3s ease;
-  animation: float 6s ease-in-out infinite;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-
-  &:hover {
-    transform: perspective(1000px) rotateX(4deg) scale(0.99);
-  }
-
-  @include respond-to(mobile) {
-    animation: none;
-    transform: none;
-  }
-
-  .cardHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  }
-
-  .cardBadge {
-    padding: 0.5rem 1rem;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    color: white;
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-
-  .cardIcon {
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    color: white;
-
-    svg {
-      width: 20px;
-      height: 20px;
-    }
-  }
-
-  .cardContent {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-    font-style: italic;
-  }
-
-  .cardFooter {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .stat {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .statValue {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: white;
-  }
-
-  .statLabel {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.6);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-}
-
+// Optimized keyframes using transform3d
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translate3d(0, 20px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
-@keyframes subtleFloat {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 800px -800px;
-  }
-}
-
-@keyframes floatLeft {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(-100%);
+// Media queries for enhanced responsive design
+@include respond-to(desktop-lg) {
+  .ctaSection {
+    .container {
+      max-width: 1320px;
+    }
   }
 }
 
-@keyframes floatRight {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(100%);
-  }
-}
+@include respond-to(mobile-sm) {
+  .ctaSection {
+    padding: 2.5rem 0;
 
-@keyframes float {
-  0%,
-  100% {
-    transform: perspective(1000px) rotateX(6deg) scale(0.98) translateY(0);
-  }
-  50% {
-    transform: perspective(1000px) rotateX(6deg) scale(0.98) translateY(-10px);
+    .container {
+      .content {
+        .title {
+          font-size: 24px;
+        }
+
+        .description {
+          font-size: 14px;
+        }
+      }
+
+      .card {
+        padding: 1.25rem;
+
+        .cardFooter {
+          gap: 1rem;
+        }
+      }
+    }
   }
 }

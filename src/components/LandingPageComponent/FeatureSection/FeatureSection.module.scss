@@ -1,47 +1,47 @@
 @import '../../../styles/variables';
 
-// Animation keyframes
+// Optimized animation keyframes - using transform3d for GPU acceleration
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translate3d(0, 20px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes fadeInLeft {
   from {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translate3d(-20px, 0, 0);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes fadeInRight {
   from {
     opacity: 0;
-    transform: translateX(20px);
+    transform: translate3d(20px, 0, 0);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes scaleIn {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale3d(0.95, 0.95, 1);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale3d(1, 1, 1);
   }
 }
 
@@ -70,6 +70,9 @@
   overflow: hidden;
   color: $white;
   padding: clamp(2rem, 6vw, 6rem) 0;
+  // Force GPU acceleration for smooth scrolling
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
 
   @include respond-to(mobile) {
     padding: 2rem 0;
@@ -136,6 +139,9 @@
         position: relative;
         overflow: hidden;
         box-shadow: 0 4px 15px rgba(37, 99, 255, 0.1);
+        // GPU acceleration
+        transform: translate3d(0, 0, 0);
+        -webkit-transform: translate3d(0, 0, 0);
 
         &::before {
           content: '';
@@ -159,21 +165,6 @@
           font-size: clamp(14px, 3.5vw, 16px);
           color: $primary-blue;
           white-space: nowrap;
-        }
-
-        &:hover {
-          background: linear-gradient(135deg, #f8f9fa, $white);
-          border-color: rgba(37, 99, 255, 0.3);
-          box-shadow: 0 12px 30px rgba(37, 99, 255, 0.2);
-          transform: translateY(-4px);
-
-          &::before {
-            left: 100%;
-          }
-
-          svg {
-            transform: scale(1.1);
-          }
         }
 
         &:active {
@@ -249,16 +240,13 @@
           border: none;
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          // GPU acceleration
+          transform: translate3d(0, 0, 0);
+          -webkit-transform: translate3d(0, 0, 0);
 
           @include respond-to(mobile) {
             width: 100%;
             max-width: 300px;
-          }
-
-          &:hover {
-            background-color: rgba(255, 255, 255, 0.9);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
           }
 
           &:active {
@@ -289,16 +277,10 @@
       grid-template-columns: repeat(2, 1fr);
       gap: clamp(1rem, 3vw, 2rem);
       margin-bottom: clamp(2rem, 4vw, 3rem);
-      opacity: 0;
       
-      // Hardware acceleration for smooth animations
-      will-change: transform, opacity;
-      transform: translateZ(0);
-
-      &.visible {
-        animation: fadeInUp 0.8s ease forwards;
-        animation-delay: 0.6s;
-      }
+      // GPU acceleration for smooth animations
+      transform: translate3d(0, 0, 0);
+      -webkit-transform: translate3d(0, 0, 0);
 
       // Enhanced responsive design
       @media (min-width: 1200px) {
@@ -322,17 +304,18 @@
         transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         position: relative;
         overflow: hidden;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.2);
+        // GPU acceleration
+        transform: translate3d(0, 0, 0);
+        -webkit-transform: translate3d(0, 0, 0);
         
-        // Consistent dimensions on desktop only
+        // Flexible dimensions that accommodate content
         @media (min-width: 768px) {
-          min-height: 320px;
-          height: 320px;
+          min-height: 280px;
+          height: auto; // Allow cards to size based on content
         }
 
-        // Glass morphism effect
+        // Optimized glass effect without backdrop-filter for better performance
         &::before {
           content: '';
           position: absolute;
@@ -345,31 +328,9 @@
           z-index: -1;
         }
 
-        &:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
-          border-color: rgba(255, 255, 255, 0.3);
-          
-          // Enhanced shadow for professional look
-          filter: brightness(1.02);
-          
-          // Smooth transition for all interactive elements
-          .cardHeader .cardIcon {
-            transform: scale(1.05);
-          }
-        }
-
-        // Performance optimization
-        &:not(:hover) {
-          transform: translateY(0);
-          .cardHeader .cardIcon {
-            transform: scale(1);
-          }
-        }
-
         @include respond-to(mobile) {
           padding: 1.5rem;
-          min-height: 232px;
+          min-height: 200px;
           height: auto; // Allow natural height on mobile
         }
 
@@ -409,7 +370,7 @@
           p {
             font-size: clamp(14px, 2.8vw, 16px);
             line-height: 1.5;
-            margin-bottom: clamp(1rem, 2.2vw, 1.5rem);
+            margin-bottom: clamp(0.75rem, 1.8vw, 1rem);
             opacity: 0.9;
             flex-shrink: 0;
           }
@@ -422,19 +383,21 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start; // Start from top instead of center
             min-height: 0; // Important for flex overflow
+            margin-top: 0.5rem; // Small gap from description
           }
         }
 
-        // Primary card (pink gradient with glass effect)
+        // Primary card (pink gradient with optimized glass effect)
         &.cardPrimary {
           background: linear-gradient(135deg, rgba(255, 64, 129, 0.9), rgba(255, 107, 157, 0.85), rgba(194, 24, 91, 0.9));
           color: white;
 
           .scrollingSubjects {
-            margin-top: auto;
             overflow: hidden;
+            min-height: 120px; // Ensure adequate space for 3 rows
+            // Optimized mask for better performance
             mask: linear-gradient(90deg, transparent, white 8%, white 92%, transparent);
             -webkit-mask: linear-gradient(90deg, transparent, white 8%, white 92%, transparent);
 
@@ -454,9 +417,10 @@
               .scrollingTrack {
                 display: flex;
                 gap: clamp(0.8rem, 2vw, 1.2rem);
-                animation: scrollLeft 20s linear infinite;
                 width: max-content;
-                will-change: transform;
+                // GPU acceleration for smooth animation
+                transform: translate3d(0, 0, 0);
+                -webkit-transform: translate3d(0, 0, 0);
 
                 @include respond-to(mobile) {
                   animation-duration: 15s; // Faster on mobile for better UX
@@ -464,31 +428,24 @@
                 }
 
                 .subjectTag {
+                  // Optimized background without backdrop-filter for better performance
                   background: rgba(255, 255, 255, 0.25);
-                  backdrop-filter: blur(15px);
+                  border: 1px solid rgba(255, 255, 255, 0.4);
                   padding: clamp(0.6rem, 1.5vw, 0.8rem) clamp(1rem, 2.5vw, 1.4rem);
                   border-radius: 25px;
                   font-size: clamp(13px, 2.8vw, 16px);
                   font-weight: 600;
-                  border: 1px solid rgba(255, 255, 255, 0.4);
                   white-space: nowrap;
                   flex-shrink: 0;
-                  transition: all 0.3s ease;
-                  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-
-                  &:hover {
-                    background: rgba(255, 255, 255, 0.35);
-                    transform: scale(1.05);
-                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-                  }
+                  // Lighter shadow for better performance
+                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                  // GPU acceleration
+                  transform: translate3d(0, 0, 0);
+                  -webkit-transform: translate3d(0, 0, 0);
 
                   @include respond-to(mobile) {
                     padding: clamp(0.5rem, 1.2vw, 0.6rem) clamp(0.8rem, 2vw, 1rem);
                     font-size: clamp(12px, 2.5vw, 14px);
-                    
-                    &:hover {
-                      transform: none; // Disable hover effects on mobile
-                    }
                   }
                 }
               }
@@ -504,17 +461,17 @@
           }
         }
 
-        // Secondary card (light background with glass effect)
+        // Secondary card (light background with optimized glass effect)
         &.cardSecondary {
           background: linear-gradient(135deg, rgba(248, 250, 252, 0.9), rgba(226, 232, 240, 0.85));
           color: #334155;
 
           .featureImage {
-            margin-top: auto;
+            min-height: 120px; // Ensure adequate space for mockup window
 
             .mockupWindow {
               background: rgba(255, 255, 255, 0.95);
-              backdrop-filter: blur(10px);
+              // Removed backdrop-filter for better performance
               border-radius: 12px;
               box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
               overflow: hidden;
@@ -582,11 +539,6 @@
                     color: #475569;
                     text-align: center;
                     transition: all 0.2s ease;
-
-                    &:hover {
-                      background: #e2e8f0;
-                      border-color: #cbd5e1;
-                    }
                   }
                 }
               }
@@ -594,21 +546,23 @@
           }
         }
 
-        // Tertiary card (blue with glass effect)
+        // Tertiary card (blue with optimized glass effect)
         &.cardTertiary {
           background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(29, 78, 216, 0.85), rgba(30, 64, 175, 0.9));
           color: white;
 
           .solutionSlider {
-            margin-top: auto;
             position: relative;
-            height: 116px;
+            min-height: 140px; // Increased from 116px for better content fit
+            height: auto;
             overflow: hidden;
 
             .stepsContainer {
               display: flex;
-              transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
               height: 100%;
+              // GPU acceleration
+              transform: translate3d(0, 0, 0);
+              -webkit-transform: translate3d(0, 0, 0);
 
               .step {
                 flex: 0 0 100%;
@@ -627,7 +581,7 @@
                     font-size: clamp(11px, 2.2vw, 13px);
                     font-weight: 700;
                     margin-right: 0.5rem;
-                    backdrop-filter: blur(10px);
+                    // Removed backdrop-filter for better performance
                   }
 
                   .stepTitle {
@@ -648,7 +602,7 @@
                     font-size: clamp(14px, 3vw, 16px);
                     text-align: center;
                     margin-bottom: 0.5rem;
-                    backdrop-filter: blur(10px);
+                    // Removed backdrop-filter for better performance
                     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
                   }
 
@@ -680,7 +634,7 @@
               display: flex;
               justify-content: center;
               gap: 0.5rem;
-              margin-top: 1rem;
+              margin-top: 0.75rem;
 
               .indicator {
                 width: 8px;
@@ -698,30 +652,24 @@
           }
         }
 
-        // Quaternary card (dark with glass effect)
+        // Quaternary card (dark with optimized glass effect)
         &.cardQuaternary {
           background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.85), rgba(2, 6, 23, 0.9));
           color: white;
 
           .sourceExamples {
-            margin-top: auto;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.75rem;
+            min-height: 140px; // Ensure adequate space for quote examples
 
             .sourceQuote {
               background: rgba(255, 255, 255, 0.08);
               border: 1px solid rgba(255, 255, 255, 0.15);
               border-radius: 12px;
               padding: 1rem;
-              backdrop-filter: blur(15px);
+              // Removed backdrop-filter for better performance
               transition: all 0.3s ease;
-
-              &:hover {
-                background: rgba(255, 255, 255, 0.12);
-                border-color: rgba(255, 255, 255, 0.25);
-                transform: translateY(-2px);
-              }
 
               p {
                 font-size: clamp(12px, 2.5vw, 14px);

@@ -46,12 +46,12 @@ export const Homepage = () => {
         />
       )}
 
-      <Hero />
+      {/* <Hero /> */}
       <FeatureSection onGetStarted={handleJoinRequest} />
       <ReviewsFeature />
       <FeatureHighlight />
-      <LandingShowcase />
-      <LandingShowcase theme="dark" />
+      {/* <LandingShowcase /> */}
+      {/* <LandingShowcase theme="dark" /> */}
       <PricingPlans onSignupClick={handleJoinRequest} />
       <FinalLowerCTA onGetStarted={handleJoinRequest} />
       <FAQ />

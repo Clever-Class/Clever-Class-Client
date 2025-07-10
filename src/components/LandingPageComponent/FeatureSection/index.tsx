@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { motion, useInView } from 'framer-motion';
 import styles from './FeatureSection.module.scss';
 import { FeatureSectionProps } from './FeatureSection.types';
 import ExtensionShowcase from '../../ExtensionShowcase';
@@ -50,126 +51,79 @@ import {
 import { RiBrainLine } from 'react-icons/ri';
 
 const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(sectionRef, { 
+    once: true, 
+    margin: "-100px",
+    amount: 0.3 
+  });
 
-  // Check for mobile devices
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 480);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    return () => {
-      window.removeEventListener('resize', checkMobile);
-    };
-  }, []);
-
-  // Step-by-step solution animation
+  // Step-by-step solution animation - optimized interval
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentStep((prev) => (prev + 1) % 4); // 4 steps total
-    }, 3000); // Change step every 3 seconds
+      setCurrentStep((prev) => (prev + 1) % 4);
+    }, 3500); // Slightly slower for better UX
 
     return () => clearInterval(interval);
   }, []);
 
-  // Subjects with their icons for the scrolling animation
+  // Optimized subject arrays - reduced complexity while maintaining visual richness
   const subjectsRow1 = [
-    { name: 'Math', icon: <FaSquareRootAlt /> },
-    { name: 'Physics', icon: <FaAtom /> },
-    { name: 'Chemistry', icon: <FaFlask /> },
-    { name: 'Biology', icon: <FaDna /> },
-    { name: 'Computer Science', icon: <FaLaptopCode /> },
-    { name: 'Astronomy', icon: <FaGlobeAmericas /> },
-    { name: 'Engineering', icon: <FaCogs /> },
-    { name: 'Robotics', icon: <FaRobot /> },
-    { name: 'Artificial Intelligence', icon: <FaBrain /> },
-    { name: 'Machine Learning', icon: <FaMicrochip /> },
-    { name: 'Quantum Physics', icon: <FaQuantum /> },
+    'Math', 'Physics', 'Chemistry', 'Biology', 'Computer Science', 'Engineering'
   ];
 
   const subjectsRow2 = [
-    { name: 'History', icon: <GiAncientColumns /> },
-    { name: 'Literature', icon: <GiBookshelf /> },
-    { name: 'Philosophy', icon: <GiThink /> },
-    { name: 'Economics', icon: <GiMoneyStack /> },
-    { name: 'Psychology', icon: <GiBrain /> },
-    { name: 'Sociology', icon: <GiGroupedDrops /> },
-    { name: 'Anthropology', icon: <GiAncientRuins /> },
-    { name: 'Political Science', icon: <GiPublicSpeaker /> },
-    { name: 'Geography', icon: <GiEarthAmerica /> },
-    { name: 'Linguistics', icon: <GiSpeaker /> },
-    { name: 'Cultural Studies', icon: <GiWorld /> },
+    'History', 'Literature', 'Philosophy', 'Economics', 'Psychology', 'Geography'
   ];
 
   const subjectsRow3 = [
-    { name: 'Algebra', icon: <TbMathFunction /> },
-    { name: 'Calculus', icon: <TbMathIntegralX /> },
-    { name: 'Geometry', icon: <TbMathAvg /> },
-    { name: 'Statistics', icon: <TbChartHistogram /> },
-    { name: 'Trigonometry', icon: <TbTriangle /> },
-    { name: 'Data Science', icon: <TbChartDots3 /> },
-    { name: 'Number Theory', icon: <TbNumbers /> },
-    { name: 'Discrete Math', icon: <TbMathSymbols /> },
-    { name: 'Linear Algebra', icon: <TbVector /> },
-    { name: 'Probability', icon: <TbDice5 /> },
-    { name: 'Differential Equations', icon: <TbDiff /> },
+    'Algebra', 'Calculus', 'Statistics', 'Data Science', 'Trigonometry', 'Linear Algebra'
   ];
 
-  // Create a seamless loop by duplicating the subjects with optimized count for different devices
-  const createSeamlessLoop = (
-    subjects: Array<{ name: string; icon: JSX.Element }>,
-  ) => {
-    // For mobile, use fewer duplicates to improve performance
-    const duplicateCount = isMobile ? 2 : 3;
-    return Array(duplicateCount).fill(subjects).flat();
+  // Framer Motion variants for smooth animations
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.1
+      }
+    }
   };
 
-  // Intersection Observer with optimized threshold for different devices
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      {
-        root: null,
-        rootMargin: isMobile ? '0px' : '50px',
-        threshold: isMobile ? 0.1 : 0.2,
-      },
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94]
       }
-    };
-  }, [isMobile]);
+    }
+  };
 
-  // Animation classes based on visibility and device type
-  const animationClass = isVisible ? styles.visible : '';
+  const slideUpVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.25, 0.46, 0.45, 0.94]
+      }
+    }
+  };
 
   return (
-    <div
+    <motion.div
       className={styles.featureSection}
       ref={sectionRef}
-      style={{
-        // Optimize paint performance
-        willChange: 'transform, opacity',
-        // Enable hardware acceleration
-        transform: 'translateZ(0)',
-      }}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={containerVariants}
     >
       <img
         src={featureSectionSideBackground}
@@ -181,16 +135,22 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
       </div>
 
       <div className={styles.contentContainer}>
-        <div
-          className={`${styles.topSection} ${animationClass}`}
-          style={{ willChange: 'transform, opacity' }}
+        <motion.div
+          className={styles.topSection}
+          variants={itemVariants}
         >
-          <button
+          <motion.button
             className={styles.chromeExtensionButton}
             onClick={() =>
               window.open('https://chrome.google.com/webstore', '_blank')
             }
             aria-label="Get Chrome Extension"
+            whileHover={{ 
+              scale: 1.05, 
+              y: -2,
+              transition: { duration: 0.2 }
+            }}
+            whileTap={{ scale: 0.98 }}
           >
             <img
               src="/asset/chrome-logo.svg"
@@ -198,45 +158,64 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
               className={styles.chromeLogo}
             />
             <span>Chrome Extension</span>
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
 
-        <div
-          className={`${styles.mainContent} ${animationClass}`}
-          style={{ willChange: 'transform, opacity' }}
+        <motion.div
+          className={styles.mainContent}
+          variants={itemVariants}
         >
           <div className={styles.contentLeft}>
-            <h1 className={styles.heroTitle}>
-              The modern approach
+            <motion.h1 
+              className={styles.heroTitle}
+              variants={slideUpVariants}
+            >
+              The modern approach 
               <br />
               to learning is here.
-            </h1>
+            </motion.h1>
 
-            <p className={styles.heroDescription}>
+            <motion.p 
+              className={styles.heroDescription}
+              variants={slideUpVariants}
+            >
               Say goodbye to guesswork, tough problems, and juggling tabs to find answers.
               <br />
               Transcript's AI powered homework helper makes finding answers a breeze.
-            </p>
+            </motion.p>
 
-            <button
+            <motion.button
               className={styles.getStartedButton}
               onClick={onGetStarted}
               aria-label="Get Started"
+              variants={slideUpVariants}
+              whileHover={{ 
+                scale: 1.02, 
+                y: -2,
+                transition: { duration: 0.2 }
+              }}
+              whileTap={{ scale: 0.98 }}
             >
               Add to Chrome for Free
-            </button>
+            </motion.button>
           </div>
 
-          <div className={styles.contentRight}>
+          <motion.div 
+            className={styles.contentRight}
+            variants={slideUpVariants}
+          >
             <ExtensionShowcase className={styles.extensionShowcase} />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-                <div
-          className={`${styles.featureHighlights} ${animationClass}`}
-          style={{ willChange: 'transform, opacity' }}
+        <motion.div
+          className={styles.featureHighlights}
+          variants={containerVariants}
         >
-          <div className={`${styles.featureCard} ${styles.cardPrimary}`}>
+          <motion.div 
+            className={`${styles.featureCard} ${styles.cardPrimary}`}
+            variants={itemVariants}
+          >
             <div className={styles.cardHeader}>
               <div className={styles.cardIcon}>
                 <HiOutlineAcademicCap />
@@ -248,62 +227,72 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
               <div className={styles.scrollingSubjects}>
                 {/* Row 1 - Science subjects */}
                 <div className={styles.subjectRow}>
-                  <div className={styles.scrollingTrack}>
-                    {Array(3).fill([
-                       'Biology',
-                       'Physics', 
-                       'Chemistry',
-                       'Astronomy',
-                       'Computer Science',
-                       'Engineering',
-                     ]).flat().map((subject, index) => (
-                       <span key={index} className={styles.subjectTag}>
+                  <motion.div 
+                    className={styles.scrollingTrack}
+                    animate={{ x: [0, -1000] }}
+                    transition={{
+                      duration: 30,
+                      ease: 'linear',
+                      repeat: Infinity,
+                      repeatType: 'loop'
+                    }}
+                  >
+                    {/* Create enough duplicates for seamless infinite scroll */}
+                    {Array(6).fill(subjectsRow1).flat().map((subject, index) => (
+                       <span key={`row1-${subject}-${index}`} className={styles.subjectTag}>
                          {subject}
                        </span>
                      ))}
-                  </div>
+                  </motion.div>
                 </div>
 
                 {/* Row 2 - Liberal Arts */}
                 <div className={`${styles.subjectRow} ${styles.reverse}`}>
-                  <div className={styles.scrollingTrack}>
-                    {Array(3).fill([
-                      'Literature',
-                      'History',
-                      'Philosophy',
-                      'Political Science',
-                      'Geography',
-                      'Psychology',
-                    ]).flat().map((subject, index) => (
-                      <span key={index} className={styles.subjectTag}>
+                  <motion.div 
+                    className={styles.scrollingTrack}
+                    animate={{ x: [-1000, 0] }}
+                    transition={{
+                      duration: 35,
+                      ease: 'linear',
+                      repeat: Infinity,
+                      repeatType: 'loop'
+                    }}
+                  >
+                    {Array(6).fill(subjectsRow2).flat().map((subject, index) => (
+                      <span key={`row2-${subject}-${index}`} className={styles.subjectTag}>
                         {subject}
                       </span>
                     ))}
-                  </div>
+                  </motion.div>
                 </div>
 
                 {/* Row 3 - Math subjects */}
                 <div className={styles.subjectRow}>
-                  <div className={styles.scrollingTrack}>
-                    {Array(3).fill([
-                      'Geometry',
-                      'Calculus',
-                      'Statistics',
-                      'Algebra',
-                      'Data Science',
-                      'Trigonometry',
-                    ]).flat().map((subject, index) => (
-                      <span key={index} className={styles.subjectTag}>
+                  <motion.div 
+                    className={styles.scrollingTrack}
+                    animate={{ x: [0, -1000] }}
+                    transition={{
+                      duration: 32,
+                      ease: 'linear',
+                      repeat: Infinity,
+                      repeatType: 'loop'
+                    }}
+                  >
+                    {Array(6).fill(subjectsRow3).flat().map((subject, index) => (
+                      <span key={`row3-${subject}-${index}`} className={styles.subjectTag}>
                         {subject}
                       </span>
                     ))}
-                  </div>
+                  </motion.div>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className={`${styles.featureCard} ${styles.cardSecondary}`}>
+          <motion.div 
+            className={`${styles.featureCard} ${styles.cardSecondary}`}
+            variants={itemVariants}
+          >
             <div className={styles.cardHeader}>
               <div className={styles.cardIcon}>
                 <RiBrainLine />
@@ -338,9 +327,12 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className={`${styles.featureCard} ${styles.cardTertiary}`}>
+          <motion.div 
+            className={`${styles.featureCard} ${styles.cardTertiary}`}
+            variants={itemVariants}
+          >
             <div className={styles.cardHeader}>
               <div className={styles.cardIcon}>
                 <HiOutlineCheckCircle />
@@ -350,9 +342,13 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
             <div className={styles.cardContent}>
               <p>Simplify complex problems into clear, actionable steps to deepen your understanding.</p>
               <div className={styles.solutionSlider}>
-                <div 
+                <motion.div 
                   className={styles.stepsContainer}
-                  style={{ transform: `translateX(-${currentStep * 100}%)` }}
+                  animate={{ x: `${-currentStep * 100}%` }}
+                  transition={{ 
+                    duration: 0.5, 
+                    ease: [0.25, 0.46, 0.45, 0.94]
+                  }}
                 >
                   {/* Step 0 - Problem */}
                   <div className={styles.step}>
@@ -414,50 +410,13 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
                       <div className={styles.checkmark}>✓</div>
                     </div>
                   </div>
-                </div>
-                
-                <div className={styles.stepIndicators}>
-                  {[0, 1, 2, 3].map((step) => (
-                    <div 
-                      key={step}
-                      className={`${styles.indicator} ${currentStep === step ? styles.active : ''}`}
-                    />
-                  ))}
-                </div>
+                </motion.div>
               </div>
             </div>
-          </div>
-
-          <div className={`${styles.featureCard} ${styles.cardQuaternary}`}>
-            <div className={styles.cardHeader}>
-              <div className={styles.cardIcon}>
-                <HiOutlineShieldCheck />
-              </div>
-              <h3>Results you can trust</h3>
-            </div>
-            <div className={styles.cardContent}>
-              <p>AI ensures your answers are backed by trustworthy sources, so you can learn with absolute confidence.</p>
-              <div className={styles.sourceExamples}>
-                <div className={styles.sourceQuote}>
-                  <p>"Evaporation is a type of vaporization that occurs on the surface of a liquid as it changes into the gas phase."</p>
-                  <div className={styles.sourceAttribution}>
-                    <span className={styles.sourceIcon}>🌐</span>
-                    <span className={styles.sourceName}>Khan Academy</span>
-                  </div>
-                </div>
-                <div className={styles.sourceQuote}>
-                  <p>"Evaporation occurs when molecules at the surface of a liquid gain enough energy to enter the gas phase."</p>
-                  <div className={styles.sourceAttribution}>
-                    <span className={styles.sourceIcon}>📚</span>
-                    <span className={styles.sourceName}>Scientific Sources</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
