@@ -1,0 +1,427 @@
+// Demo Section Styles - Updated for absolute positioning
+.demoSection {
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(59, 130, 246, 0.05) 0%, rgba(168, 85, 247, 0.05) 50%, rgba(34, 197, 94, 0.05) 100%);
+    pointer-events: none;
+  }
+}
+
+.demoContainer {
+  position: relative;
+  z-index: 1;
+}
+
+.demoStep {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+
+  &.active {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6, #22c55e);
+      animation: shimmer 2s ease-in-out infinite;
+    }
+  }
+
+  &:last-child {
+    margin-bottom: 1.5rem;
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.stepHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.stepIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.stepInfo {
+  h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 0.25rem 0;
+  }
+
+  p {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+  }
+}
+
+// Upload Demo Styles
+.uploadDemo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.uploadZone {
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+
+  svg {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  span {
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.85rem;
+  }
+}
+
+.progressBar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.progressTrack {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border-radius: 2px;
+  transition: width 0.1s ease;
+}
+
+.progressText {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.8rem;
+  min-width: 35px;
+}
+
+// AI Demo Styles
+.aiDemo {
+  position: relative;
+  height: 120px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.neuralNetwork {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.neuralNode {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.neuralLine {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.6), transparent);
+  border-radius: 1px;
+}
+
+.processingStatus {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 0.4rem 0.75rem;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 0.75rem;
+}
+
+.statusIcon {
+  color: #8b5cf6;
+  font-size: 0.8rem;
+}
+
+// Quiz Preview Styles
+.quizPreview {
+  display: flex;
+  justify-content: center;
+}
+
+.questionCard {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.25rem;
+  width: 100%;
+  position: relative;
+}
+
+.questionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.questionNumber {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  padding: 0.2rem 0.6rem;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 0.7rem;
+}
+
+.generatedBadge {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  padding: 0.2rem 0.6rem;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 0.7rem;
+}
+
+.questionText {
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.sparkleEffect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.sparkle {
+  position: absolute;
+  font-size: 0.8rem;
+  pointer-events: none;
+}
+
+// Quiz Interface Styles
+.quizInterface {
+  width: 100%;
+}
+
+.quizQuestion {
+  text-align: center;
+  margin-bottom: 1rem;
+
+  h4 {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+.answerOptions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.answerOption {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  font-size: 0.85rem;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  &.correct {
+    border-color: rgba(34, 197, 94, 0.5);
+  }
+}
+
+.optionLetter {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+.optionText {
+  color: #fff;
+  font-weight: 500;
+  flex: 1;
+}
+
+.checkmark {
+  position: absolute;
+  right: 0.5rem;
+  color: #22c55e;
+  font-size: 1rem;
+}
+
+// Step Indicators
+.stepIndicators {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 1.5rem;
+}
+
+.stepIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+
+  &.active {
+    background: #3b82f6;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .demoSection {
+    padding: 1.5rem;
+  }
+
+  .demoStep {
+    padding: 1.25rem;
+  }
+
+  .stepHeader {
+    gap: 0.5rem;
+  }
+
+  .uploadZone {
+    padding: 1.25rem;
+  }
+
+  .aiDemo {
+    height: 100px;
+  }
+
+  .answerOptions {
+    grid-template-columns: 1fr;
+  }
+
+  .progressBar {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .progressText {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .questionCard {
+    padding: 1rem;
+  }
+
+  .answerOption {
+    padding: 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .stepIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .stepInfo h3 {
+    font-size: 0.9rem;
+  }
+
+  .stepInfo p {
+    font-size: 0.75rem;
+  }
+} 

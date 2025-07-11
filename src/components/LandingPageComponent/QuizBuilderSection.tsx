@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { cn } from '~/lib/utils';
 import {
   LuLightbulb,
@@ -7,8 +7,10 @@ import {
   LuPencil,
   LuClipboardCheck,
   LuClock,
+  LuCheck,
 } from 'react-icons/lu';
 import styles from './QuizBuilderSection.module.scss';
+import QuizBuilderDemo from './QuizBuilderDemo';
 
 interface FeatureCardProps {
   icon: React.ReactNode;
@@ -40,52 +42,113 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 };
 
 const QuizBuilderSection: React.FC = () => {
+  const sectionRef = React.useRef<HTMLDivElement>(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94]
+      }
+    }
+  };
+
+
+
   return (
-    <section className={styles.featureSection}>
+    <motion.section 
+      className={styles.featureSection}
+      ref={sectionRef}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={containerVariants}
+    >
       {/* Background gradient */}
       <div className={styles.backgroundGradient} />
-
-      {/* Scrolling background */}
-      <div className={styles.scrollingBackground} />
 
       <div className={styles.content}>
         {/* Mobile App Badge */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          variants={itemVariants}
           className={styles.badge}
         >
           <LuLightbulb size={18} style={{ marginRight: '8px' }} />
           <span>AI Quiz Builder</span>
         </motion.div>
 
-        {/* Main Title */}
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className={styles.title}
+        {/* Main Content - Info Section Only */}
+        <motion.div 
+          className={styles.mainContent}
+          variants={itemVariants}
         >
-          Make Smart Quizzes
-          <br />
-          With Your Study Materials
-        </motion.h2>
+          {/* Information Section */}
+          <div className={styles.infoSection}>
+            {/* Main Title */}
+            <motion.h2
+              variants={itemVariants}
+              className={styles.title}
+            >
+              Make Smart Quizzes
+              <br />
+              With Your Study Materials
+            </motion.h2>
 
-        {/* Description */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className={styles.description}
-        >
-          Upload your PDFs, notes, or handouts — and let Clever Class turn them
-          into custom AI-powered quizzes. Test yourself, track your progress,
-          and master your material faster.
-        </motion.p>
+            {/* Description */}
+            <motion.p
+              variants={itemVariants}
+              className={styles.description}
+            >
+              Upload your PDFs, notes, or handouts — and let Clever Class turn them
+              into custom AI-powered quizzes. Test yourself, track your progress,
+              and master your material faster.
+            </motion.p>
+
+            {/* Trust Indicators */}
+            <motion.div
+              variants={itemVariants}
+              className={styles.trustIndicators}
+            >
+              <div className={styles.trustItem}>
+                <LuCheck className={styles.trustIcon} />
+                <span>Works with any PDF or document</span>
+              </div>
+              <div className={styles.trustItem}>
+                <LuCheck className={styles.trustIcon} />
+                <span>AI-powered smart questions</span>
+              </div>
+              <div className={styles.trustItem}>
+                <LuCheck className={styles.trustIcon} />
+                <span>Instant quiz generation</span>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Positioned Demo Component */}
+        <div className={styles.demoWrapper}>
+          <QuizBuilderDemo />
+        </div>
 
         {/* Feature Cards Grid */}
-        <div className={styles.grid}>
+        <motion.div 
+          className={styles.grid}
+          variants={containerVariants}
+        >
           <FeatureCard
             icon={<LuUpload size={24} />}
             title="Upload & Generate"
@@ -113,9 +176,9 @@ const QuizBuilderSection: React.FC = () => {
             description="Every quiz is saved for review. Monitor your improvement and revisit topics when needed."
             variant="green"
           />
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
