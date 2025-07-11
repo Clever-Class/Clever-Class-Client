@@ -3,14 +3,14 @@ import React from 'react';
 import LandingPageImage from '~assets/images/heroImage-demo.png';
 import tick from '~assets/images/tick.svg';
 
-import './FeatureHighlightSection.scss';
+import './UniversalCompatibilitySection.scss';
 
-interface FeatureHighlightSectionProps {
+interface UniversalCompatibilitySectionProps {
   primary?: boolean;
 }
 
-export const FeatureHighlightSection: React.FC<
-  FeatureHighlightSectionProps
+export const UniversalCompatibilitySection: React.FC<
+  UniversalCompatibilitySectionProps
 > = ({ primary }) => {
   return (
     <div

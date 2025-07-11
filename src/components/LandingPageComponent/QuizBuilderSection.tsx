@@ -8,7 +8,7 @@ import {
   LuClipboardCheck,
   LuClock,
 } from 'react-icons/lu';
-import styles from './FeatureHighlight.module.scss';
+import styles from './QuizBuilderSection.module.scss';
 
 interface FeatureCardProps {
   icon: React.ReactNode;
@@ -39,7 +39,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   );
 };
 
-const FeatureHighlight: React.FC = () => {
+const QuizBuilderSection: React.FC = () => {
   return (
     <section className={styles.featureSection}>
       {/* Background gradient */}
@@ -119,4 +119,4 @@ const FeatureHighlight: React.FC = () => {
   );
 };
 
-export default FeatureHighlight;
+export default QuizBuilderSection;

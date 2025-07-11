@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import styles from './FeatureSection.module.scss';
-import { FeatureSectionProps } from './FeatureSection.types';
+import styles from './ChromeExtensionSection.module.scss';
+import { ChromeExtensionSectionProps } from './ChromeExtensionSection.types';
 import ExtensionShowcase from '../../ExtensionShowcase';
 import featureSectionSideBackground from '../../../assets/images/extension-bg-browser.png';
 import {
@@ -50,7 +50,7 @@ import {
 } from 'react-icons/hi2';
 import { RiBrainLine } from 'react-icons/ri';
 
-const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
+const ChromeExtensionSection: React.FC<ChromeExtensionSectionProps> = ({ onGetStarted }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [aiProcessingStep, setAiProcessingStep] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -720,4 +720,4 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ onGetStarted }) => {
   );
 };
 
-export default FeatureSection;
+export default ChromeExtensionSection;
