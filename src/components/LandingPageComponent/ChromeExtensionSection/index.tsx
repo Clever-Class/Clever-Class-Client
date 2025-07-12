@@ -93,7 +93,6 @@ const ChromeExtensionSection: React.FC<ChromeExtensionSectionProps> = ({ onGetSt
 
   // Framer Motion variants for smooth animations
   const containerVariants = {
-    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
@@ -323,7 +322,7 @@ const ChromeExtensionSection: React.FC<ChromeExtensionSectionProps> = ({ onGetSt
                   <div className={styles.windowContent}>
                     <div className={styles.questionBox}>
                       <span className={styles.questionLabel}>Question 3</span>
-                      <span className={styles.transcriptLabel}>transcript</span>
+                      <span className={styles.cleverclassLabel}>CleverClass</span>
                     </div>
                     <div className={styles.answerOptions}>
                       <div className={styles.answerOption}>A) 14</div>
