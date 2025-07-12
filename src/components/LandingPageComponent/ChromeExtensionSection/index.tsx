@@ -190,7 +190,7 @@ const ChromeExtensionSection: React.FC<ChromeExtensionSectionProps> = ({ onGetSt
             >
               Say goodbye to guesswork, tough problems, and juggling tabs to find answers.
               <br />
-              Transcript's AI powered homework helper makes finding answers a breeze.
+              CleverClass's AI powered homework helper makes finding answers a breeze.
             </motion.p>
 
             <motion.button

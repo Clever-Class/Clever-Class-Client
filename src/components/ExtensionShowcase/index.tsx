@@ -107,7 +107,7 @@ const ExtensionShowcase: React.FC<ExtensionShowcaseProps> = ({ className }) => {
               <IoNotifications />
             </div>
             <div className={styles.extensionTitle}>
-              Itranscript
+            CleverClass
             </div>
             <div className={styles.settingsIcon}>
               <IoSettings />

@@ -34,7 +34,7 @@ const LandingHero: React.FC<LandingHeroProps> = ({ onGetStarted }) => {
             Say goodbye to guesswork, tough problems, and juggling tabs to find
             answers.
             <br />
-            Transcript's AI powered homework helper makes finding answers a
+            CleverClass's AI powered homework helper makes finding answers a
             breeze.
           </p>
 
