@@ -94,7 +94,7 @@ const QuizBuilderDemo: React.FC<QuizBuilderDemoProps> = ({ className }) => {
                 transition={{ duration: 2, repeat: Infinity }}
               >
                 <HiOutlineDocumentText size={32} />
-                <span>Biology_Chapter_5.pdf</span>
+                <span>Physics_Chapter_3.pdf</span>
               </motion.div>
               
               <motion.div 
@@ -204,7 +204,7 @@ const QuizBuilderDemo: React.FC<QuizBuilderDemoProps> = ({ className }) => {
           </motion.div>
         )}
 
-        {/* Step 2: Smart Quiz Created */}
+        {/* Step 2: Physics MCQ Question 1 */}
         {currentStep === 2 && (
           <motion.div
             className={`${styles.demoStep} ${styles.active}`}
@@ -215,63 +215,65 @@ const QuizBuilderDemo: React.FC<QuizBuilderDemoProps> = ({ className }) => {
           >
             <div className={styles.stepHeader}>
               <div className={styles.stepIcon}>
-                <LuSparkles size={18} />
+                <LuPlay size={18} />
               </div>
               <div className={styles.stepInfo}>
-                <h3>Quiz Created</h3>
-                <p>Custom questions ready</p>
+                <h3>Take Quiz</h3>
+                <p>Interactive testing</p>
               </div>
             </div>
             
-            <div className={styles.quizPreview}>
-              <motion.div 
-                className={styles.questionCard}
-                animate={{
-                  boxShadow: ["0 4px 15px rgba(34, 197, 94, 0.2)", "0 6px 20px rgba(34, 197, 94, 0.4)", "0 4px 15px rgba(34, 197, 94, 0.2)"]
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <div className={styles.questionHeader}>
-                  <span className={styles.questionNumber}>Q1</span>
-                  <span className={styles.generatedBadge}>GENERATED</span>
-                </div>
-                <h4 className={styles.questionText}>What is photosynthesis?</h4>
-                
-                <motion.div
-                  className={styles.sparkleEffect}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  {[...Array(4)].map((_, i) => (
-                    <motion.div
-                      key={`sparkle-${i}`}
-                      className={styles.sparkle}
-                      animate={{
-                        y: [0, -15, 0],
-                        x: [0, Math.random() * 15 - 7],
-                        opacity: [0, 1, 0],
-                        scale: [0, 1, 0]
-                      }}
-                      transition={{
-                        duration: 2,
-                        delay: i * 0.3,
-                        repeat: Infinity
-                      }}
-                      style={{
-                        left: `${25 + i * 20}%`,
-                        top: `${15 + (i % 2) * 20}%`
-                      }}
-                    >
-                      ✨
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </motion.div>
+            <div className={styles.quizInterface}>
+              <div className={styles.quizQuestion}>
+                <h4>What is the SI unit of force?</h4>
+              </div>
+              
+              <div className={styles.answerOptions}>
+                {[
+                  { letter: 'A', answer: 'Joule' },
+                  { letter: 'B', answer: 'Newton' },
+                  { letter: 'C', answer: 'Watt' },
+                  { letter: 'D', answer: 'Pascal' }
+                ].map((option, i) => (
+                  <motion.div
+                    key={option.letter}
+                    className={`${styles.answerOption} ${i === 1 ? styles.correct : ''}`}
+                    animate={{
+                      backgroundColor: i === 1 ? 
+                        ["rgba(34, 197, 94, 0.1)", "rgba(34, 197, 94, 0.3)", "rgba(34, 197, 94, 0.1)"] :
+                        "rgba(255, 255, 255, 0.05)",
+                      borderColor: i === 1 ? 
+                        "rgba(34, 197, 94, 0.5)" : 
+                        "rgba(255, 255, 255, 0.1)"
+                    }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    <span className={styles.optionLetter}>{option.letter}</span>
+                    <span className={styles.optionText}>{option.answer}</span>
+                    {i === 1 && (
+                      <motion.div
+                        className={styles.checkmark}
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ 
+                          type: "spring", 
+                          stiffness: 200, 
+                          damping: 15,
+                          delay: 0.5
+                        }}
+                      >
+                        <HiOutlineCheckCircle />
+                      </motion.div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </motion.div>
         )}
 
-        {/* Step 3: Interactive Quiz Taking */}
+        {/* Step 3: Physics MCQ Question 2 */}
         {currentStep === 3 && (
           <motion.div
             className={`${styles.demoStep} ${styles.active}`}
@@ -292,24 +294,24 @@ const QuizBuilderDemo: React.FC<QuizBuilderDemoProps> = ({ className }) => {
             
             <div className={styles.quizInterface}>
               <div className={styles.quizQuestion}>
-                <h4>What is 15 + 27?</h4>
+                <h4>What is the speed of light in vacuum?</h4>
               </div>
               
               <div className={styles.answerOptions}>
                 {[
-                  { letter: 'A', answer: '32' },
-                  { letter: 'B', answer: '42' },
-                  { letter: 'C', answer: '52' },
-                  { letter: 'D', answer: '35' }
+                  { letter: 'A', answer: '3×10⁸ m/s' },
+                  { letter: 'B', answer: '2×10⁸ m/s' },
+                  { letter: 'C', answer: '5×10⁸ m/s' },
+                  { letter: 'D', answer: '4×10⁸ m/s' }
                 ].map((option, i) => (
                   <motion.div
                     key={option.letter}
-                    className={`${styles.answerOption} ${i === 1 ? styles.correct : ''}`}
+                    className={`${styles.answerOption} ${i === 0 ? styles.correct : ''}`}
                     animate={{
-                      backgroundColor: i === 1 ? 
+                      backgroundColor: i === 0 ? 
                         ["rgba(34, 197, 94, 0.1)", "rgba(34, 197, 94, 0.3)", "rgba(34, 197, 94, 0.1)"] :
                         "rgba(255, 255, 255, 0.05)",
-                      borderColor: i === 1 ? 
+                      borderColor: i === 0 ? 
                         "rgba(34, 197, 94, 0.5)" : 
                         "rgba(255, 255, 255, 0.1)"
                     }}
@@ -318,7 +320,7 @@ const QuizBuilderDemo: React.FC<QuizBuilderDemoProps> = ({ className }) => {
                   >
                     <span className={styles.optionLetter}>{option.letter}</span>
                     <span className={styles.optionText}>{option.answer}</span>
-                    {i === 1 && (
+                    {i === 0 && (
                       <motion.div
                         className={styles.checkmark}
                         initial={{ scale: 0, rotate: -180 }}

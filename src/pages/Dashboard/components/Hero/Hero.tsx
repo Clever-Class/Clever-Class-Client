@@ -1,7 +1,8 @@
-import { FiDownload, FiPlay } from 'react-icons/fi';
+import { FiDownload } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import styles from './Hero.module.scss';
 import AddExtensionIcon from '~assets/images/AddExtensionIcon';
+import VideoThumbnail from '../../../../components/common/VideoThumbnail/VideoThumbnail';
 
 const textVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -37,10 +38,15 @@ export const Hero = () => {
           animate="visible"
           className={styles.videoContainer}
         >
-          <div className={styles.videoPlaceholder}>
-            <FiPlay className={styles.playIcon} />
-            <span>How It Works</span>
-          </div>
+          <VideoThumbnail
+            title="How It Works"
+            subtitle="See Clever Class in action"
+            duration="2:30"
+            onClick={() => {
+              // TODO: Add video play functionality
+              console.log('Video clicked');
+            }}
+          />
         </motion.div>
       </div>
 

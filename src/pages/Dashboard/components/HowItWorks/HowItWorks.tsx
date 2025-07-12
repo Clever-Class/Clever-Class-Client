@@ -1,7 +1,8 @@
-import { FiZap, FiCheckCircle, FiTool, FiInfo, FiPlay } from 'react-icons/fi';
+import { FiZap, FiCheckCircle, FiTool, FiInfo } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import styles from './HowItWorks.module.scss';
 import SectionTitle from '../../../../components/common/SectionTitle/SectionTitle';
+import VideoThumbnail from '../../../../components/common/VideoThumbnail/VideoThumbnail';
 
 const textVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -28,12 +29,15 @@ export const HowItWorks = () => {
           animate="visible"
           className={styles.howItWorksVideo}
         >
-          <div className={styles.videoContainer}>
-            <div className={styles.videoPlaceholder}>
-              <FiPlay className={styles.playIcon} />
-              <span>How It Works</span>
-            </div>
-          </div>
+          <VideoThumbnail
+            title="How It Works"
+            subtitle="See Clever Class in action"
+            duration="2:30"
+            onClick={() => {
+              // TODO: Add video play functionality
+              console.log('Video clicked');
+            }}
+          />
         </motion.div>
 
         <motion.div

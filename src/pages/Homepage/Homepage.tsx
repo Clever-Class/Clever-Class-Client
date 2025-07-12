@@ -46,7 +46,7 @@ export const Homepage = () => {
         />
       )}
 
-      {/* <Hero /> */}
+      <Hero />
       <ChromeExtensionSection onGetStarted={handleJoinRequest} />
       <ReviewsFeature />
       <QuizBuilderSection />
