@@ -13,6 +13,8 @@ import FinalLowerCTA from '~/components/LandingPageComponent/FinalLowerCTA';
 import LandingShowcase from '~components/LandingShowcase';
 import Footer from '~components/Footer/Footer';
 import CTASection from '~components/CTASection';
+import { FaYoutube, FaHeadphones, FaFileAlt } from 'react-icons/fa';
+import { RiRobot2Line } from 'react-icons/ri';
 
 export const Homepage = () => {
   const [authPopup, setAuthPopup] = useState<{
@@ -30,6 +32,27 @@ export const Homepage = () => {
   const handleLoginRequest = () => {
     setAuthPopup({ isOpen: true, mode: 'login' });
   };
+
+  const lectureSummarizerFeatures = [
+    {
+      icon: <FaYoutube />,
+      badge: 'YOUTUBE',
+      title: 'YouTube Video Analysis',
+      description: 'Extract insights from any YouTube video instantly'
+    },
+    {
+      icon: <FaHeadphones />,
+      badge: 'PODCAST',
+      title: 'Podcast Summarization',
+      description: 'Get key points from podcasts in seconds'
+    },
+    {
+      icon: <FaFileAlt />,
+      badge: 'INSIGHTS',
+      title: 'AI-Powered Analysis',
+      description: 'Smart extraction of important information'
+    }
+  ];
 
   return (
     <div>
@@ -50,8 +73,18 @@ export const Homepage = () => {
       <ChromeExtensionSection onGetStarted={handleJoinRequest} />
       <ReviewsFeature />
       <QuizBuilderSection />
-      {/* <LandingShowcase /> */}
-      {/* <LandingShowcase theme="dark" /> */}
+      <LandingShowcase onButtonClick={handleJoinRequest} />
+      <LandingShowcase 
+        theme="dark" 
+        badgeIcon={<RiRobot2Line />}
+        badgeText="Lecture Summarizer"
+        title="Extract Key Insights from Any Content"
+        highlightedWord="Key Insights"
+        description="Extract key insights from any YouTube video or podcast in seconds with AI."
+        features={lectureSummarizerFeatures}
+        buttonText="Try Summarizer"
+        onButtonClick={handleJoinRequest}
+      />
       <PricingPlans onSignupClick={handleJoinRequest} />
       <FinalLowerCTA onGetStarted={handleJoinRequest} />
       <FAQ />

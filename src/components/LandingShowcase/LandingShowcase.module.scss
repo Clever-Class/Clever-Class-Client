@@ -8,6 +8,7 @@
   color: $text-color-light;
   transition: all 0.3s ease;
 
+  // Simplified background pattern - no expensive animation
   &::before {
     content: '';
     position: absolute;
@@ -16,24 +17,7 @@
     background-size: 500px auto;
     background-repeat: repeat;
     opacity: 0.08;
-    animation: floatBackground 40s linear infinite;
-    filter: blur(0.5px);
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-  }
-
-  .gradientOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    pointer-events: none;
+    // Removed expensive animation and blur
   }
 
   .container {
@@ -79,10 +63,9 @@
         .title {
           font-size: clamp(2.25rem, 6vw, 3.5rem);
           font-weight: 800;
-          line-height: 1;
+          line-height: 1.15;
           letter-spacing: -0.02em;
           margin-bottom: clamp(1rem, 3vw, 1.5rem);
-          line-height: 1.15;
 
           @include respond-to(mobile) {
             font-size: clamp(2rem, 8vw, 2.75rem);
@@ -107,13 +90,12 @@
         position: relative;
         border-radius: 20px;
         padding: clamp(2rem, 4vw, 3rem);
-        -webkit-backdrop-filter: blur(10px);
-        backdrop-filter: blur(10px);
-        transform: perspective(1000px) rotateY(5deg) rotateX(5deg);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        // Removed expensive backdrop-filter and 3D transforms
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        // Added will-change for better performance
+        will-change: transform;
 
         @include respond-to(tablet) {
-          transform: none;
           padding: clamp(1.5rem, 3vw, 2rem);
           width: 100%;
           max-width: 500px;
@@ -126,13 +108,9 @@
           margin-top: 0.5rem;
         }
 
+        // Simplified hover effect
         &:hover {
-          transform: perspective(1000px) rotateY(2deg) rotateX(2deg)
-            translateY(-5px);
-
-          @include respond-to(tablet) {
-            transform: translateY(-5px);
-          }
+          transform: translateY(-5px);
         }
 
         .qualityOption {
@@ -209,25 +187,12 @@
             border-radius: 10px;
           }
 
-          &::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 200%;
-            height: 100%;
-            transition: 0.5s;
-          }
-
+          // Simplified hover effect
           &:hover {
             transform: translateY(-2px);
 
-            &::before {
-              left: 100%;
-            }
-
             svg {
-              transform: translateY(-2px);
+              transform: translateX(4px);
             }
           }
 
@@ -241,30 +206,9 @@
     }
   }
 
-  // Light theme (default)
+  // Light theme (default) - simplified
   &.light {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-
-    &::after {
-      background: radial-gradient(
-        circle at 30% 20%,
-        rgba(37, 99, 235, 0.08),
-        transparent 60%
-      );
-    }
-
-    .gradientOverlay {
-      background: radial-gradient(
-          circle at 70% 80%,
-          rgba(99, 102, 241, 0.08),
-          transparent 60%
-        ),
-        radial-gradient(
-          circle at 30% 50%,
-          rgba(37, 99, 235, 0.08),
-          transparent 50%
-        );
-    }
 
     .textContent {
       .badge {
@@ -287,59 +231,31 @@
     }
 
     .optionsDisplay {
-      background: rgba(255, 255, 255, 0.98);
+      background: rgba(255, 255, 255, 0.95);
       border: 1px solid rgba(37, 99, 235, 0.1);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1),
-        0 0 0 1px rgba(37, 99, 235, 0.05);
-      transform: perspective(1000px) rotateX(6deg) rotateY(6deg) rotateZ(0.5deg);
-      transform-origin: center center;
-      animation: floatLight 6s ease-in-out infinite;
-
-      @keyframes floatLight {
-        0%,
-        100% {
-          transform: perspective(1000px) rotateX(6deg) rotateY(6deg)
-            rotateZ(0.5deg) translateY(0);
-        }
-        50% {
-          transform: perspective(1000px) rotateX(6deg) rotateY(6deg)
-            rotateZ(0.5deg) translateY(-10px);
-        }
-      }
+      // Simplified box-shadow
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 
       &:hover {
-        transform: perspective(1000px) rotateX(4deg) rotateY(4deg)
-          rotateZ(0.25deg) translateY(-5px);
-        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15),
-          0 0 0 1px rgba(37, 99, 235, 0.1);
-      }
-
-      @include respond-to(tablet) {
-        transform: none;
-        animation: none;
-
-        &:hover {
-          transform: translateY(-5px);
-        }
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
       }
 
       .qualityOption {
         background: rgba(255, 255, 255, 1);
         border: 1px solid rgba(37, 99, 235, 0.15);
-        box-shadow: 0 4px 16px rgba(37, 99, 235, 0.08);
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
 
         &:hover {
           background: rgba(255, 255, 255, 1);
           border-color: rgba(37, 99, 235, 0.25);
-          box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
-          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+          transform: translateY(-1px);
         }
 
         .formatBadge {
           background: rgba(37, 99, 235, 0.15);
           color: $primary-blue;
           border: 1px solid rgba(37, 99, 235, 0.2);
-          box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
         }
 
         .details {
@@ -357,72 +273,20 @@
         background: $primary-blue;
 
         &:hover {
-          box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
-        }
-
-        &::before {
-          background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.2),
-            transparent
-          );
-        }
-      }
-    }
-
-    .content {
-      .optionsDisplay {
-        order: 1;
-      }
-
-      .textContent {
-        order: 2;
-      }
-
-      @include respond-to(tablet) {
-        .optionsDisplay {
-          order: 2;
-        }
-
-        .textContent {
-          order: 1;
+          box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
       }
     }
   }
 
-  // Dark theme
+  // Dark theme - simplified
   &.dark {
-    background: black;
+    background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
     color: $white;
 
     &::before {
-      filter: invert(1) blur(0.5px);
+      filter: invert(1);
       opacity: 0.05;
-    }
-
-    &::after {
-      background: radial-gradient(
-        circle at 30% 20%,
-        rgba(37, 99, 255, 0.44),
-        transparent 60%
-      );
-      opacity: 0.4;
-    }
-
-    .gradientOverlay {
-      background: radial-gradient(
-          circle at 70% 80%,
-          rgba(37, 99, 255, 0.44),
-          transparent 60%
-        ),
-        radial-gradient(
-          circle at 30% 50%,
-          rgba(37, 99, 255, 0.44),
-          transparent 50%
-        );
-      opacity: 0.4;
     }
 
     .textContent {
@@ -430,35 +294,13 @@
         background: rgba(37, 99, 255, 0.15);
         color: $white;
         border: 1px solid rgba(37, 99, 255, 0.2);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2),
-          0 0 0 1px rgba(37, 99, 255, 0.1);
-
-        svg {
-          color: $white;
-        }
       }
 
       .title {
         color: $white;
-        background: linear-gradient(
-          to bottom,
-          white,
-          rgba(143, 175, 255, 0.225)
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
 
         span {
           color: $primary-blue;
-          background: linear-gradient(
-            to bottom,
-            $primary-blue,
-            rgba(37, 99, 255, 0.5)
-          );
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
           font-weight: 800;
         }
       }
@@ -471,39 +313,10 @@
     .optionsDisplay {
       background: rgba(0, 0, 0, 0.6);
       border: 1px solid rgba(37, 99, 255, 0.15);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
-        0 0 0 1px rgba(37, 99, 255, 0.1), 0 0 40px rgba(37, 99, 255, 0.2);
-      transform: perspective(1000px) rotateX(6deg) rotateY(-6deg)
-        rotateZ(-0.5deg);
-      transform-origin: center center;
-      animation: float 6s ease-in-out infinite;
-
-      @keyframes float {
-        0%,
-        100% {
-          transform: perspective(1000px) rotateX(6deg) rotateY(-6deg)
-            rotateZ(-0.5deg) translateY(0);
-        }
-        50% {
-          transform: perspective(1000px) rotateX(6deg) rotateY(-6deg)
-            rotateZ(-0.5deg) translateY(-10px);
-        }
-      }
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
 
       &:hover {
-        transform: perspective(1000px) rotateX(4deg) rotateY(-4deg)
-          rotateZ(-0.25deg) translateY(-5px);
-        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5),
-          0 0 0 1px rgba(37, 99, 255, 0.15), 0 0 60px rgba(37, 99, 255, 0.25);
-      }
-
-      @include respond-to(tablet) {
-        transform: none;
-        animation: none;
-
-        &:hover {
-          transform: translateY(-5px);
-        }
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
       }
 
       .qualityOption {
@@ -514,8 +327,8 @@
         &:hover {
           background: rgba(37, 99, 255, 0.06);
           border-color: rgba(37, 99, 255, 0.2);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3),
-            0 0 20px rgba(37, 99, 255, 0.15);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          transform: translateY(-1px);
         }
 
         .formatBadge {
@@ -538,33 +351,12 @@
       .downloadButton {
         background: $primary-blue;
         border: 1px solid rgba(37, 99, 255, 0.3);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2),
-          0 0 0 1px rgba(37, 99, 255, 0.15), 0 0 20px rgba(37, 99, 255, 0.2);
 
         &:hover {
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3),
-            0 0 0 1px rgba(37, 99, 255, 0.25), 0 0 40px rgba(37, 99, 255, 0.3);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
           background: linear-gradient(135deg, $primary-blue, #1e40af);
-        }
-
-        &::before {
-          background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.15),
-            transparent
-          );
         }
       }
     }
-  }
-}
-
-@keyframes floatBackground {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 600px -600px;
   }
 }
