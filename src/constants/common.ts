@@ -13,4 +13,8 @@ export enum AppRoutes {
   QuizBuilder = '/quiz-builder',
   QuickNotes = '/quick-notes',
   LectureSummarizer = '/lecture-summarizer',
+  PrivacyPolicy = '/privacy-policy',
+  AboutUs = '/about-us',
+  TermsOfService = '/terms-of-service',
+  RefundPolicy = '/refund-policy',
 }

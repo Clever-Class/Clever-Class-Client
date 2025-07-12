@@ -1,28 +1,20 @@
 import { Link } from 'react-router-dom';
 import { FaGithub, FaTwitter, FaLinkedinIn, FaInstagram } from 'react-icons/fa';
+import { AppRoutes } from '~constants';
 import styles from './Footer.module.scss';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
-    product: [
-      { name: 'Features', href: '/features' },
-      { name: 'Pricing', href: '/pricing' },
-      { name: 'Use Cases', href: '/use-cases' },
-      { name: 'Resources', href: '/resources' },
-    ],
     company: [
-      { name: 'About Us', href: '/about' },
-      { name: 'Blog', href: '/blog' },
-      { name: 'Careers', href: '/careers' },
-      { name: 'Contact', href: '/contact' },
+      // { name: 'About Us', href: AppRoutes.AboutUs },
+      { name: 'Pricing', href: AppRoutes.Pricing },
     ],
-    support: [
-      { name: 'Help Center', href: '/help' },
-      { name: 'Terms of Service', href: '/terms' },
-      { name: 'Privacy Policy', href: '/privacy' },
-      { name: 'Status', href: '/status' },
+    links: [
+      { name: 'Terms of Service', href: AppRoutes.TermsOfService },
+      { name: 'Privacy Policy', href: AppRoutes.PrivacyPolicy },
+      { name: 'Refund Policy', href: AppRoutes.RefundPolicy },
     ],
   };
 
@@ -82,17 +74,6 @@ const Footer = () => {
           {/* Links Sections */}
           <div className={styles.links}>
             <div className={styles.linkGroup}>
-              <h3>Product</h3>
-              <ul>
-                {footerLinks.product.map((link) => (
-                  <li key={link.name}>
-                    <Link to={link.href}>{link.name}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className={styles.linkGroup}>
               <h3>Company</h3>
               <ul>
                 {footerLinks.company.map((link) => (
@@ -104,9 +85,9 @@ const Footer = () => {
             </div>
 
             <div className={styles.linkGroup}>
-              <h3>Support</h3>
+              <h3>Quick Links</h3>
               <ul>
-                {footerLinks.support.map((link) => (
+                {footerLinks.links.map((link) => (
                   <li key={link.name}>
                     <Link to={link.href}>{link.name}</Link>
                   </li>

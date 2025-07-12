@@ -1,0 +1,215 @@
+.aboutUs {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  
+  .heroSection {
+    text-align: center;
+    margin-bottom: 4rem;
+    padding: 3rem 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    
+    .heroText {
+      font-size: 1.3rem;
+      line-height: 1.6;
+      font-weight: 300;
+      margin: 0 auto 2rem;
+      max-width: 800px;
+    }
+    
+    .heroSubtext {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      font-weight: 300;
+      margin: 0 auto;
+      max-width: 800px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+  }
+  
+  .section {
+    margin-bottom: 4rem;
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      
+      &::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #ffd700, #ffed4e);
+        margin: 0.5rem auto;
+        border-radius: 2px;
+      }
+    }
+    
+    p {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.9);
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 1.5rem;
+    }
+    
+    .sectionIntro {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.95);
+      margin-bottom: 2rem;
+    }
+    
+    .visionText {
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: #ffd700;
+      text-align: center;
+      font-style: italic;
+      line-height: 1.5;
+    }
+    
+    .link {
+      color: #ffd700;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      
+      &:hover {
+        color: #ffed4e;
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+    
+    .feature {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      }
+      
+      .featureIcon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+      
+      h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #ffd700;
+        margin-bottom: 1rem;
+      }
+      
+      p {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin: 0;
+        text-align: center;
+      }
+    }
+  }
+  
+  .values {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+    
+    .value {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      
+      h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #ffd700;
+        margin-bottom: 0.5rem;
+      }
+      
+      p {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin: 0;
+        text-align: center;
+      }
+    }
+  }
+}
+
+// Override global styles for this page
+.aboutUs {
+  :global(.static-page-content) {
+    background: transparent;
+  }
+  
+  :global(.page-title) {
+    color: #ffffff;
+  }
+  
+  :global(.page-content) {
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+@media (max-width: 768px) {
+  .aboutUs {
+    .heroSection {
+      padding: 2rem 1rem;
+      
+      .heroText {
+        font-size: 1.1rem;
+      }
+      
+      .heroSubtext {
+        font-size: 1rem;
+      }
+    }
+    
+    .features {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      
+      .feature {
+        padding: 1.5rem;
+        
+        .featureIcon {
+          font-size: 2rem;
+        }
+      }
+    }
+    
+    .values {
+      grid-template-columns: 1fr;
+    }
+    
+    .section {
+      .visionText {
+        font-size: 1.2rem;
+      }
+    }
+  }
+} 

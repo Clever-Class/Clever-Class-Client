@@ -74,7 +74,7 @@ const ExtensionShowcase: React.FC<ExtensionShowcaseProps> = ({ className }) => {
           </div>
           <div className={styles.browserActions}>
             <div className={styles.extensionIcon}>
-              <div className={`${styles.cleverClassIcon} ${isVisible ? styles.animate : ''}`}>It</div>
+              <div className={`${styles.cleverClassIcon} ${isVisible ? styles.animate : ''}`}>CC</div>
             </div>
           </div>
         </div>
@@ -117,8 +117,8 @@ const ExtensionShowcase: React.FC<ExtensionShowcaseProps> = ({ className }) => {
           <div className={styles.extensionContent}>
             <div className={styles.featureButtons}>
               <div className={`${styles.featureButton} ${styles.active}`}>
-                <div className={styles.featureButtonIcon}>It</div>
-                <div className={styles.featureButtonName}>Magic</div>
+                <div className={styles.featureButtonIcon}>CC</div>
+                <div className={styles.featureButtonName}>Magic Button</div>
                 <div className={styles.featureButtonStatus}>Showing</div>
               </div>
               <div className={`${styles.featureButton} ${styles.inactive}`}>

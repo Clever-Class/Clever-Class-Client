@@ -18,6 +18,10 @@ import { QuizBuilder } from '~pages/QuizBuilder';
 import { QuickNotes } from '~pages/QuickNotes';
 import LectureSummarizer from '~pages/LectureSummarizer';
 import DashboardMKII from '~pages/Dashboard/DashboardMKII';
+import { PrivacyPolicy } from '~pages/PrivacyPolicy';
+import { AboutUs } from '~pages/AboutUs';
+import { TermsOfService } from '~pages/TermsOfService';
+import { RefundPolicy } from '~pages/RefundPolicy';
 
 const DashboardRoutes = () => {
   return (
@@ -47,6 +51,10 @@ const Routes = () => {
       <Route path={AppRoutes.ResetPassword} element={<ResetPassword />} />
       <Route path={AppRoutes.PaymentSuccess} element={<SuccessPayment />} />
       <Route path={AppRoutes.Pricing} element={<PricingPage />} />
+      <Route path={AppRoutes.PrivacyPolicy} element={<PrivacyPolicy />} />
+      <Route path={AppRoutes.AboutUs} element={<AboutUs />} />
+      <Route path={AppRoutes.TermsOfService} element={<TermsOfService />} />
+      <Route path={AppRoutes.RefundPolicy} element={<RefundPolicy />} />
       <Route path={AppRoutes.Dashboard + '/*'} element={<PrivateRoutes />}>
         <Route path="*" element={<DashboardRoutes />} />
       </Route>
