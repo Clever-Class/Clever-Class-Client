@@ -126,14 +126,14 @@ const ReviewsFeature: React.FC = () => {
             className={styles.stat}
             variants={itemVariants}
           >
-            <span className={styles.statNumber}>50,000+</span>
+            <span className={styles.statNumber}>10,000+</span>
             <span className={styles.statLabel}>Students helped</span>
           </motion.div>
           <motion.div 
             className={styles.stat}
             variants={itemVariants}
           >
-            <span className={styles.statNumber}>4.9/5</span>
+            <span className={styles.statNumber}>4.7/5</span>
             <span className={styles.statLabel}>Average rating</span>
           </motion.div>
           <motion.div 

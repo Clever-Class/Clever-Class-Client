@@ -35,6 +35,20 @@ export const Navbar: React.FC<NavbarProps> = ({
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const scrollToQuizBuilder = () => {
+    const element = document.getElementById('quiz-builder');
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+    // Close mobile menu if open
+    if (isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+  };
+
   const menuVariants = {
     closed: {
       opacity: 0,
@@ -83,13 +97,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         {!isMobile && (
           <ul className={styles.navbarLinks}>
             <li>
-              <a href="#extention">Chrome Extension</a>
+              <Link to={AppRoutes.Homepage}>Chrome Extension</Link>
             </li>
             <li>
-              <a href="#notebook">Notebook</a>
-            </li>
-            <li>
-              <a href="#help-center">Help Center</a>
+              <button onClick={scrollToQuizBuilder} className={styles.navLink}>Quiz Builder</button>
             </li>
             <li>
               <Link to={AppRoutes.Pricing}>Pricing</Link>
@@ -150,6 +161,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             <ul className={styles.mobileMenuLinks}>
               <li>
                 <a href="#extention">Chrome Extension</a>
+              </li>
+              <li>
+                <button onClick={scrollToQuizBuilder} className={styles.mobileNavLink}>Quiz Builder</button>
               </li>
               <li>
                 <a href="#notebook">Notebook</a>

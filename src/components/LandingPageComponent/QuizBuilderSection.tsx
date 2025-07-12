@@ -72,6 +72,7 @@ const QuizBuilderSection: React.FC = () => {
 
   return (
     <motion.section 
+      id="quiz-builder"
       className={styles.featureSection}
       ref={sectionRef}
       initial="hidden"

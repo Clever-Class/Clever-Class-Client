@@ -185,7 +185,7 @@ export const CTASection: React.FC = () => {
                 <span className={styles.statLabel}>Support</span>
               </div>
               <div className={styles.stat}>
-                <span className={styles.statValue}>98%</span>
+                <span className={styles.statValue}>95%</span>
                 <span className={styles.statLabel}>Success Rate</span>
               </div>
               <div className={styles.stat}>
