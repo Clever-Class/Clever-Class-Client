@@ -97,15 +97,22 @@ const Hero: React.FC = () => {
                   className={styles.avatarGroup}
                   aria-label="Student Avatars"
                 >
-                  {[1, 2, 3, 4, 5].map((index) => (
+                  {[
+                    { src: '/asset/studentpic/min_jun.png', alt: 'Min Jun' },
+                    { src: '/asset/studentpic/emma.png', alt: 'Emma Smith' },
+                    { src: '/asset/studentpic/layla_mei.png', alt: 'Layla Mei' },
+                    { src: '/asset/studentpic/lorin.png', alt: 'Lorin Gomez' },
+                    { src: '/asset/studentpic/tony.png', alt: 'Tony' },
+                    { src: '/asset/studentpic/barisha.png', alt: 'Barisha' },
+                  ].map((student, index) => (
                     <div
                       key={index}
                       className={styles.avatar}
                       style={{ zIndex: 5 - index }}
                     >
                       <img
-                        src={`https://i.pravatar.cc/150?img=${index}`}
-                        alt={`Student ${index}`}
+                        src={student.src}
+                        alt={student.alt}
                         loading="lazy"
                         width="48"
                         height="48"

@@ -10,14 +10,80 @@ const ReviewsFeature: React.FC = () => {
     amount: 0.2 
   });
 
-  // Sample review data - optimized for performance
+  // Sample review data - optimized for performance with student photos
   const reviews = [
-    { id: 1, name: 'Sarah M.', role: 'College Student', rating: 5, text: 'This extension has completely transformed how I study. The step-by-step solutions help me understand concepts instead of just getting answers.' },
-    { id: 2, name: 'Alex Chen', role: 'High School Senior', rating: 5, text: 'Perfect for homework help! Works seamlessly across all my educational sites and the AI explanations are incredibly detailed.' },
-    { id: 3, name: 'Maria Rodriguez', role: 'Graduate Student', rating: 5, text: 'The subject coverage is amazing. From advanced calculus to literature analysis, it handles everything with accuracy.' },
-    { id: 4, name: 'James Wilson', role: 'Engineering Student', rating: 5, text: 'Finally, an AI assistant that actually understands complex engineering problems. The visual explanations are a game changer.' },
-    { id: 5, name: 'Emily Davis', role: 'Medical Student', rating: 5, text: 'Helps me break down complex medical concepts. The reliable sources and citations give me confidence in the answers.' },
-    { id: 6, name: 'David Kim', role: 'Computer Science Student', rating: 5, text: 'Works great for coding problems and algorithm explanations. The step-by-step debugging help is incredibly useful.' },
+    { 
+      id: 1, 
+      name: 'Barisha', 
+      role: 'College Student', 
+      rating: 5, 
+      image: '/asset/studentpic/barisha.png',
+      text: 'This extension has completely transformed how I study. The step-by-step solutions help me understand concepts instead of just getting answers.' 
+    },
+    { 
+      id: 2, 
+      name: 'Arjun Patel', 
+      role: 'University Student', 
+      rating: 5, 
+      image: '/asset/studentpic/arjun.png',
+      text: 'Perfect for homework help! Works seamlessly across all my educational sites and the AI explanations are incredibly detailed.' 
+    },
+    { 
+      id: 3, 
+      name: 'Layla Mei', 
+      role: 'University Student', 
+      rating: 5, 
+      image: '/asset/studentpic/layla_mei.png',
+      text: 'The subject coverage is amazing. From advanced calculus to literature analysis, it handles everything with accuracy.' 
+    },
+    { 
+      id: 4, 
+      name: 'Estovan', 
+      role: 'Engineering Student', 
+      rating: 5, 
+      image: '/asset/studentpic/estovan.png',
+      text: 'Finally, an AI assistant that actually understands complex engineering problems. The visual explanations are a game changer.' 
+    },
+    { 
+      id: 5, 
+      name: 'Min Jun', 
+      role: 'Medical Student', 
+      rating: 5, 
+      image: '/asset/studentpic/min_jun.png',
+      text: 'Helps me break down complex medical concepts. The reliable sources and citations give me confidence in the answers.' 
+    },
+    { 
+      id: 6, 
+      name: 'Alex Carter', 
+      role: 'Computer Science Student', 
+      rating: 5, 
+      image: '/asset/studentpic/alex.png',
+      text: 'Works great for coding problems and algorithm explanations. The step-by-step debugging help is incredibly useful.' 
+    },
+    {
+      id: 7,
+      name: 'Emma Smith',
+      role: 'School Student',
+      rating: 5,
+      image: '/asset/studentpic/emma.png',
+      text: 'This extension has completely transformed how I study. The step-by-step solutions help me understand concepts instead of just getting answers.'
+    },
+    {
+      id: 8,
+      name: 'Tony',
+      role: 'College Student',
+      rating: 5,
+      image: '/asset/studentpic/tony.png',
+      text: 'I use this extension every day for my assignments. It saves me so much time and the explanations are super clear and easy to follow.'
+    },
+    {
+      id: 9,
+      name: "Lorin Gomez",
+      role: "College Student",
+      rating: 5,
+      image: '/asset/studentpic/lorin.png',
+      text: 'A must-have for every student! The clear explanations and interactive steps make even the toughest topics easy to grasp.'
+    }
   ];
 
   // Framer Motion variants
@@ -99,7 +165,11 @@ const ReviewsFeature: React.FC = () => {
                 <div className={styles.reviewHeader}>
                   <div className={styles.reviewerInfo}>
                     <div className={styles.reviewerAvatar}>
-                      {review.name.charAt(0)}
+                      <img 
+                        src={review.image} 
+                        alt={review.name}
+                        className={styles.avatarImage}
+                      />
                     </div>
                     <div className={styles.reviewerDetails}>
                       <h4 className={styles.reviewerName}>{review.name}</h4>
