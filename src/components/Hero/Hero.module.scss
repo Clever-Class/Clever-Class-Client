@@ -457,6 +457,10 @@ $desktop-lg: 1440px;
 }
 
 .featureAnimation {
+  width: 100%;
+  display: block;
+  opacity: 1;
+  visibility: visible;
   transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -491,6 +495,10 @@ $desktop-lg: 1440px;
   width: 100%;
   max-width: 600px;
   min-height: 320px;
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  position: relative;
 
   @include respond-to(mobile) {
     max-width: 100%;
@@ -523,53 +531,64 @@ $desktop-lg: 1440px;
     padding: 1.5rem;
     position: relative;
     min-height: 220px;
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    background: transparent;
 
     @include respond-to(mobile) {
       padding: 1.25rem;
       min-height: 180px;
     }
 
-                .questionBox {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 1.25rem;
+    .questionBox {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      opacity: 1;
+      visibility: visible;
 
-        .questionLabel {
-          font-size: 16px;
-          color: #64748b;
-          font-weight: 600;
-          line-height: 1.3;
+      .questionLabel {
+        font-size: 15px;
+        color: #64748b;
+        font-weight: 600;
+        line-height: 1.3;
+        opacity: 1;
+        visibility: visible;
 
-          @include respond-to(mobile) {
-            font-size: 13px;
-          }
+        @include respond-to(mobile) {
+          font-size: 13px;
         }
       }
+    }
 
-          .answerOptions {
-            margin-top: 2rem;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
+    .answerOptions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      opacity: 1;
+      visibility: visible;
 
-        .answerOption {
-          background: #f8fafc;
-          border: 1px solid #e2e8f0;
-          border-radius: 10px;
-          padding: 0.75rem 1rem;
-          font-size: 14px;
-          color: #475569;
-          text-align: center;
-          transition: all 0.2s ease;
-          font-weight: 500;
+      .answerOption {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        font-size: 14px;
+        color: #475569;
+        text-align: center;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        opacity: 1;
+        visibility: visible;
 
-          @include respond-to(mobile) {
-            padding: 0.6rem 0.75rem;
-            font-size: 12px;
-          }
+        @include respond-to(mobile) {
+          padding: 0.6rem 0.75rem;
+          font-size: 12px;
         }
       }
+    }
   }
 }
 
@@ -599,6 +618,8 @@ $desktop-lg: 1440px;
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  opacity: 1;
+  visibility: visible;
 
   @include respond-to(mobile) {
     padding: 6px 12px;

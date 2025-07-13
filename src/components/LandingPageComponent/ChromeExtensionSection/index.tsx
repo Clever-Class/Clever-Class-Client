@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from './ChromeExtensionSection.module.scss';
 import { ChromeExtensionSectionProps } from './ChromeExtensionSection.types';
 import ExtensionShowcase from '../../ExtensionShowcase';
@@ -18,19 +18,7 @@ import {
   FaAtom as FaQuantum,
   FaCheckCircle,
 } from 'react-icons/fa';
-import {
-  GiAncientColumns,
-  GiBookshelf,
-  GiThink,
-  GiMoneyStack,
-  GiBrain,
-  GiGroupedDrops,
-  GiAncientRuins,
-  GiPublicSpeaker,
-  GiEarthAmerica,
-  GiSpeaker,
-  GiWorld,
-} from 'react-icons/gi';
+
 import {
   TbMathFunction,
   TbMathIntegralX,
@@ -56,12 +44,6 @@ const ChromeExtensionSection: React.FC<ChromeExtensionSectionProps> = ({ onGetSt
   const [aiProcessingStep, setAiProcessingStep] = useState(0);
   const [showAnswerPopup, setShowAnswerPopup] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { 
-    once: true, 
-    margin: "-100px",
-    amount: 0.3 
-  });
 
   // Step-by-step solution animation - optimized interval
   useEffect(() => {
@@ -168,9 +150,8 @@ const ChromeExtensionSection: React.FC<ChromeExtensionSectionProps> = ({ onGetSt
   return (
     <motion.div
       className={styles.featureSection}
-      ref={sectionRef}
       initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      animate="visible"
       variants={containerVariants}
     >
       <img

@@ -36,20 +36,30 @@ const Hero: React.FC = () => {
 
   // Auto-show popup for showcasing with click animation
   useEffect(() => {
+    // Ensure initial state
+    setShowAnswerPopup(false);
+    setButtonClicked(false);
+
     const showcaseInterval = setInterval(() => {
-      // First show click animation
-      setButtonClicked(true);
+      // Reset state first
+      setShowAnswerPopup(false);
+      setButtonClicked(false);
       
-      // Then show popup after click animation
+      // Small delay then start animation
       setTimeout(() => {
-        setShowAnswerPopup(true);
-        setButtonClicked(false);
-      }, 300);
-      
-      // Hide popup after 3 seconds
-      setTimeout(() => {
-        setShowAnswerPopup(false);
-      }, 3300);
+        setButtonClicked(true);
+        
+        // Then show popup after click animation
+        setTimeout(() => {
+          setShowAnswerPopup(true);
+          setButtonClicked(false);
+        }, 400);
+        
+        // Hide popup after 3.5 seconds
+        setTimeout(() => {
+          setShowAnswerPopup(false);
+        }, 3900);
+      }, 100);
     }, 6000);
 
     return () => clearInterval(showcaseInterval);
@@ -187,12 +197,7 @@ const Hero: React.FC = () => {
           </div>
 
           <div className={styles.heroAnimationContainer}>
-            <motion.div 
-              className={styles.featureAnimation}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
+            <div className={styles.featureAnimation}>
               <div className={styles.featureImage}>
                 <div className={styles.mockupWindow}>
                   <div className={styles.windowHeader}>
@@ -279,7 +284,7 @@ const Hero: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </div>
         </div>
       </section>

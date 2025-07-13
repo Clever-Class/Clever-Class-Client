@@ -44,6 +44,8 @@
   
   @media (max-width: $mobile) {
     transform: none;
+    height: 100%;
+    padding-bottom: 40px;
     
     &:hover {
       transform: none;
@@ -397,7 +399,6 @@
     width: 90%;
     max-width: 300px;
     right: auto;
-    top: 15px;
     margin: 0 auto;
     transform: scale(0.3);
     border-radius: 14px;
@@ -476,7 +477,7 @@
   justify-content: space-between;
   
   @media (max-width: $mobile) {
-    padding: 8px 10px;
+    padding: 16px 14px; // Increased padding for mobile
   }
 }
 
@@ -534,7 +535,7 @@
   letter-spacing: -0.02em;
   
   @media (max-width: $mobile) {
-    font-size: 12px;
+    font-size: 18px; // Increased from 12px to 18px for mobile
   }
 }
 
@@ -579,7 +580,7 @@
   transition: opacity 0.3s ease-out, transform 0.3s ease-out;
   
   @media (max-width: $mobile) {
-    padding: 0 10px 10px 10px;
+    padding: 0 14px 18px 14px; // Increased padding for mobile
   }
 }
 
@@ -590,8 +591,8 @@
   margin-bottom: 20px;
   
   @media (max-width: $mobile) {
-    gap: 6px;
-    margin-bottom: 12px;
+    gap: 10px; // Increased gap for mobile
+    margin-bottom: 20px; // Increased margin for mobile
   }
 }
 
@@ -625,8 +626,8 @@
   }
   
   @media (max-width: $mobile) {
-    padding: 6px;
-    gap: 2px;
+    padding: 10px; // Increased padding for mobile
+    gap: 4px; // Increased gap for mobile
     border-radius: 10px;
   }
 }
@@ -650,15 +651,15 @@
   }
   
   @media (max-width: $mobile) {
-    width: 22px;
-    height: 22px;
-    font-size: 10px;
+    width: 28px; // Increased size for mobile
+    height: 28px; // Increased size for mobile
+    font-size: 12px; // Increased font size for mobile
     border-radius: 6px;
-    margin-bottom: 1px;
+    margin-bottom: 2px; // Increased margin for mobile
     
     svg {
-      width: 12px;
-      height: 12px;
+      width: 14px; // Increased icon size for mobile
+      height: 14px; // Increased icon size for mobile
     }
   }
 }
@@ -672,8 +673,8 @@
   line-height: 1.2;
   
   @media (max-width: $mobile) {
-    font-size: 8px;
-    line-height: 1.1;
+    font-size: 12px; // Increased from 8px to 12px for mobile
+    line-height: 1.2; // Increased line height for mobile
   }
 }
 
@@ -683,7 +684,7 @@
   text-align: center;
   
   @media (max-width: $mobile) {
-    font-size: 7px;
+    font-size: 10px; // Increased from 7px to 10px for mobile
   }
 }
 
@@ -693,7 +694,7 @@
   gap: 12px;
   
   @media (max-width: $mobile) {
-    gap: 6px;
+    gap: 10px; // Increased gap for mobile
   }
 }
 
@@ -711,7 +712,7 @@
   }
   
   @media (max-width: $mobile) {
-    gap: 6px;
+    gap: 8px; // Increased gap for mobile
   }
 }
 
@@ -765,14 +766,14 @@
   }
   
   @media (max-width: $mobile) {
-    width: 40px;
-    height: 40px;
-    font-size: 14px;
+    width: 48px; // Increased size for mobile
+    height: 48px; // Increased size for mobile
+    font-size: 16px; // Increased font size for mobile
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     
     svg {
-      width: 16px;
-      height: 16px;
+      width: 18px; // Increased icon size for mobile
+      height: 18px; // Increased icon size for mobile
     }
     
     &.aiChat {
@@ -797,8 +798,8 @@
   letter-spacing: 0.2px;
   
   @media (max-width: $mobile) {
-    font-size: 8px;
-    font-weight: 500;
+    font-size: 11px; // Increased from 8px to 11px for mobile
+    font-weight: 600; // Increased font weight for mobile
   }
 }
 
