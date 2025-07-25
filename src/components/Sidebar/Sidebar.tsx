@@ -1,17 +1,15 @@
 import React from 'react';
 import {
   RiDashboardLine,
-  RiTaskLine,
   RiSettingsLine,
-  RiTeamLine,
-  RiCalendarLine,
+  RiFileTextLine,
 } from 'react-icons/ri';
 import styles from './Sidebar.module.scss';
 import { SidebarHeader } from './SidebarHeader/SidebarHeader';
 import { SidebarContent } from './SidebarContent/SidebarContent';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import classNames from 'classnames';
-import { BotMessageSquare } from 'lucide-react';
+import { BotMessageSquare, Dices, Video } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
@@ -37,8 +35,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: BotMessageSquare,
       route: '/dashboard/ai-chatbot',
     },
-    { name: 'Tasks', icon: RiTaskLine, route: '/dashboard/tasks' },
-    { name: 'Team', icon: RiTeamLine, route: '/dashboard/team' },
+    {
+      name: 'Quiz Builder',
+      icon: Dices,
+      route: '/dashboard/quiz-builder',
+    },
+    {
+      name: 'Quick Notes',
+      icon: RiFileTextLine,
+      route: '/dashboard/quick-notes',
+    },
+    {
+      name: 'Lecture Summarizer',
+      icon: Video,
+      route: '/dashboard/lecture-summarizer',
+    },
     { name: 'Settings', icon: RiSettingsLine, route: '/dashboard/settings' },
   ];
 

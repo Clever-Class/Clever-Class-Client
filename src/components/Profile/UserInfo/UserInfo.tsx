@@ -1,5 +1,4 @@
 import { Edit2 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import './UserInfo.scss';
 import { User } from '~types';
 import { Avatar, AvatarFallback, AvatarImage } from '~components/ui/avatar';
@@ -14,6 +13,8 @@ interface UserInfoProps {
 export const UserInfo = ({ user }: UserInfoProps) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
+  console.log(user, 'user');
+
   if (!user) return null;
 
   return (
@@ -21,9 +22,9 @@ export const UserInfo = ({ user }: UserInfoProps) => {
       <div className={styles.content}>
         <div className={styles.avatar}>
           <Avatar className="w-full h-full">
-            <AvatarImage src="/placeholder.svg" alt={user.name} />
+            <AvatarImage src={user.avatar} alt={user.name} />
             <AvatarFallback>
-              {user.name.slice(0, 2).toUpperCase()}
+              {/* {user.name.slice(0, 2).toUpperCase()} */}
             </AvatarFallback>
           </Avatar>
         </div>

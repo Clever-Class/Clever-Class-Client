@@ -1,0 +1,74 @@
+@import '../../../../styles/variables';
+
+.supportSection {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
+
+  @media (max-width: $tablet) {
+    padding: 0 2rem;
+    margin-top: 0;
+  }
+
+  @media (max-width: $mobile) {
+    padding: 0 1.5rem;
+  }
+}
+
+.supportCard {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 16px rgba(37, 99, 255, 0.1);
+  padding: 2rem 2.5rem;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+}
+
+.supportTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.supportDescription {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.supportLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.supportLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #60a5fa;
+  font-weight: 500;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  @media (max-width: $mobile) {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+  }
+
+  svg {
+    font-size: 1.25rem;
+  }
+  &:hover {
+    color: #2563ff;
+  }
+}

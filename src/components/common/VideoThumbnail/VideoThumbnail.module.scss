@@ -1,0 +1,277 @@
+@import '../../../styles/variables';
+
+.thumbnailContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 24px rgba(37, 99, 255, 0.1);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(37, 99, 255, 0.2);
+  }
+}
+
+.thumbnailBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    #0f1629 0%,
+    #1a2332 35%,
+    #1e3a5f 65%,
+    #2563eb 85%,
+    #3b82f6 100%
+  );
+}
+
+.gradientOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 255, 0.6) 0%,
+    rgba(59, 130, 246, 0.5) 50%,
+    rgba(96, 165, 250, 0.4) 100%
+  );
+  backdrop-filter: blur(2px);
+}
+
+.patternOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+  background-size: 200px 200px, 150px 150px, 100px 100px;
+  animation: floatPattern 20s ease-in-out infinite;
+}
+
+@keyframes floatPattern {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  33% { transform: translateX(10px) translateY(-10px); }
+  66% { transform: translateX(-5px) translateY(5px); }
+}
+
+.thumbnailContent {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.durationBadge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+}
+
+.playButton {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.2),
+    0 0 0 0 rgba(255, 255, 255, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 
+      0 12px 32px rgba(0, 0, 0, 0.3),
+      0 0 0 8px rgba(255, 255, 255, 0.2);
+    
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.playIcon {
+  font-size: 1.75rem;
+  color: #2563eb;
+  margin-left: 4px; // Slight offset for visual balance
+  transition: color 0.3s ease;
+}
+
+.textContent {
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.025em;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  font-weight: 500;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.decorativeElements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.floatingIcon {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.4);
+  animation: float 6s ease-in-out infinite;
+  animation-delay: var(--delay);
+
+  &:nth-child(1) {
+    top: 20%;
+    left: 15%;
+    animation-duration: 8s;
+  }
+
+  &:nth-child(2) {
+    top: 25%;
+    right: 20%;
+    animation-duration: 7s;
+  }
+
+  &:nth-child(3) {
+    bottom: 25%;
+    left: 20%;
+    animation-duration: 9s;
+  }
+
+  svg {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  }
+}
+
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0) rotate(0deg); 
+    opacity: 0.4;
+  }
+  50% { 
+    transform: translateY(-10px) rotate(5deg); 
+    opacity: 0.6;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: $tablet) {
+  .thumbnailContainer {
+    border-radius: 1rem;
+  }
+
+  .thumbnailContent {
+    padding: 1.5rem;
+  }
+
+  .playButton {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 1rem;
+  }
+
+  .playIcon {
+    font-size: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+  }
+
+  .floatingIcon {
+    display: none; // Hide decorative elements on mobile for performance
+  }
+}
+
+@media (max-width: $mobile) {
+  .thumbnailContainer {
+    border-radius: 0.75rem;
+  }
+
+  .thumbnailContent {
+    padding: 1rem;
+  }
+
+  .playButton {
+    width: 60px;
+    height: 60px;
+  }
+
+  .playIcon {
+    font-size: 1.25rem;
+  }
+
+  .title {
+    font-size: 1.125rem;
+  }
+
+  .durationBadge {
+    top: 0.75rem;
+    right: 0.75rem;
+    font-size: 0.7rem;
+  }
+} 

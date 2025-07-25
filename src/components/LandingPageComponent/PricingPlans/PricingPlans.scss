@@ -1,151 +1,389 @@
 @import '../../../styles/variables.scss';
 
-.pricing-plans {
-  font-family: Arial, sans-serif;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 80px 0px;
+.pricing-plans-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: black;
+  padding: clamp(4rem, 8vw, 8rem) 0;
 
-  //
-
-  h1 {
-    text-align: center;
-    color: $primary-color-light;
-    font-size: 2.5rem;
-    margin-bottom: $spacing-large;
+  // Top divider
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(59, 130, 246, 0.4) 20%, 
+      rgba(139, 92, 246, 0.6) 50%, 
+      rgba(34, 197, 94, 0.4) 80%, 
+      transparent 100%
+    );
+    z-index: 1;
   }
 
-  .toggle-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: calc($spacing-extra-large + $spacing-semi);
-    position: relative;
 
-    button {
-      background-color: transparent;
-      border: none;
-      padding: 10px 20px;
-      font-size: 1rem;
-      cursor: pointer;
+}
 
-      &.active {
-        background-color: $primary-color-light;
-        color: white;
-        border-radius: 20px;
-        transition: background-color 0.5s ease, color 0.5s ease,
-          border-radius 0.5s ease;
-      }
-    }
+.pricing-plans {
+  position: relative;
+  width: 100%;
+  max-width: min(90%, 1200px);
+  margin: 0 auto;
+  padding: 0 ;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4rem);
 
-    .save-tag {
-      position: absolute;
-      right: -60px;
-      background-color: #e0f7e9;
-      color: #1a4f3c;
-      padding: 5px 10px;
-      border-radius: 15px;
-      font-size: 0.8rem;
-    }
+  .title-container {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: clamp(24px, 5vw, 48px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: clamp(1rem, 3vw, 1.5rem);
+    letter-spacing: -0.04em;
+    background: linear-gradient(to bottom, white, rgba(37, 99, 255, 0.1));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+  
+  }
+
+  .subtitle {
+    font-size: clamp(14px, 2.5vw, 18px);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    letter-spacing: -0.02em;
   }
 
   .plans-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: clamp(1.5rem, 3vw, 2rem);
+    width: 100%;
+    max-width: 100%;
 
     .plan {
-      flex: 1;
-      background-color: white;
-      border: 1px solid #e0e0e0;
-      border-radius: 10px;
-      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: clamp(1.5rem, 3vw, 2rem);
       position: relative;
-
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      gap: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+      contain: layout style;
 
-      &.starter {
-        background-color: $background-color-secondary-light;
-        border-color: $primary-color-light;
-      }
-
-      .popular-tag {
+      &::before {
+        content: '';
         position: absolute;
-        top: -15px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: $primary-color-light;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 15px;
-        font-size: 0.8rem;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: transparent;
+        transition: background 0.3s ease;
       }
 
-      h2 {
-        font-size: 1.5rem;
-        margin-bottom: 10px;
-      }
-
-      .plan-type {
-        display: inline-block;
-        background-color: #e1e0f7;
-        color: #1a214f;
-        padding: 5px 10px;
-        border-radius: 15px;
-        font-size: 0.8rem;
-        margin-bottom: 15px;
-      }
-
-      .price {
-        font-size: 2rem;
-        margin-bottom: 10px;
-
-        span {
-          font-size: 1rem;
+      &:hover {
+        border-color: rgba(59, 130, 246, 0.3);
+        box-shadow: 0 16px 48px rgba(59, 130, 246, 0.2);
+        transform: translateY(-8px);
+        
+        &::before {
+          background: linear-gradient(90deg, #3b82f6, #8b5cf6);
         }
       }
 
-      .credits {
-        font-size: 0.9rem;
-        color: #666;
-        margin-bottom: 20px;
+      &.popular {
+        border-color: rgba(59, 130, 246, 0.4);
+        box-shadow: 0 12px 40px rgba(59, 130, 246, 0.25);
+        
+        &::before {
+          background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        }
+
+        .plan-header h2 {
+          background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
       }
 
-      ul {
-        list-style-type: none;
-        padding: 0;
-        margin-bottom: 20px;
+      &.recommended {
+        transform: scale(1.02);
+        border-color: rgba(59, 130, 246, 0.5);
+        background: rgba(59, 130, 246, 0.08);
+        box-shadow: 0 16px 48px rgba(59, 130, 246, 0.3);
+        z-index: 2;
 
-        li {
-          margin-bottom: 10px;
-          position: relative;
-          padding-left: 25px;
+        &::before {
+          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #22c55e);
+        }
 
-          &:before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: $primary-color-light;
+        .plan-badge {
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+          transform: translateX(-50%);
+          background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+          color: white;
+          padding: 6px 16px;
+          border-radius: 20px;
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+          z-index: 10;
+          white-space: nowrap;
+        }
+      }
+
+      .plan-header {
+        text-align: center;
+        margin-bottom: 0.5rem;
+
+        .plan-icon {
+          color: #3b82f6;
+          font-size: 2.5rem;
+          margin-bottom: 1rem;
+          display: block;
+        }
+
+        h2 {
+          font-size: clamp(1.5rem, 3vw, 1.75rem);
+          font-weight: 700;
+          margin-bottom: 0.5rem;
+          color: white;
+          letter-spacing: -0.02em;
+        }
+
+        .plan-description {
+          color: rgba(255, 255, 255, 0.7);
+          font-size: clamp(0.9rem, 2vw, 1rem);
+          font-weight: 500;
+        }
+      }
+
+      .price-container {
+        text-align: center;
+        position: relative;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+        .price {
+          font-size: clamp(2.5rem, 5vw, 3rem);
+          font-weight: 800;
+          color: white;
+          display: flex;
+          align-items: baseline;
+          justify-content: center;
+          gap: 0.5rem;
+          letter-spacing: -0.03em;
+          line-height: 1;
+          margin-bottom: 1rem;
+
+          .price-period {
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: normal;
+          }
+        }
+
+        .savings-badge {
+          display: inline-block;
+          background: linear-gradient(135deg, #22c55e, #10b981);
+          color: white;
+          padding: 4px 12px;
+          border-radius: 16px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+
+          &.no-savings {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
           }
         }
       }
 
-      .sign-up {
-        width: 100%;
-        padding: 10px;
-        background-color: $primary-color-light;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1rem;
+      .plan-body {
+        flex: 1;
 
-        &:hover {
-          background-color: darken($primary-color-light, 10%);
+        .plan-features-title {
+          font-size: 1rem;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 0.9);
+          margin-bottom: 1rem;
+          text-align: center;
+        }
+
+        .features-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+
+          li {
+            display: flex;
+            align-items: flex-start;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            gap: 12px;
+
+            .feature-icon {
+              color: #22c55e;
+              font-size: 1rem;
+              width: 20px;
+              height: 20px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+              margin-top: 2px;
+              background: rgba(34, 197, 94, 0.2);
+              border-radius: 50%;
+              border: 1px solid rgba(34, 197, 94, 0.3);
+            }
+          }
+        }
+      }
+
+      .sign-up-button {
+        width: 100%;
+        padding: 16px 24px;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        position: relative;
+        overflow: hidden;
+
+        &.primary {
+          background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+          color: white;
+          box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.5);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+        }
+
+        &.secondary {
+          background: rgba(255, 255, 255, 0.05);
+          color: #3b82f6;
+          border: 2px solid rgba(59, 130, 246, 0.3);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+          &:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+          }
         }
       }
     }
   }
 }
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .pricing-plans {
+    gap: 2.5rem;
+
+    .plans-container {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+
+      .plan.recommended {
+        transform: scale(1.01);
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .pricing-plans-wrapper {
+    padding: 3rem 0;
+  }
+
+  .pricing-plans {
+    gap: 2rem;
+
+    .plans-container {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+
+      .plan {
+        padding: 1.5rem;
+        
+        &.recommended {
+          transform: scale(1);
+        }
+
+        .plan-header .plan-icon {
+          font-size: 2rem;
+        }
+
+        .price-container .price {
+          font-size: 2.5rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .pricing-plans-wrapper {
+    padding: 2rem 0;
+  }
+
+  .pricing-plans {
+    gap: 1.5rem;
+
+    .plans-container {
+      .plan {
+        padding: 1.25rem;
+        gap: 1.25rem;
+
+        .price-container .price {
+          font-size: 2.2rem;
+        }
+      }
+    }
+  }
+}
+

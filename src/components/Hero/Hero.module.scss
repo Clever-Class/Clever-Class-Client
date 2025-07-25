@@ -436,48 +436,336 @@ $desktop-lg: 1440px;
   }
 }
 
-.heroVideoContainer {
+.heroAnimationContainer {
   width: 100%;
   max-width: 100%;
-  aspect-ratio: 16/9;
-  border-radius: clamp(1rem, 3vw, 2rem);
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: #f8f9fa;
   position: relative;
   z-index: 2;
 
   @media (max-width: $laptop) {
-    transform: none;
     margin-top: 2rem;
   }
 
   @media (min-width: $laptop) {
     flex: 1;
     max-width: 50%;
+  }
 
+  @include respond-to(mobile) {
+    margin-top: 1rem;
+  }
+}
+
+.featureAnimation {
+  width: 100%;
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  @media (max-width: $laptop) {
+    transform: none;
+  }
+
+  @media (min-width: $laptop) {
     &:hover {
-      transform: perspective(1000px) rotateY(-2deg) rotateX(2deg)
-        translateY(-10px);
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+      transform: perspective(1000px) rotateY(-2deg) rotateX(2deg) translateY(-10px);
     }
   }
 
   @include respond-to(mobile) {
     transform: none;
-    margin-top: 1rem;
-    border-radius: 0.75rem;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-    background: #f8f9fa;
-  }
-
-  .heroVideo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: inherit;
-    background: #f8f9fa;
   }
 }
+
+.featureImage {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mockupWindow {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  width: 100%;
+  max-width: 600px;
+  min-height: 320px;
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  position: relative;
+
+  @include respond-to(mobile) {
+    max-width: 100%;
+    min-height: 280px;
+  }
+
+  .windowHeader {
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    padding: 1.25rem;
+    border-bottom: 1px solid #e2e8f0;
+
+    .windowControls {
+      display: flex;
+      gap: 0.8rem;
+
+      span {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #cbd5e1;
+
+        &:first-child { background: #ef4444; }
+        &:nth-child(2) { background: #f59e0b; }
+        &:last-child { background: #10b981; }
+      }
+    }
+  }
+
+  .windowContent {
+    padding: 1.5rem;
+    position: relative;
+    min-height: 220px;
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    background: transparent;
+
+    @include respond-to(mobile) {
+      padding: 1.25rem;
+      min-height: 180px;
+    }
+
+    .questionBox {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      opacity: 1;
+      visibility: visible;
+
+      .questionLabel {
+        font-size: 15px;
+        color: #64748b;
+        font-weight: 600;
+        line-height: 1.3;
+        opacity: 1;
+        visibility: visible;
+
+        @include respond-to(mobile) {
+          font-size: 13px;
+        }
+      }
+    }
+
+    .answerOptions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      opacity: 1;
+      visibility: visible;
+
+      .answerOption {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        font-size: 14px;
+        color: #475569;
+        text-align: center;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        opacity: 1;
+        visibility: visible;
+
+        @include respond-to(mobile) {
+          padding: 0.6rem 0.75rem;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
+
+// Shimmer animation for buttons
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+// CleverClass Interactive Button
+.cleverclassButton {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  opacity: 1;
+  visibility: visible;
+
+  @include respond-to(mobile) {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 3s infinite;
+  }
+
+  .buttonIcon {
+    font-size: 16px;
+
+    @include respond-to(mobile) {
+      font-size: 14px;
+    }
+  }
+
+  .buttonText {
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+
+    @include respond-to(mobile) {
+      font-size: 10px;
+    }
+  }
+}
+
+// Answer Popup
+.answerPopup {
+  position: absolute;
+  top: 30%;
+  right: 24px;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 1.5rem;
+  min-width: 280px;
+  max-width: 320px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  color: #1e293b;
+
+  @include respond-to(mobile) {
+    min-width: 240px;
+    max-width: 280px;
+    padding: 1.25rem;
+  }
+
+  .popupHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+
+    .popupIcon {
+      color: #22c55e;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      @include respond-to(mobile) {
+        font-size: 18px;
+      }
+    }
+
+    .popupTitle {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1e293b;
+      margin: 0;
+
+      @include respond-to(mobile) {
+        font-size: 16px;
+      }
+    }
+  }
+
+  .popupContent {
+    display: flex;
+    flex-direction: column;
+
+    .correctAnswer {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 16px;
+      color: white;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+
+      @include respond-to(mobile) {
+        padding: 0.75rem 1.25rem;
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        animation: shimmer 2s infinite;
+      }
+
+      .answerLetter {
+        font-size: 20px;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 0.75rem;
+        border-radius: 10px;
+        backdrop-filter: blur(10px);
+
+        @include respond-to(mobile) {
+          font-size: 18px;
+          padding: 0.4rem 0.6rem;
+        }
+      }
+
+      .answerValue {
+        font-size: 24px;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        @include respond-to(mobile) {
+          font-size: 22px;
+        }
+      }
+    }
+  }
+}
+
+

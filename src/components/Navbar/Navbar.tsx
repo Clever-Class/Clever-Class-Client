@@ -4,14 +4,20 @@ import { RxDashboard } from 'react-icons/rx';
 import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
 import CleverClassLogo from '~assets/images/logo.png';
+import { Link } from 'react-router-dom';
+import { AppRoutes } from '~constants';
 
 import styles from './Navbar.module.scss';
 
 interface NavbarProps {
   onSignupClick: () => void;
+  onLoginClick: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  onSignupClick,
+  onLoginClick,
+}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const userToken = Cookies.get('userToken');
@@ -27,6 +33,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const scrollToQuizBuilder = () => {
+    const element = document.getElementById('quiz-builder');
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+    // Close mobile menu if open
+    if (isMenuOpen) {
+      setIsMenuOpen(false);
+    }
   };
 
   const menuVariants = {
@@ -77,16 +97,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
         {!isMobile && (
           <ul className={styles.navbarLinks}>
             <li>
-              <a href="#extention">Chrome Extension</a>
+              <Link to={AppRoutes.Homepage}>Chrome Extension</Link>
             </li>
             <li>
-              <a href="#notebook">Notebook</a>
+              <button onClick={scrollToQuizBuilder} className={styles.navLink}>Quiz Builder</button>
             </li>
             <li>
-              <a href="#help-center">Help Center</a>
-            </li>
-            <li>
-              <a href="#pricing">Pricing</a>
+              <Link to={AppRoutes.Pricing}>Pricing</Link>
             </li>
           </ul>
         )}
@@ -105,9 +122,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
                 </div>
               ) : (
                 <div className={styles.navbarAuth}>
-                  <a href="/login" className={styles.navbarLogin}>
+                  <span className={styles.navbarLogin} onClick={onLoginClick}>
                     Log in
-                  </a>
+                  </span>
                   <a
                     href="#start-trial"
                     className={styles.navbarJoinFree}
@@ -146,13 +163,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
                 <a href="#extention">Chrome Extension</a>
               </li>
               <li>
+                <button onClick={scrollToQuizBuilder} className={styles.mobileNavLink}>Quiz Builder</button>
+              </li>
+              <li>
                 <a href="#notebook">Notebook</a>
               </li>
               <li>
                 <a href="#help-center">Help Center</a>
               </li>
               <li>
-                <a href="#pricing">Pricing</a>
+                <Link to={AppRoutes.Pricing}>Pricing</Link>
               </li>
               {userToken ? (
                 <li>

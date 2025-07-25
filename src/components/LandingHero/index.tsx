@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './LandingHero.module.scss';
 import { LandingHeroProps } from './LandingHero.types';
-import ChromeExtensionIcon from '../../assets/icons/ChromeExtensionIcon';
+import ChromeExtensionIcon from '../../assets/images/chrome-extension-icon.svg';
 
 const LandingHero: React.FC<LandingHeroProps> = ({ onGetStarted }) => {
   return (
@@ -34,7 +34,7 @@ const LandingHero: React.FC<LandingHeroProps> = ({ onGetStarted }) => {
             Say goodbye to guesswork, tough problems, and juggling tabs to find
             answers.
             <br />
-            Transcript's AI powered homework helper makes finding answers a
+            CleverClass's AI powered homework helper makes finding answers a
             breeze.
           </p>
 

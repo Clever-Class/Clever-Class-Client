@@ -1,1 +1,1 @@
-export * from './Routes.tsx';
+export { default as Routes } from './Routes.tsx';

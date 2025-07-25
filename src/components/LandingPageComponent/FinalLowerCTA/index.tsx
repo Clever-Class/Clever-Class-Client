@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import finalLowerCTAScreenshot from '~/assets/images/final_cta_home.png';
+import finalLowerCTAScreenshot from '~/assets/images/dashboard.png';
 
 import styles from './FinalLowerCTA.module.scss';
 

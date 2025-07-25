@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChevronLeft } from 'lucide-react';
 import styles from '../Sidebar.module.scss';
-
+import logo from '~/assets/images/logo.png';
 interface SidebarHeaderProps {
   isCollapsed: boolean;
   toggleCollapse: () => void;
@@ -14,7 +14,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   return (
     <div className={styles.sidebarHeader}>
       <div className={styles.logoContainer}>
-        <div className={styles.logo} />
+        <img src={logo} alt="CleverClass Logo" className={styles.logo} />
         {!isCollapsed && <span className={styles.brandName}>Clever Class</span>}
       </div>
       <button

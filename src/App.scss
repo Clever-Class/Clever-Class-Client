@@ -1,8 +1,15 @@
 @import './styles/variables';
 
 * {
-  font-family: $font-family-primary;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+}
+
+body {
+  font-family: $font-family-primary;
+}
+
+.katex {
+  font-family: 'KaTeX_Main' !important;
 }

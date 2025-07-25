@@ -46,6 +46,158 @@
     }
   }
 
+  // New CTA styles
+  .upgradeCTA {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .upgradeContent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+
+    .upgradeText {
+      h4 {
+        font-size: clamp(16px, 2vw, 18px);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: rgba(255, 255, 255, 0.9);
+        background: linear-gradient(120deg, #fff, #2563ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.01em;
+      }
+
+      p {
+        font-size: clamp(14px, 1.5vw, 15px);
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0;
+        letter-spacing: -0.01em;
+        line-height: 1.4;
+      }
+    }
+  }
+
+  .sparkleIcon {
+    background: rgba(37, 99, 255, 0.12) !important;
+    border: 1px solid rgba(37, 99, 255, 0.2) !important;
+    color: #2563ff;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.2) 0%,
+        rgba(255, 255, 255, 0) 70%
+      );
+      animation: pulseGlow 2s infinite;
+    }
+  }
+
+  .upgradeButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2563ff, #1e50e0);
+    border: none;
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    margin-top: auto;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 99, 255, 0.2);
+    }
+
+    .buttonText {
+      position: relative;
+      z-index: 2;
+    }
+
+    .sparkleWrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0),
+        rgba(255, 255, 255, 0.2),
+        rgba(255, 255, 255, 0)
+      );
+      transition: all 0.6s;
+      z-index: 1;
+    }
+
+    &.pulsing {
+      &::before {
+        left: 100%;
+        transition: all 0.6s;
+      }
+
+      .sparkleWrapper {
+        animation: sparkle 1s infinite;
+      }
+    }
+  }
+
+  @keyframes pulseGlow {
+    0% {
+      opacity: 0.4;
+      transform: scale(0.95);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.05);
+    }
+    100% {
+      opacity: 0.4;
+      transform: scale(0.95);
+    }
+  }
+
+  @keyframes sparkle {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.3);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  // End of new CTA styles
+
   .planHeader,
   .creditsHeader {
     display: flex;
@@ -93,6 +245,78 @@
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(37, 99, 255, 0.12);
     }
+  }
+
+  // Update existing styles for updateButton to match our new CTA
+  .updateButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    background: rgba(37, 99, 255, 0.08);
+    border: 1px solid rgba(37, 99, 255, 0.12);
+    color: #2563ff;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    margin-top: auto;
+
+    &:hover {
+      background: rgba(37, 99, 255, 0.12);
+      border-color: rgba(37, 99, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37, 99, 255, 0.12);
+    }
+  }
+
+  .cancelButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 0.75rem;
+
+    &:hover {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(239, 68, 68, 0.12);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  .dontCancelButton {
+    background: rgba(37, 99, 255, 0.08);
+    border: 1px solid rgba(37, 99, 255, 0.12);
+    color: #2563ff;
+
+    &:hover {
+      background: rgba(37, 99, 255, 0.12);
+      border-color: rgba(37, 99, 255, 0.2);
+      box-shadow: 0 8px 24px rgba(37, 99, 255, 0.12);
+    }
+  }
+
+  .trial,
+  .cancelMessage {
+    color: #ef4444 !important;
   }
 
   .planActions {
@@ -236,6 +460,276 @@
 
       .actionButton {
         width: 100%;
+      }
+    }
+  }
+}
+
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.syncButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--color-primary-100);
+  color: var(--color-primary-900);
+  border: 1px solid var(--color-primary-200);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-primary-200);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.rotating {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.trial {
+  color: var(--color-success-600);
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.cancelMessage {
+  color: var(--color-error-600);
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.updateButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  background: rgba(37, 99, 255, 0.08);
+  border: 1px solid rgba(37, 99, 255, 0.12);
+  color: #2563ff;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  text-align: center;
+
+  &:hover {
+    background: rgba(37, 99, 255, 0.12);
+    border-color: rgba(37, 99, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37, 99, 255, 0.12);
+  }
+}
+
+.cancelButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.dontCancelButton {
+  background: rgba(37, 99, 255, 0.9);
+  border: 1px solid rgba(37, 99, 255, 0.8);
+  color: white;
+  margin-top: 0.75rem;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      transparent 20%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 80%
+    );
+    z-index: -1;
+    animation: reflectAnimation 2s infinite;
+  }
+
+  &:hover {
+    background: rgba(37, 99, 255, 1);
+    border-color: rgba(37, 99, 255, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37, 99, 255, 0.2);
+  }
+}
+
+@keyframes reflectAnimation {
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.premiumFeatures {
+  background: linear-gradient(
+    145deg,
+    rgba(19, 30, 75, 0.95),
+    rgba(29, 46, 108, 0.95)
+  );
+  border-radius: 14px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border: 1px solid rgba(67, 83, 255, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(67, 83, 255, 0.2) inset;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(67, 83, 255, 0.3) inset;
+    border-color: rgba(67, 83, 255, 0.4);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(
+      circle,
+      rgba(67, 83, 255, 0.3) 0%,
+      transparent 70%
+    );
+    top: -75px;
+    right: -75px;
+    border-radius: 50%;
+    z-index: 0;
+  }
+
+  .featuresList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: translateX(4px);
+      }
+
+      svg {
+        color: #4ade80;
+        filter: drop-shadow(0 0 4px rgba(74, 222, 128, 0.4));
+      }
+
+      span {
+        color: rgba(255, 255, 255, 0.9);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        letter-spacing: 0.02em;
+      }
+    }
+  }
+
+  .creditsHeader {
+    position: relative;
+    z-index: 1;
+
+    h4 {
+      font-size: 18px !important;
+      font-weight: 600 !important;
+      margin-bottom: 6px !important;
+      color: white !important;
+      background: linear-gradient(
+        to right,
+        #fff,
+        rgba(255, 255, 255, 0.8)
+      ) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+    }
+
+    p {
+      font-size: 15px !important;
+      color: rgba(255, 255, 255, 0.7) !important;
+      font-weight: 400;
+    }
+
+    .iconContainer {
+      background: rgba(74, 144, 226, 0.2) !important;
+      border: 1px solid rgba(74, 144, 226, 0.3) !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+      color: #4a90e2 !important;
+
+      svg {
+        color: #4a90e2;
+        filter: drop-shadow(0 0 4px rgba(74, 144, 226, 0.6));
+      }
+
+      &:hover {
+        background: rgba(74, 144, 226, 0.3) !important;
+        border-color: rgba(74, 144, 226, 0.4) !important;
       }
     }
   }

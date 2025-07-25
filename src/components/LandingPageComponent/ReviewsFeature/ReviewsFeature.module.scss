@@ -1,32 +1,14 @@
 @import '../../../styles/variables';
 
-// Animation keyframes
+// Optimized animation keyframes - using transform3d for GPU acceleration
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translate3d(0, 20px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scrollLeft {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes scrollRight {
-  0% {
-    transform: translateX(-50%);
-  }
-  100% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -36,6 +18,9 @@
   overflow: hidden;
   padding: clamp(2rem, 6vw, 6rem) 0;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  // GPU acceleration for smooth scrolling
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
 
   @include respond-to(mobile) {
     padding: 2rem 0;
@@ -50,11 +35,6 @@
     .sectionHeader {
       text-align: center;
       margin-bottom: clamp(2rem, 6vw, 4rem);
-      opacity: 0;
-
-      &.visible {
-        animation: fadeInUp 0.8s ease forwards;
-      }
 
       .title {
         font-size: clamp(24px, 5vw, 48px);
@@ -84,237 +64,180 @@
       }
     }
 
-    .scrollingReviews {
-      position: relative;
-      width: 100vw;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
+    .reviewsContainer {
+      margin-bottom: clamp(2rem, 6vw, 4rem);
       overflow: hidden;
-      padding: 0 calc((100vw - min(90%, 1200px)) / 2);
+      // Optimized mask for better performance
+      mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
+      -webkit-mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
 
-      @include respond-to(mobile) {
-        gap: 0.8rem;
-      }
-      @include respond-to(desktop-lg) {
-        padding: 0 calc((100vw - 1320px) / 2);
-      }
-
-      &::before,
-      &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        width: 25%;
-        height: 100%;
-        z-index: 2;
-        pointer-events: none;
-      }
-
-      &::before {
-        left: 0;
-        background: linear-gradient(
-          to right,
-          rgba(248, 249, 250, 1) 0%,
-          rgba(248, 249, 250, 0.9) 20%,
-          rgba(248, 249, 250, 0) 100%
-        );
-      }
-
-      &::after {
-        right: 0;
-        background: linear-gradient(
-          to left,
-          rgba(248, 249, 250, 1) 0%,
-          rgba(248, 249, 250, 0.9) 20%,
-          rgba(248, 249, 250, 0) 100%
-        );
-      }
-
-      .scrollRow1,
-      .scrollRow2 {
+      .reviewsTrack {
         display: flex;
-        gap: 1.5rem;
-        width: fit-content;
-        padding: 1rem 0;
-        position: relative;
-
-        &::before,
-        &::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          height: 100%;
-          width: 4rem;
-          z-index: 1;
-          pointer-events: none;
-        }
-
-        &::before {
-          left: -4rem;
-          background: linear-gradient(
-            to right,
-            rgba(248, 249, 250, 1),
-            rgba(248, 249, 250, 0)
-          );
-        }
-
-        &::after {
-          right: -4rem;
-          background: linear-gradient(
-            to left,
-            rgba(248, 249, 250, 1),
-            rgba(248, 249, 250, 0)
-          );
-        }
+        gap: clamp(1rem, 3vw, 2rem);
+        width: max-content;
+        // GPU acceleration for smooth animation
+        transform: translate3d(0, 0, 0);
+        -webkit-transform: translate3d(0, 0, 0);
 
         .reviewCard {
-          width: 350px;
+          background: rgba(255, 255, 255, 0.9);
+          border: 1px solid rgba(0, 0, 0, 0.08);
+          border-radius: 16px;
+          padding: clamp(1.5rem, 3vw, 2rem);
+          width: clamp(280px, 25vw, 350px);
+          height: auto;
+          min-height: 200px;
           flex-shrink: 0;
-          background: $white;
-          border-radius: 1rem;
-          padding: 1.5rem;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
-          z-index: 1;
+          transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+          // GPU acceleration
+          transform: translate3d(0, 0, 0);
+          -webkit-transform: translate3d(0, 0, 0);
 
-          &:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            z-index: 2;
+          // Optimized glass effect without backdrop-filter
+          &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 16px;
+            z-index: -1;
+          }
+
+          @include respond-to(mobile) {
+            width: clamp(250px, 80vw, 300px);
+            padding: 1.5rem;
           }
 
           .reviewHeader {
             display: flex;
-            align-items: flex-start;
-            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
             margin-bottom: 1rem;
 
-            .avatar {
-              width: 3rem;
-              height: 3rem;
-              border-radius: 50%;
-              overflow: hidden;
-              flex-shrink: 0;
+            .reviewerInfo {
+              display: flex;
+              align-items: center;
+              gap: 0.75rem;
 
-              img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
+              .reviewerAvatar {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, $primary-blue, $primary-blue-light);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 600;
+                font-size: 18px;
+                flex-shrink: 0;
+                overflow: hidden;
+
+                .avatarImage {
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  border-radius: 50%;
+                  background: white;
+                }
+              }
+
+              .reviewerDetails {
+                .reviewerName {
+                  font-size: 16px;
+                  font-weight: 600;
+                  color: $dark-bg;
+                  margin: 0 0 0.25rem 0;
+                  line-height: 1.2;
+                }
+
+                .reviewerRole {
+                  font-size: 14px;
+                  color: rgba($dark-bg, 0.7);
+                  margin: 0;
+                  line-height: 1.2;
+                }
               }
             }
 
-            .userInfo {
-              flex: 1;
+            .rating {
               display: flex;
-              flex-direction: column;
               gap: 2px;
 
-              .name {
+              .star {
+                color: #fbbf24;
                 font-size: 16px;
-                font-weight: 600;
-                color: $dark-bg;
-                margin: 0;
-              }
-
-              .role {
-                font-size: 12px;
-                color: rgba($dark-bg, 0.6);
-                margin: 0;
-              }
-
-              .rating {
-                display: flex;
-                gap: 0.25rem;
-                color: #ffc438;
-                font-size: 14px;
-                margin-top: 0.25rem;
+                line-height: 1;
               }
             }
           }
 
-          .reviewContent {
+          .reviewText {
             font-size: 14px;
             line-height: 1.6;
             color: rgba($dark-bg, 0.8);
-            margin-bottom: 0.75rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          }
-
-          .reviewDate {
-            font-size: 12px;
-            color: rgba($dark-bg, 0.5);
+            margin: 0;
+            font-style: italic;
+            
+            // Ensure text doesn't overflow
+            word-wrap: break-word;
+            overflow-wrap: break-word;
           }
         }
       }
+    }
 
-      .scrollRow1 {
-        animation: scrollLeft 45s linear infinite;
-        animation-play-state: running;
-        margin-left: 0;
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(1rem, 4vw, 2rem);
+      text-align: center;
 
-        &:hover {
-          animation-play-state: paused;
-        }
+      @include respond-to(mobile) {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
       }
 
-      .scrollRow2 {
-        animation: scrollRight 50s linear infinite;
-        animation-play-state: running;
-        margin-left: -50%;
+      .stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
 
-        &:hover {
-          animation-play-state: paused;
+        .statNumber {
+          font-size: clamp(24px, 4vw, 36px);
+          font-weight: 700;
+          color: $primary-blue;
+          line-height: 1;
+        }
+
+        .statLabel {
+          font-size: clamp(14px, 2.5vw, 16px);
+          color: rgba($dark-bg, 0.7);
+          font-weight: 500;
+          line-height: 1.2;
         }
       }
     }
   }
 }
 
-@include respond-to(mobile) {
+// Media queries for enhanced responsive design
+@include respond-to(tablet) {
   .reviewsSection {
     .contentContainer {
-      .scrollingReviews {
-        padding: 0 1rem;
-
-        &::before,
-        &::after {
-          width: 15%;
-        }
-
-        .scrollRow1,
-        .scrollRow2 {
-          &::before,
-          &::after {
-            width: 2rem;
-          }
-
+      .reviewsContainer {
+        .reviewsTrack {
           .reviewCard {
-            width: 300px;
-            padding: 1.25rem;
-
-            .reviewContent {
-              -webkit-line-clamp: 4;
-            }
+            width: clamp(260px, 70vw, 320px);
           }
         }
       }
-    }
-  }
-}
-
-@include respond-to(desktop-lg) {
-  .reviewsSection {
-    .contentContainer {
-      max-width: 1320px;
     }
   }
 }
@@ -326,8 +249,39 @@
         .title {
           font-size: 24px;
         }
+
         .description {
-          font-size: 13px;
+          font-size: 14px;
+        }
+      }
+
+      .reviewsContainer {
+        .reviewsTrack {
+          .reviewCard {
+            width: clamp(240px, 85vw, 280px);
+            padding: 1.25rem;
+
+            .reviewHeader {
+              .reviewerInfo {
+                .reviewerAvatar {
+                  width: 40px;
+                  height: 40px;
+                  font-size: 16px;
+
+                  .avatarImage {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                  }
+                }
+              }
+            }
+
+            .reviewText {
+              font-size: 13px;
+            }
+          }
         }
       }
     }

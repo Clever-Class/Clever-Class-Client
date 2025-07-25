@@ -12,13 +12,11 @@ import {
   SignupUserData,
   LOGOUT,
   UPDATE_USER_DATA,
-  UPDATE_PROFILE_REQUEST,
   UPDATE_PROFILE_SUCCESS,
   UPDATE_PROFILE_FAILURE,
 } from '~constants';
 import { AppDispatch } from '~store';
 import { Dispatch } from 'redux';
-import { UpdateProfileData, UpdateProfileResponse, User } from '~types';
 
 export const signupUserAction =
   (userEntryData: SignupUserData) => async (dispatch: AppDispatch) => {
@@ -183,3 +181,22 @@ export const updateProfile = (formData: FormData) => {
     }
   };
 };
+
+// Update user credits action without losing other user data
+export const updateUserCredits = (credits: number) => ({
+  type: UPDATE_USER_DATA,
+  payload: {
+    user: {
+      trialCredits: credits,
+    },
+  },
+});
+
+// Add new function to update all user data from /me endpoint
+export const updateUserFromMe = (userData: any, subscriptionData: any) => ({
+  type: UPDATE_USER_DATA,
+  payload: {
+    user: userData,
+    subscription: subscriptionData,
+  },
+});

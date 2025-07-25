@@ -15,3 +15,6 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
 };
 
 export default Layout;
+
+// Export StaticPageLayout
+export { StaticPageLayout } from './StaticPageLayout';

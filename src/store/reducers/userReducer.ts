@@ -11,6 +11,7 @@ import {
   UPDATE_PROFILE_REQUEST,
   UPDATE_PROFILE_SUCCESS,
   UPDATE_PROFILE_FAILURE,
+  LOGOUT,
 } from '~constants';
 import { UserState, ProfileActionTypes } from '~types';
 
@@ -44,6 +45,9 @@ type UserActionTypes =
   | {
       type: typeof FETCH_USER_FAILURE | typeof SIGNUP_FAILURE;
       payload: string;
+    }
+  | {
+      type: typeof LOGOUT;
     };
 
 export const userReducer = (
@@ -66,7 +70,15 @@ export const userReducer = (
         loading: false,
         error: null,
         userToken: action.payload.token || state.userToken,
-        user: action.payload.user || state.user,
+        user: action.payload.user
+          ? // If we have a complete user object, use it
+            typeof action.payload.user === 'object' &&
+            !Array.isArray(action.payload.user) &&
+            Object.keys(action.payload.user).length > 1
+            ? action.payload.user
+            : // Otherwise merge with existing user data
+              { ...state.user, ...action.payload.user }
+          : state.user,
         subscription: action.payload.subscription || state.subscription,
       };
 
@@ -88,6 +100,9 @@ export const userReducer = (
         error: action.payload,
         message: action.payload,
       };
+
+    case LOGOUT:
+      return initialState;
 
     default:
       return state;

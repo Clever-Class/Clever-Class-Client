@@ -145,17 +145,7 @@
     border-radius: 50%;
     background: rgba(37, 99, 255, 0.03);
     color: rgba(255, 255, 255, 0.7);
-    transition: all 0.3s ease;
     border: 1px solid rgba(37, 99, 255, 0.1);
-
-    &:hover {
-      background: rgba(37, 99, 255, 0.15);
-      color: white;
-      transform: translateY(-2px);
-      border-color: rgba(37, 99, 255, 0.2);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3),
-        0 0 0 1px rgba(37, 99, 255, 0.25), 0 0 40px rgba(37, 99, 255, 0.3);
-    }
 
     svg {
       width: 16px;
@@ -166,16 +156,12 @@
 
 .links {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: $spacing-large;
 
   @media (max-width: $mobile) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: $spacing-medium;
-  }
-
-  @media (max-width: $mobile-sm) {
     grid-template-columns: 1fr;
+    gap: $spacing-medium;
   }
 }
 
@@ -205,38 +191,8 @@
         color: rgba(255, 255, 255, 0.6);
         text-decoration: none;
         font-size: 0.9375rem;
-        transition: all 0.2s ease;
-        position: relative;
-        padding-left: 0;
         display: inline-flex;
         align-items: center;
-
-        &::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          top: 50%;
-          width: 0;
-          height: 1px;
-          background: rgba(37, 99, 255, 0.44);
-          transition: all 0.2s ease;
-          opacity: 0;
-        }
-
-        &:hover {
-          color: white;
-          padding-left: 20px;
-          background: rgba(37, 99, 255, 0.15);
-          padding: 0.25rem 1rem 0.25rem 1.5rem;
-          border-radius: 4px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2),
-            0 0 0 1px rgba(37, 99, 255, 0.15);
-
-          &::before {
-            width: 12px;
-            opacity: 1;
-          }
-        }
       }
     }
   }
@@ -286,12 +242,6 @@
 
   span {
     cursor: pointer;
-    transition: color 0.2s ease;
-
-    &:hover {
-      color: white;
-      text-shadow: 0 0 20px rgba(37, 99, 255, 0.4);
-    }
 
     &:not(:last-child)::after {
       content: '•';

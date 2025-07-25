@@ -9,4 +9,12 @@ export enum AppRoutes {
   Settings = '/settings',
   PaymentSuccess = '/payment/success',
   Chatbot = '/ai-chatbot',
+  Pricing = '/pricing',
+  QuizBuilder = '/quiz-builder',
+  QuickNotes = '/quick-notes',
+  LectureSummarizer = '/lecture-summarizer',
+  PrivacyPolicy = '/privacy-policy',
+  AboutUs = '/about-us',
+  TermsOfService = '/terms-of-service',
+  RefundPolicy = '/refund-policy',
 }

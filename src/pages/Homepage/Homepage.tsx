@@ -1,71 +1,95 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
-import {
-  FeatureHighlight,
-  FeatureHighlightSection,
-  LowerCTA,
-  Navbar,
-  SignupPopup,
-  SupportedAppSection,
-  TestimonialsSection,
-} from '~components/index';
-import { PricingPlans } from '~components/LandingPageComponent/PricingPlans/PricingPlans';
+import { QuizBuilderSection, Navbar, AuthPopup } from '~components/index';
+import { PricingPlans } from '~components/LandingPageComponent';
 
-import StarImage from '~assets/images/star.png';
 import FAQ from '~components/LandingPageComponent/FaqSection/FaqSection';
 
 import './Homepage.scss';
 import Hero from '~components/Hero';
-import FeatureSection from '~components/LandingPageComponent/FeatureSection';
+import ChromeExtensionSection from '~components/LandingPageComponent/ChromeExtensionSection';
 import ReviewsFeature from '~components/LandingPageComponent/ReviewsFeature';
 import FinalLowerCTA from '~/components/LandingPageComponent/FinalLowerCTA';
 import LandingShowcase from '~components/LandingShowcase';
 import Footer from '~components/Footer/Footer';
 import CTASection from '~components/CTASection';
+import { FaYoutube, FaHeadphones, FaFileAlt } from 'react-icons/fa';
+import { RiRobot2Line } from 'react-icons/ri';
 
 export const Homepage = () => {
-  const dispatch = useDispatch();
-  const [signupPopup, setSignupPopup] = useState<boolean>(false);
+  const [authPopup, setAuthPopup] = useState<{
+    isOpen: boolean;
+    mode: 'login' | 'signup';
+  }>({
+    isOpen: false,
+    mode: 'signup',
+  });
 
-  const handlePricingSignupClick = (planId: string) => {
-    dispatch({ type: 'SELECT_PRICING_PLAN', payload: planId });
-    setSignupPopup(true);
+  const handleJoinRequest = () => {
+    setAuthPopup({ isOpen: true, mode: 'signup' });
   };
 
-  const handleFreeTrial = () => {
-    setSignupPopup(true);
+  const handleLoginRequest = () => {
+    setAuthPopup({ isOpen: true, mode: 'login' });
   };
 
-  const handleGetStarted = () => {
-    // Your get started logic here
-  };
+  const lectureSummarizerFeatures = [
+    {
+      icon: <FaYoutube />,
+      badge: 'YOUTUBE',
+      title: 'YouTube Video Analysis',
+      description: 'Extract insights from any YouTube video instantly'
+    },
+    {
+      icon: <FaHeadphones />,
+      badge: 'PODCAST',
+      title: 'Podcast Summarization',
+      description: 'Get key points from podcasts in seconds'
+    },
+    {
+      icon: <FaFileAlt />,
+      badge: 'INSIGHTS',
+      title: 'AI-Powered Analysis',
+      description: 'Smart extraction of important information'
+    }
+  ];
 
   return (
     <div>
-      <Navbar onSignupClick={handleFreeTrial} />
+      <Navbar
+        onSignupClick={handleJoinRequest}
+        onLoginClick={handleLoginRequest}
+      />
 
-      {/* Signup Popup */}
-      {signupPopup && <SignupPopup onClose={() => setSignupPopup(false)} />}
+      {/* Auth Popup */}
+      {authPopup.isOpen && (
+        <AuthPopup
+          onClose={() => setAuthPopup({ isOpen: false, mode: 'signup' })}
+          mode={authPopup.mode}
+        />
+      )}
 
       <Hero />
-      <FeatureSection onGetStarted={handleFreeTrial} />
+      <ChromeExtensionSection onGetStarted={handleJoinRequest} />
       <ReviewsFeature />
-      <FeatureHighlight />
-      <LandingShowcase />
-      <LandingShowcase theme="dark" />
-      <FinalLowerCTA onGetStarted={handleGetStarted} />
+      <QuizBuilderSection />
+      <LandingShowcase onButtonClick={handleJoinRequest} />
+      <LandingShowcase 
+        theme="dark" 
+        badgeIcon={<RiRobot2Line />}
+        badgeText="Lecture Summarizer"
+        title="Extract Key Insights from Any Content"
+        highlightedWord="Key Insights"
+        description="Extract key insights from any YouTube video or podcast in seconds with AI."
+        features={lectureSummarizerFeatures}
+        buttonText="Try Summarizer"
+        onButtonClick={handleJoinRequest}
+      />
+      <PricingPlans onSignupClick={handleJoinRequest} />
+      <FinalLowerCTA onGetStarted={handleJoinRequest} />
       <FAQ />
       <CTASection />
       <Footer />
-      {/* <SupportedAppSection />
-      <FeatureHighlightSection primary />
-      <FeatureHighlightSection />
-      <FeatureHighlightSection primary />
-      <TestimonialsSection />
-      <PricingPlans onSignupClick={handlePricingSignupClick} />
-      <LowerCTA />
-      */}
     </div>
   );
 };

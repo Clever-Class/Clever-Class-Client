@@ -1,0 +1,4 @@
+---
+description: For a React project with lazy loading and a focus on smooth, lag-free animations:  Use CSS transitions/animations for simple, fast UI interactions.  Use Framer Motion for everything else — it’s the cleanest, smoothest, and most React-native-friendly library you’ll find.
+alwaysApply: false
+---
